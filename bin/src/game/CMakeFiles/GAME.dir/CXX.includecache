@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/hate/hate.h
+iostream
+-
+
+/home/ed/Code/Hate/src/game/main.cpp
+iostream
+-
+hate/hate.h
+/home/ed/Code/Hate/src/game/hate/hate.h
+

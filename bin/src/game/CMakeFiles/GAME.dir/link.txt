@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/GAME.dir/main.cpp.o  -o GAME -rdynamic ../hate/libENGINE.a -lGLEW -lGLU -lGL -lGLU -lGL 
