@@ -23,8 +23,6 @@ namespace Hate {
 			 */
 			void loop();
 
-			// A static refference to the core
-			static Hate* CORE;
 		private:
 			/**
 			 * The function that handles the loading of resources.
