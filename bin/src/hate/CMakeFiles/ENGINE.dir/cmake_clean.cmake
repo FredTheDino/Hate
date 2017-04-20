@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ENGINE.dir/hate.cpp.o"
+  "CMakeFiles/ENGINE.dir/window.cpp.o"
   "libENGINE.pdb"
   "libENGINE.a"
 )

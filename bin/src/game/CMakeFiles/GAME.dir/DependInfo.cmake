@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/ed/Code/Hate/src/game/main.cpp" "/home/ed/Code/Hate/bin/src/game/CMakeFiles/GAME.dir/main.cpp.o"
+  "/home/ed/Code/Old-Hate/src/game/main.cpp" "/home/ed/Code/Old-Hate/bin/src/game/CMakeFiles/GAME.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -16,7 +16,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/ed/Code/Hate/bin/src/hate/CMakeFiles/ENGINE.dir/DependInfo.cmake"
+  "/home/ed/Code/Old-Hate/bin/src/hate/CMakeFiles/ENGINE.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

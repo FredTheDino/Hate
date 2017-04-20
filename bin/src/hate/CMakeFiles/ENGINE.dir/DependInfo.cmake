@@ -4,7 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/ed/Code/Hate/src/hate/hate.cpp" "/home/ed/Code/Hate/bin/src/hate/CMakeFiles/ENGINE.dir/hate.cpp.o"
+  "/home/ed/Code/Old-Hate/src/hate/hate.cpp" "/home/ed/Code/Old-Hate/bin/src/hate/CMakeFiles/ENGINE.dir/hate.cpp.o"
+  "/home/ed/Code/Old-Hate/src/hate/window.cpp" "/home/ed/Code/Old-Hate/bin/src/hate/CMakeFiles/ENGINE.dir/window.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

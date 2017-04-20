@@ -7,12 +7,18 @@
 #IncludeRegexTransform: 
 
 ../src/hate/hate.h
-iostream
+window.h
+../src/hate/window.h
+
+../src/hate/window.h
+GLFW/glfw3.h
+-
+string
 -
 
-/home/ed/Code/Hate/src/game/main.cpp
+/home/ed/Code/Old-Hate/src/game/main.cpp
 iostream
 -
 hate/hate.h
-/home/ed/Code/Hate/src/game/hate/hate.h
+/home/ed/Code/Old-Hate/src/game/hate/hate.h
 

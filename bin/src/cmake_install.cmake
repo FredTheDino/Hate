@@ -1,4 +1,4 @@
-# Install script for directory: /home/ed/Code/Hate/src
+# Install script for directory: /home/ed/Code/Old-Hate/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,13 +29,13 @@ endif()
 
 # Install shared libraries without execute permission?
 if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  set(CMAKE_INSTALL_SO_NO_EXE "1")
+  set(CMAKE_INSTALL_SO_NO_EXE "0")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/ed/Code/Hate/bin/src/hate/cmake_install.cmake")
-  include("/home/ed/Code/Hate/bin/src/game/cmake_install.cmake")
+  include("/home/ed/Code/Old-Hate/bin/src/hate/cmake_install.cmake")
+  include("/home/ed/Code/Old-Hate/bin/src/game/cmake_install.cmake")
 
 endif()
 
