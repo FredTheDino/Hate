@@ -1,3 +1,6 @@
+#pragma once
+#include <string>
+
 class GLFWwindow;
 namespace Hate {
 	/**
@@ -90,9 +93,11 @@ namespace Hate {
 			 */
 			void getPosition(int* x, int* y);
 
-			void setIcon(const char* path) {
-
-			}
+			/**
+			 * Sets the icon of the window.
+			 * @param path the path to the icon in the resource folder.
+			 */
+			void setIcon(std::string path);
 
 			/**
 			 * Returns the GLFWwindow that lies beind this wrapping.

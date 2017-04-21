@@ -1,10 +1,13 @@
 #include "window.h"
+#include "hate.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <vector>
 
 namespace Hate {
 
+	// The close callback for the window
 	void close_callback(GLFWwindow* window) {
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
@@ -43,6 +46,8 @@ namespace Hate {
 		GLFWmonitor* m = fullscreen ? monitors[monitor] : NULL;
 		glfw_window = glfwCreateWindow(width, height, title, m, NULL);
 
+		setIcon("icon.png");
+
 		// So we can close it
 		glfwSetWindowCloseCallback(glfw_window, close_callback);
 		// For GLEW, turns out this is important
@@ -55,8 +60,8 @@ namespace Hate {
 
 	void Window::update() {
 		glfwPollEvents();
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glfwSwapBuffers(glfw_window);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void Window::show() {
@@ -85,6 +90,20 @@ namespace Hate {
 
 	void Window::getPosition(int* x, int* y) {
 		glfwGetWindowPos(glfw_window, x, y);
+	}
+
+	void Window::setIcon(std::string path) {
+		GLFWimage image;
+		unsigned int w, h;
+
+		std::vector<unsigned char> pixels;
+		Hate::LOADER->quickLoadPng(path, &w, &h, &pixels);
+	
+		image.width = w;
+		image.height = h;
+		image.pixels = &pixels[0];
+			
+		glfwSetWindowIcon(glfw_window, 1, &image);
 	}
 
 	bool Window::shouldClose() {

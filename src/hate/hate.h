@@ -1,5 +1,6 @@
 #pragma once
 #include "window.h"
+#include "loader.h"
 
 namespace Hate {
 	/**
@@ -7,6 +8,10 @@ namespace Hate {
 	 */
 	class Hate {
 		public:
+			// Static refferneces
+			static Hate*     CORE;
+			static Loader* LOADER;
+
 			/**
 			 * Creates a new Hate engine object.
 			 * @param *load the load function that loads when the game is started.

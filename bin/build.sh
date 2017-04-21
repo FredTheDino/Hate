@@ -19,5 +19,4 @@ fi
 
 echo ""
 echo "---------- RUN ---------"
-gdb ./src/game/GAME
-
+gdb ./src/game/GAME -x run

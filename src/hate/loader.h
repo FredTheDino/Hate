@@ -1,7 +1,29 @@
 #pragma once
-#include <unorderd_map>
+#include "texture.h"
+#include "audio.h"
+#include <unordered_map>
+#include <fstream>
+#include <vector>
 
 namespace Hate {
+	
+	//Helper for loading wav files
+	struct WavHeader {
+		/* RIFF Chunk Descriptor */
+		uint8_t		riff[4];        // RIFF Header Magic header
+		uint32_t	chunkSize;      // RIFF Chunk Size
+		uint8_t		wave[4];        // WAVE Header
+		/* "fmt" sub-chunk */
+		uint8_t		fmt[4];         // FMT header
+		uint32_t	subchunkSize;   // Size of the fmt chunk
+		uint16_t	audioFormat;    // Audio format
+		uint16_t	numOfChan;      // Number of channels 1=Mono 2=Stereo
+		uint32_t	samplesPerSec;  // Sampling Frequency in Hz
+		uint32_t	bytesPerSec;    // bytes per second
+		uint16_t	blockAlign;     // 2=16-bit mono, 4=16-bit stereo
+		uint16_t	bitsPerSample;  // Number of bits per sample
+	};
+
 	/**
 	 * This class should not be touched by human hands.
 	 * The Loader class handles loading of Pngs and Wavs,
@@ -25,7 +47,7 @@ namespace Hate {
 			 * @param path the path to the file.
 			 * @return an audio file loaded in OpenAL.
 			 */
-			Audio wav(std::string path);
+			Audio wav(std::string& path);
 
 			/**
 			 * Retrives a texture allready processed by OpenGL.
@@ -33,7 +55,14 @@ namespace Hate {
 			 * @param path the path to the file.
 			 * @return a texture that can be used by OpenGL.
 			 */
-			Texture png(std::string path);
+			Texture png(std::string& path);
+
+			/**
+			 * Unloads a loaded asset and does the nessecary cleanup.
+			 *
+			 * @param path the path to the file.
+			 */
+			void unload(std::string& path);
 
 			/**
 			 * Loads a png file and adds it to the library for future access.
@@ -47,7 +76,7 @@ namespace Hate {
 			 * @param sprites_x the number of sprites on the x axis of the image. (1)
 			 * @param sprites_y the number of sprites on the y axis of the image. (1)
 			 */
-			void loadPng(std::string path, unsigned int sprites_x=1, unsigned int sprites_y=1);
+			void loadPng(std::string& path, unsigned int sprites_x=1, unsigned int sprites_y=1);
 
 			/**
 			 * Loads a wav file and adds it tot he library for future access.
@@ -59,7 +88,7 @@ namespace Hate {
 			 * 
 			 * @param path the path to the file to load.
 			 */
-			void loadWav(std::string path);
+			void loadWav(std::string& path);
 
 			/**
 			 * Loads an image without processing it with OpenGL. (CLEANUP NEEDED)
@@ -71,7 +100,8 @@ namespace Hate {
 			 * @param height a pointer to overwrite with the height.
 			 * @param pixels a list to write the pixels into.
 			 */
-			void quickLoadPng(std::string path, int* width, int* height, int* pixels);
+			bool quickLoadPng(std::string path, unsigned int* width, unsigned int* height, 
+					std::vector<unsigned char>* pixels);
 			
 			/**
 			 * Loads a sound file without processing it in OpenAL. (CLEANUP NEEDED)
@@ -83,7 +113,7 @@ namespace Hate {
 			 * @param header a pointer to a WavHeader.
 			 * @param data a pointer that will point to the data. (NOTE: NEEDS CLEANUP)
 			 */
-			void quickLoadWav(std::string path, WavHeader* header, char* data);
+			bool quickLoadWav(std::string& path, WavHeader* header, std::vector<char>* data);
 
 			/**
 			 * Loads a text file in for reading or writing. (CLEANUP NEEDED) 
@@ -94,7 +124,7 @@ namespace Hate {
 			 * @param path the path to the text file.
 			 * @return a file stream with read and wright access.
 			 */
-			std::fstream loadText(std::string path);
+			std::fstream* openText(std::string& path);
 
 			/**
 			 * Loads a binary file in for reading or writing. (CLEANUP NEEDED)
@@ -105,7 +135,7 @@ namespace Hate {
 			 * @param path the path to the binary file.
 			 * @return a file stream with read and write access.
 			 */
-			std::fstream loadBinary(std::string path);
+			std::fstream* openBinary(std::string& path);
 
 		private:
 			
@@ -115,7 +145,16 @@ namespace Hate {
 			 * @param path path to the file.
 			 * @return a file stream.
 			 */
-			std::fstream open(std::string path);
+			std::fstream* open(std::string& path, std::ios_base::openmode mode);
+
+			// Gets an element from the library, if it doesn't exist, return NULL.
+			void* get(std::string& path);
+		
+			// Removes a void pointer, by casting to to supported types.
+			void unload(void* ptr);
+			
+			// Returns the OS path to the file
+			inline std::string getRealPath(std::string& path);
 
 			// Finds the resource folder or throws an error.
 			void findResourceFolder();
@@ -124,28 +163,7 @@ namespace Hate {
 			std::string resource_path;
 
 			// The resource library.
-			std::unorderd_map<std::string, void*> library;
+			std::unordered_map<std::string, void*> library;
 	};
 
-	//Helper for loading wav files
-	struct WavHeader {
-		/* RIFF Chunk Descriptor */
-		uint8_t		riff[4];        // RIFF Header Magic header
-		uint32_t	chunkSize;      // RIFF Chunk Size
-		uint8_t		wave[4];        // WAVE Header
-		/* "fmt" sub-chunk */
-		uint8_t		fmt[4];         // FMT header
-		uint32_t	subchunkSize;  // Size of the fmt chunk
-		uint16_t	audioFormat;    // Audio format 1=PCM,6=mulaw,7=alaw,     257=IBM Mu-Law, 258=IBM A-Law, 259=ADPCM
-		uint16_t	numOfChan;      // Number of channels 1=Mono 2=Stereo
-		uint32_t	samplesPerSec;  // Sampling Frequency in Hz
-		uint32_t	bytesPerSec;    // bytes per second
-		uint16_t	blockAlign;     // 2=16-bit mono, 4=16-bit stereo
-		uint16_t	bitsPerSample;  // Number of bits per sample
-	};
-
-	struct WavChunk {
-		uint8_t		id[4];
-		uint32_t	size;
-	};
 }

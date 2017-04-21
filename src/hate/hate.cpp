@@ -1,5 +1,5 @@
 #include "hate.h"
-#include "globals.cpp"
+#include "globals.h"
 #include <unistd.h>
 #include <iostream>
 #include <exception>
@@ -7,6 +7,9 @@
 #include <GLFW/glfw3.h>
 
 namespace Hate {
+
+	Hate*   Hate::CORE   = nullptr;
+	Loader* Hate::LOADER = new Loader();
 	
 	Hate::Hate(void(*load)(void), void(*clean)(void)) {
 		CORE = this;
@@ -51,6 +54,7 @@ namespace Hate {
 		while (running) {
 			window->update();
 
+			glBegin(GL_TRIANGLES);
 			glColor3f(0.1, 0.2, 0.3);
 			glVertex3f(0, 0, 0);
 			glVertex3f(1, 0, 0);
