@@ -46,11 +46,6 @@ namespace Hate {
 	}
 
 	void Hate::loop() {
-		int w;
-		int h;
-		window->getSize(&w, &h);
-		std::cout << w << "×" << h << std::endl;
-
 		while (running) {
 			window->update();
 
