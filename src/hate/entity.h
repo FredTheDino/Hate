@@ -59,5 +59,3 @@ namespace hate {
 			std::unordered_map<std::string, Component*> components;
 	};
 }
-
-#include "entity.cpp"

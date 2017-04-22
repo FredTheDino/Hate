@@ -1,4 +1,5 @@
 #pragma once
+#include "hate.h"
 #include "texture.h"
 #include "audio.h"
 #include <unordered_map>
@@ -35,12 +36,14 @@ namespace hate {
 	 * and load everything to the same place.
 	 */
 	class Loader {
-		public:
+		friend Hate;
+		protected:
 			// Initalizes the loader by finding "res/.res" directory.
 			Loader();
 			// Clears out the library.
 			~Loader();
 
+		public:
 			/**
 			 * Retrives a pice of audio from the library.
 			 *

@@ -5,7 +5,7 @@ file (GLOB GAME_FILES "*.cpp" "*.h")
 add_executable (GAME "${GAME_FILES}")
 
 # Include the Hate lib
-include_directories (GAME "${CMAKE_SOURCE_DIR}/src")
+include_directories (GAME "${CMAKE_SOURCE_DIR}/src/hate")
 
 # Link this with the engine
 target_link_libraries (GAME ENGINE)

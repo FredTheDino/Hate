@@ -1,8 +1,8 @@
 #include <iostream>
 
 // Engine
-#include "hate/hate.h"
-#include "hate/entity.h"
+#include "hate.h"
+#include "entity.h"
 
 void load() {
 	std::cout << "Hello world!" << std::endl;
