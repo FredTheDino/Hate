@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Hate {
+namespace hate {
 	/**
 	 * This class is a pice of audio that can be played by OpenAL.
 	 */

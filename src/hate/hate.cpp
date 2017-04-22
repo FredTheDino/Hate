@@ -1,12 +1,14 @@
 #include "hate.h"
-#include "globals.h"
+#include "entity.h"
+#include "entity.cpp"
+#include "component.h"
 #include <unistd.h>
 #include <iostream>
 #include <exception>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-namespace Hate {
+namespace hate {
 
 	Hate*   Hate::CORE   = nullptr;
 	Loader* Hate::LOADER = new Loader();
@@ -46,11 +48,13 @@ namespace Hate {
 	}
 
 	void Hate::loop() {
+		Entity e;
+		e.add(new Component());
 		while (running) {
 			window->update();
 
 			glBegin(GL_TRIANGLES);
-			glColor3f(0.1, 0.2, 0.3);
+			glColor3f(0.3, 0.2, 0.1);
 			glVertex3f(0, 0, 0);
 			glVertex3f(1, 0, 0);
 			glVertex3f(0, 1, 0);

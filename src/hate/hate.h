@@ -2,7 +2,7 @@
 #include "window.h"
 #include "loader.h"
 
-namespace Hate {
+namespace hate {
 	/**
 	 * The core class for using the Hate-Engine
 	 */

@@ -2,6 +2,7 @@
 
 // Engine
 #include "hate/hate.h"
+#include "hate/entity.h"
 
 void load() {
 	std::cout << "Hello world!" << std::endl;
@@ -12,6 +13,6 @@ void clean() {
 }
 
 int main(int c, char** v) {
-	Hate::Hate hate(&load, &clean);
+	hate::Hate hate(&load, &clean);
 	return 0;
 }

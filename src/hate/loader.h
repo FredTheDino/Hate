@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-namespace Hate {
+namespace hate {
 	
 	//Helper for loading wav files
 	struct WavHeader {

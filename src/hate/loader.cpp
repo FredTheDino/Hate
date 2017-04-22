@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace Hate {
+namespace hate {
 
 	Loader::Loader() {
 		resource_path = "res/";
@@ -78,6 +78,7 @@ namespace Hate {
 			buffer->read((char*)&chunk, sizeof(chunk));
 			i++;
 			if (i > 100) {
+				delete buffer;
 				return false;
 			}
 		}
@@ -85,6 +86,7 @@ namespace Hate {
 		data->resize(chunk.size);
 		buffer->read((char*)&chunk, data->size());
 		
+		delete buffer;
 		return true;
 	}
 

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Hate {
+namespace hate {
 	/**
 	 * An OpenGL texture.
 	 */

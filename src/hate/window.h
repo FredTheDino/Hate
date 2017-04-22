@@ -2,7 +2,7 @@
 #include <string>
 
 class GLFWwindow;
-namespace Hate {
+namespace hate {
 	/**
 	 * Makes the creaton of windows easier and wraps it in
 	 * a class for object oriented goodness.

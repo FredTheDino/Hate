@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-namespace Hate {
+namespace hate {
 
 	// The close callback for the window
 	void close_callback(GLFWwindow* window) {
