@@ -2,11 +2,11 @@
 #include <unordered_map>
 #include "component.h"
 
-#define ENTITY
+#define _ENTITY_
 namespace hate {
 
 	// Forward declaration if needed
-#ifndef COMPONENT
+#ifndef _COMPONENT_
 	class Component;
 #endif
 

@@ -1,4 +1,5 @@
 #include "renderengine.h"
+#include <iostream>
 
 namespace hate {
 	RenderEngine::RenderEngine() {}
@@ -18,9 +19,10 @@ namespace hate {
 		layer.erase(layer.begin() + i);
 	}
 
-	void RenderEngine::render() {
+	void RenderEngine::draw() {
 		for (auto layer : layers) {
-			for (Drawable* d : layer->second) {
+			for (size_t i = 0; i < layer.second.size(); i++) {
+				Drawable* d = layer.second[i];
 				d->draw();
 			}
 		}

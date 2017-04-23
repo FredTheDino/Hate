@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 
-#define COMPONENT
+#define _COMPONENT_
 namespace hate {
 	// Forward declaration if needed
-#ifndef ENTITY
+#ifndef _ENTITY_
 	class Entity;
 #endif
 
@@ -18,10 +18,10 @@ namespace hate {
 		friend Entity;
 		public:
 			// Creates a new component.
-			Component();
+			Component() {};
 
 			// Delets this component.
-			~Component();
+			~Component() {};
 
 			/**
 			 * Returns the key for this component type.

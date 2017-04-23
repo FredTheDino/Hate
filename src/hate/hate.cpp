@@ -1,4 +1,6 @@
 #include "hate.h"
+#include "entity.cpp"
+#include "drawable.h"
 #include <iostream>
 #include <exception>
 #include <GL/glew.h>
@@ -6,11 +8,14 @@
 
 namespace hate {
 
-	Hate*   Hate::CORE   = nullptr;
-	Loader* Hate::LOADER = new Loader();
+	Hate*   		Hate::CORE   = nullptr;
+	Loader* 		Hate::LOADER = nullptr; 
+	RenderEngine* 	Hate::ENGINE = nullptr; 
 	
 	Hate::Hate(void(*load)(void), void(*clean)(void)) {
 		CORE = this;
+		LOADER = new Loader();
+        ENGINE = new RenderEngine();
 		this->load = load;
 		this->clean = clean;
 		
@@ -41,12 +46,21 @@ namespace hate {
 
 		// Unalocate the engine
 		delete window;
+		delete LOADER;
+		delete ENGINE;
 	}
 
 	void Hate::loop() {
+		Entity* e = new Entity();
+		Drawable* c = new Drawable();
+		e->add(c);
+
 		while (running) {
 			window->update();
 			running = !window->shouldClose();
+
+			std::cout << "WOOO!" << std::endl;
+			ENGINE->draw();
 
 			glBegin(GL_TRIANGLES);
 			glColor3f(0.3, 0.2, 0.3);
@@ -55,5 +69,7 @@ namespace hate {
 			glVertex3f(0, 1, 0);
 			glEnd();
 		}
+
+		delete e;
 	}
 }

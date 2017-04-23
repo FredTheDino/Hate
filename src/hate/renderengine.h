@@ -4,7 +4,11 @@
 #include "hate.h"
 #include "drawable.h"
 
+#define _RENDERENGINE_
 namespace hate {
+#ifndef _HATE_
+	class Hate;
+#endif
 	/**
 	 * The renderengine handles the drawing of components
 	 * that extend the "drawable" component. These components
@@ -16,8 +20,8 @@ namespace hate {
 	 * engine.
 	 * 
 	 */
-	class RenderEngine() {
-		friend Hate;
+	class RenderEngine {
+		friend class Hate;
 		protected:
 			// Creates a new RenderEngine
 			RenderEngine();
@@ -51,11 +55,11 @@ namespace hate {
 			/**
 			 * Renders everything in the render engine.
 			 */
-			void render();
+			void draw();
 
 		private:
 			// The layers for rendering
 			std::unordered_map<int, std::vector<Drawable*>> layers;
 
-	}
+	};
 }

@@ -1,16 +1,28 @@
 #pragma once
 #include "window.h"
 #include "loader.h"
+#include "renderengine.h"
 
+#define _HATE_
 namespace hate {
+	
+#ifndef _LOADER_
+	class Loader;
+#endif
+
+#ifndef _RENDERENGINE_
+	class RenderEngine;
+#endif
+
 	/**
 	 * The core class for using the Hate-Engine
 	 */
 	class Hate {
 		public:
 			// Static refferneces
-			static Hate*     CORE;
-			static Loader* LOADER;
+			static Hate*     	 CORE;
+			static Loader* 		 LOADER;
+			static RenderEngine* ENGINE;
 
 			/**
 			 * Creates a new Hate engine object.

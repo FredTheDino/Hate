@@ -6,8 +6,13 @@
 #include <fstream>
 #include <vector>
 
+#define _LOADER_
 namespace hate {
-	
+
+#ifndef _HATE_
+	class Hate;
+#endif
+
 	//Helper for loading wav files
 	struct WavHeader {
 		/* RIFF Chunk Descriptor */
@@ -36,7 +41,7 @@ namespace hate {
 	 * and load everything to the same place.
 	 */
 	class Loader {
-		friend Hate;
+		friend class Hate;
 		protected:
 			// Initalizes the loader by finding "res/.res" directory.
 			Loader();
