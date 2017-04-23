@@ -5,7 +5,7 @@ echo ""
 echo "---------- CMAKE ---------"
 export CC=clang
 export CXX=clang++
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 if [ $? -ne 0 ]; then
 	echo "Failed to run Cmake"
