@@ -52,14 +52,12 @@ namespace hate {
 
 	void Hate::loop() {
 		Entity* e = new Entity();
-		Drawable* c = new Drawable();
-		e->add(c);
+		e->add(new Drawable(5));
 
 		while (running) {
 			window->update();
 			running = !window->shouldClose();
 
-			std::cout << "WOOO!" << std::endl;
 			ENGINE->draw();
 
 			glBegin(GL_TRIANGLES);

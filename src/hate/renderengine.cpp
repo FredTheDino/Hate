@@ -1,5 +1,4 @@
 #include "renderengine.h"
-#include <iostream>
 
 namespace hate {
 	RenderEngine::RenderEngine() {}
@@ -12,17 +11,16 @@ namespace hate {
 
 	void RenderEngine::remove(Drawable* drawable) {
 		auto layer = layers[drawable->getLayer()];
-		int i;
-		for (; i < layer.size(); i++) {
-			if (layer[i] == drawable) break;
+		for (int i = 0; i < layer.size(); i++) {
+			if (layer[i] == drawable) {
+				layer.erase(layer.begin() + i);
+			}
 		}
-		layer.erase(layer.begin() + i);
 	}
 
 	void RenderEngine::draw() {
 		for (auto layer : layers) {
-			for (size_t i = 0; i < layer.second.size(); i++) {
-				Drawable* d = layer.second[i];
+			for (Drawable* d : layer.second) {
 				d->draw();
 			}
 		}

@@ -14,13 +14,15 @@ namespace hate {
 	class Drawable : public Component {
 		public:
 			// Constructs a new drawable
-			Drawable();
+			Drawable(int layer=0);
 
 			// Destructor
 			~Drawable();
 
 			// So we can seperate them
 			virtual std::string getKey() { return "drawable-base"; };
+
+			virtual void init();
 
 			/**
 			 * Sets the layer for drawing.
@@ -49,6 +51,5 @@ namespace hate {
 			// The layer is the draworder of the drawables.
 			// If two drawables share a layer the order is not specified.
 			int layer;
-
 	};
 }

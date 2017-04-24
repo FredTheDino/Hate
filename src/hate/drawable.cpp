@@ -4,12 +4,16 @@
 #include "hate.h"
 
 namespace hate {
-	Drawable::Drawable() : Component() {
-		Hate::ENGINE->add(this);
+	Drawable::Drawable(int layer) : Component() {
+		this->layer = layer;
 	}
 
 	Drawable::~Drawable() {
 		Hate::ENGINE->remove(this);
+	}
+
+	void Drawable::init() {
+		Hate::ENGINE->add(this);
 	}
 
 	void Drawable::setLayer(int layer) {
@@ -22,7 +26,5 @@ namespace hate {
 		return layer;
 	}
 
-	void Drawable::draw() {
-		std::cout << "DRAW!" << std::endl;
-	}
+	void Drawable::draw() {}
 }

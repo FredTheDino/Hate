@@ -4,7 +4,12 @@ namespace hate {
 
 	Entity::Entity() {}
 
-	Entity::~Entity() {}
+	Entity::~Entity() {
+		for (auto c : components) {
+			if (c.second)
+				delete c.second;
+		}
+	}
 
 	template <class T> T* Entity::get() {
 		T target;
@@ -18,8 +23,8 @@ namespace hate {
 	}
 
 	template <class T> bool Entity::add(T* component) {
-		if (get<T>()) {
-			components.insert(std::pair<std::string, Component*>(component->getKey(), (Component*) component));
+		if (!get<T>()) {
+			components.insert(std::pair<std::string, Component*>(component->getKey(), component));
 			component->setParent(this);
 			component->init();
 			return true;

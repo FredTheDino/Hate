@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <iostream>
 
 #define _COMPONENT_
 namespace hate {
@@ -21,7 +22,7 @@ namespace hate {
 			Component() {};
 
 			// Delets this component.
-			~Component() {};
+			virtual ~Component() {};
 
 			/**
 			 * Returns the key for this component type.
