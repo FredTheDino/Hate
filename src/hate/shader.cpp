@@ -8,15 +8,16 @@
 
 namespace hate {
 
-	bool checkError(GLuint target, GLenum flag, const char* prefix, bool isProgram) {
-		GLint successfull = 0;
+	bool checkError(GLuint target, GLenum flag, const char* prefix, bool isProgram = false) {
+		GLint success = 1;
 		if (isProgram) {
-			glGetProgramiv(target, flag, &successfull);
+			glGetProgramiv(target, flag, &success);
 		} else {
-			glGetShaderiv(target, flag, &successfull);
+			glGetShaderiv(target, flag, &success);
 		}
-		if (successfull == GL_FALSE) {
-			GLchar error[1024] = {0};
+
+		if (success == GL_FALSE) {
+			GLchar error[512];
 
 			GLsizei length = 0;
 			if (isProgram) {
@@ -25,7 +26,7 @@ namespace hate {
 				glGetShaderInfoLog(target, sizeof(error), &length, error);
 			}
 
-			printf("(%s): %s\n", prefix, error + 1);
+			printf("(%s): %s\n", prefix, error);
 			return false;
 		}
 		return true;
@@ -33,12 +34,15 @@ namespace hate {
 
 	GLuint compileShader(String source, bool vertex) {
 		GLuint shader = glCreateShader(vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+		if (!shader) {
+			printf("Cannot allocate shader.");
+			return -1;
+		}
 
-		const GLchar* src = source.c_str();
-		int length = source.size();
-		glShaderSource(shader, 1, &src, &length);
+		const GLchar* src = (GLchar*) source.c_str();
+		glShaderSource(shader, 1, &src, NULL);
 
-		if (!checkError(shader, GL_COMPILE_STATUS, "Shader Compilation", false)) {
+		if (!checkError(shader, GL_COMPILE_STATUS, "Shader Compilation")) {
 			glDeleteShader(shader); // Don't leak the shader.
 			return -1;
 		}
@@ -106,12 +110,12 @@ namespace hate {
 		readFileToBuffer(path, &buffer);
 
 		GLuint vertexShader = compileShader(&buffer[0], true);
+		if (vertexShader == -1) throw 1;
 
 		toFragmentShader(&buffer);
 
 		GLuint fragmentShader = compileShader(&buffer[0], false);
-
-		if (vertexShader == -1 || fragmentShader == -1) throw 1;
+		if (fragmentShader == -1) throw 1;
 
 		GLuint program = linkProgram(vertexShader, fragmentShader);
 		if (program == -1) throw 2;
@@ -145,6 +149,7 @@ namespace hate {
 
 #ifdef DEBUG
 	void Shader::recompileIfChanged() {
+		// Check if the timestamp has changed
 		struct stat attr;
 		stat(path.c_str(), &attr);
 		long newTimeStamp = attr.st_mtime;

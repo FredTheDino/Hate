@@ -1,11 +1,13 @@
 #!/bin/bash
+mkdir bin
+cd bin
 clear
 echo ""
 echo ""
 echo "---------- CMAKE ---------"
 export CC=clang
 export CXX=clang++
-cmake -DCMAKE_CXX_FLAGS=-g  -DCMAKE_BUILD_TYPE=Debug ..
+cmake -DCMAKE_CXX_FLAGS=-g  -DCMAKE_BUILD_TYPE=Debug .. 
 
 if [ $? -ne 0 ]; then
 	echo "Failed to run Cmake"

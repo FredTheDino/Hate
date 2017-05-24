@@ -52,7 +52,7 @@ namespace hate {
 			void disable() { enabled = false; }
 
 			// Toggles the enabled state of the component.
-			void toggle() { enabled != enabled; }
+			void toggle() { enabled = !enabled; }
 
 			void setEnabled(bool state) { enabled = state; }
 
