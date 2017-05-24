@@ -2,6 +2,7 @@
 #include "window.h"
 #include "loader.h"
 #include "renderengine.h"
+#include "shader.h"
 
 #define _HATE_
 namespace hate {
@@ -23,6 +24,7 @@ namespace hate {
 			static Hate*     	 CORE;
 			static Loader* 		 LOADER;
 			static RenderEngine* ENGINE;
+			static Shader*		 SHADER;
 
 			/**
 			 * Creates a new Hate engine object.

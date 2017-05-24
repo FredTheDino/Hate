@@ -1,5 +1,7 @@
 #pragma once
 #include "component.h"
+#include "texture.h"
+#include "mesh.h"
 
 
 #define _DRAWABLE_
@@ -44,6 +46,9 @@ namespace hate {
 			 *
 			 * Thie function is made to be overwritten and alows
 			 * different kinds of rendering.
+			 *
+			 * By default this uses a simple orthographic shader,
+			 * but this can also be over written.
 			 */
 			virtual void draw();
 
@@ -51,5 +56,11 @@ namespace hate {
 			// The layer is the draworder of the drawables.
 			// If two drawables share a layer the order is not specified.
 			int layer;
+
+			// The mesh the drawable should use.
+			Mesh mesh;
+			
+			// The texture the mesh should use
+			Texture texture;
 	};
 }

@@ -60,6 +60,5 @@ namespace hate {
 		private:
 			// The layers for rendering
 			std::unordered_map<int, std::vector<Drawable*>> layers;
-
 	};
 }

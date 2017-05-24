@@ -3,30 +3,30 @@
 
 namespace hate {
 	/**
-	 * An OpenGL texture.
+	 * An OpenGL mesh.
 	 */
-	class Texture {
+	class Mesh {
 		public:
 			/**
-			 * Creates a new OpenGL texture
+			 * Creates a new OpenGL mesh
 			 * that is cached on the graphicscard.
 			 */
-			Texture() {}
+			Mesh() {}
 
 			/**
 			 * Deletes the data stored locally.
 			 */
-			~Texture() {}
+			~Mesh() {}
 
 			/**
 			 * Cleans up the graphicscard so
 			 * there aren't a bunch of unallocated 
-			 * textures floating about.
+			 * meshs floating about.
 			 */
 			void clean() {}
 
 			/**
-			 * Binds the texture to the specified
+			 * Binds the mesh to the specified
 			 * slot for the shader to use.
 			 */
 			void bind(int slot) {
@@ -34,7 +34,10 @@ namespace hate {
 			}
 
 		private:
-			// The OpenGL id of the texture.
-			int id;
+			// The OpenGL id of the VBO.
+			int vbo;
+			
+			// The OpenGL id of the VAO.
+			int vao;
 	};
 }

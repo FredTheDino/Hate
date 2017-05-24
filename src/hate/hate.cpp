@@ -1,21 +1,21 @@
 #include "hate.h"
 #include "entity.cpp"
 #include "drawable.h"
+#include "platform.h"
 #include <iostream>
 #include <exception>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 namespace hate {
 
 	Hate*   		Hate::CORE   = nullptr;
 	Loader* 		Hate::LOADER = nullptr; 
 	RenderEngine* 	Hate::ENGINE = nullptr; 
+	Shader* 		Hate::SHADER = nullptr; 
 	
 	Hate::Hate(void(*load)(void), void(*clean)(void)) {
+		// These can be set here.
 		CORE = this;
 		LOADER = new Loader();
-        ENGINE = new RenderEngine();
 		this->load = load;
 		this->clean = clean;
 		
@@ -30,6 +30,10 @@ namespace hate {
 		if (glewInit()) {
 			throw std::runtime_error("Failed to initalize GLEW\n");
 		}
+
+		// These need OpenGL
+        ENGINE = new RenderEngine();
+		SHADER = new Shader("master.glsl");
 
 		// Call load
 		(*this->load)();
@@ -48,6 +52,7 @@ namespace hate {
 		delete window;
 		delete LOADER;
 		delete ENGINE;
+		delete SHADER;
 	}
 
 	void Hate::loop() {
