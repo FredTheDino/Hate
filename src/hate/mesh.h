@@ -1,7 +1,19 @@
 #pragma once
 #include "platform.h"
+#include "math.h"
 
 namespace hate {
+	struct Vertex {
+		Vec2 position;
+		Vec2 texCoord;
+
+		Vertex(float x, float y, float u, float v) {
+			position = Vec2(x, y);
+			texCoord = Vec2(u, v);
+		}
+	};
+
+
 	/**
 	 * An OpenGL mesh.
 	 */
@@ -11,33 +23,37 @@ namespace hate {
 			 * Creates a new OpenGL mesh
 			 * that is cached on the graphicscard.
 			 */
-			Mesh() {}
+			Mesh();
 
 			/**
 			 * Deletes the data stored locally.
 			 */
-			~Mesh() {}
+			~Mesh();
 
 			/**
 			 * Cleans up the graphicscard so
 			 * there aren't a bunch of unallocated 
 			 * meshs floating about.
 			 */
-			void clean() {}
+			void clean();
 
 			/**
-			 * Binds the mesh to the specified
-			 * slot for the shader to use.
+			 * Draws the mesh
 			 */
-			void bind(int slot) {
-				
-			}
+			void draw();
 
 		private:
+			// Initalizes the mesh
+			void init();
+
+			// How many verticies should be draw.
+			unsigned int drawLength;
+
 			// The OpenGL id of the VBO.
-			int vbo;
-			
+			GLuint vbo,
 			// The OpenGL id of the VAO.
-			int vao;
+			vao,
+			// The OpenGL indicies.
+			ebo;
 	};
 }

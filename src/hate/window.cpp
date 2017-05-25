@@ -61,7 +61,7 @@ namespace hate {
 	void Window::update() {
 		glfwPollEvents();
 		glfwSwapBuffers(glfw_window);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void Window::show() {
@@ -108,6 +108,10 @@ namespace hate {
 
 	bool Window::shouldClose() {
 		return glfwWindowShouldClose(glfw_window);
+	}
+
+	void Window::setSwapInverval(int i) {
+		glfwSwapInterval(i);
 	}
 
 	GLFWwindow* Window::getWindow() {

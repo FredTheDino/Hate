@@ -7,16 +7,17 @@ in vec4 position;
 out vec4 out_position;
 
 void main() {
+	//
 	out_position = position;
 }
-
 #endif 
 
 #ifdef FRAG
 out vec4 color;
 
 void main() {
-	color = vec4(1, 1, 0, 1);
+	color = vec4(1, 1, 1, 1);
 }
-
 #endif
+
+

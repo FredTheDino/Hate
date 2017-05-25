@@ -100,6 +100,11 @@ namespace hate {
 			void setIcon(std::string path);
 
 			/**
+			 * Sets the swap interval, same thing as Vsync.
+			 */
+			void setSwapInverval(int i = 1);
+
+			/**
 			 * Returns the GLFWwindow that lies beind this wrapping.
 			 * @return the GLFWwinow
 			 */

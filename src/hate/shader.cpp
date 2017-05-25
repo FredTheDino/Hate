@@ -27,9 +27,9 @@ namespace hate {
 			}
 
 			printf("(%s): %s\n", prefix, error);
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	GLuint compileShader(String source, bool vertex) {
@@ -42,7 +42,9 @@ namespace hate {
 		const GLchar* src = (GLchar*) source.c_str();
 		glShaderSource(shader, 1, &src, NULL);
 
-		if (!checkError(shader, GL_COMPILE_STATUS, "Shader Compilation")) {
+		glCompileShader(shader);
+
+		if (checkError(shader, GL_COMPILE_STATUS, "Shader Compilation")) {
 			glDeleteShader(shader); // Don't leak the shader.
 			return -1;
 		}
@@ -58,7 +60,7 @@ namespace hate {
 
 		glLinkProgram(program);
 
-		if(!checkError(program, GL_LINK_STATUS, "Program Linking", true)) {
+		if(checkError(program, GL_LINK_STATUS, "Program Linking", true)) {
 			//We don't need the program anymore.
 			glDeleteProgram(program);
 			//Don't leak shaders either.
@@ -96,6 +98,7 @@ namespace hate {
 		for (int i = 0; i < buffer->size(); i++) {
 			if ((*buffer)[i] == 'V') {
 				start = i;
+				break;
 			}
 		}
 
@@ -121,20 +124,20 @@ namespace hate {
 		if (program == -1) throw 2;
 
 		glValidateProgram(program);
-		if (!checkError(program, GL_VALIDATE_STATUS, "Validation Error", true)) throw 3;
+		if (checkError(program, GL_VALIDATE_STATUS, "Validation Error", true)) throw 3;
 
 		return program;
 	}
 
 	Shader::Shader(String path) {
-		this->path = path;
-
 #ifdef DEBUG
 		// Initalize the timestamp!
 		struct stat attr;
-		stat(path.c_str(), &attr);
+		stat(Hate::LOADER->getRealPath(path).c_str(), &attr);
 		lastTimeStamp = attr.st_mtime;
 #endif
+
+		this->path = path;
 		program = compile();
 	}
 
@@ -151,21 +154,27 @@ namespace hate {
 	void Shader::recompileIfChanged() {
 		// Check if the timestamp has changed
 		struct stat attr;
-		stat(path.c_str(), &attr);
-		long newTimeStamp = attr.st_mtime;
+		stat(Hate::LOADER->getRealPath(path).c_str(), &attr);
+		long timeStamp = attr.st_mtime;
 
-		if (lastTimeStamp != newTimeStamp) {
-			lastTimeStamp = newTimeStamp;
+		/*
+		printf("ts: %lu\n", timeStamp);
+		printf("ps: %lu\n", lastTimeStamp);
+		*/
+
+		if (lastTimeStamp < timeStamp) {
+			printf("Recompiling shader...\n");
+			lastTimeStamp = timeStamp;
 			// We should recompile everything!
 			GLuint newProgram;
 			try {
 				newProgram = compile();
 			} catch (int e) {
+				printf("Failed to recompile shader (error: %d)\n", e);
 				return;
 			}
 
 			glDeleteProgram(program);
-			
 			program = newProgram;
 		}
 	}

@@ -145,6 +145,8 @@ namespace hate {
 			 */
 			std::fstream* openBinary(std::string& path);
 
+			// Returns the OS path to the file
+			std::string getRealPath(std::string& path);
 		private:
 			
 			/**
@@ -160,9 +162,6 @@ namespace hate {
 		
 			// Removes a void pointer, by casting to to supported types.
 			void unload(void* ptr);
-			
-			// Returns the OS path to the file
-			inline std::string getRealPath(std::string& path);
 
 			// Finds the resource folder or throws an error.
 			void findResourceFolder();
