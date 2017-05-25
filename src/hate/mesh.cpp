@@ -10,18 +10,19 @@ namespace hate {
 		glGenBuffers(1, &vbo);
 		glGenBuffers(1, &ebo);
 
+		// TODO: Don't hard code this stuff.
 		std::vector<Vertex> verticies;
-		verticies.push_back(Vertex(0, 0, 0, 0));
-		verticies.push_back(Vertex(1, 0, 0, 0));
-		verticies.push_back(Vertex(1, 1, 0, 0));
-		verticies.push_back(Vertex(0, 1, 0, 0));
+		verticies.push_back(Vertex(-1, -1, 1, 0));
+		verticies.push_back(Vertex( 0,  1, 0, 1));
+		verticies.push_back(Vertex( 0,  0, 1, 0));
+		verticies.push_back(Vertex( 1, -1, 0, 1));
 
 		std::vector<GLuint> indicies;
 		indicies.push_back(0);
+		indicies.push_back(2);
+		indicies.push_back(1);
 		indicies.push_back(1);
 		indicies.push_back(2);
-		indicies.push_back(2);
-		indicies.push_back(0);
 		indicies.push_back(3);
 
 		drawLength = indicies.size();
@@ -38,11 +39,12 @@ namespace hate {
 
 			// Position
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 2, GL_FALSE, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 			
-			// Position
+			// Texture coordinate
 			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 2, GL_FALSE, GL_FALSE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, texCoord));
+			printf("Offset: %lu\n", offsetof(Vertex, texCoord));
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) offsetof(Vertex, texCoord));
 		}
 		glBindVertexArray(0);
 	}
@@ -58,6 +60,7 @@ namespace hate {
 	void Mesh::draw() {
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, drawLength, GL_UNSIGNED_INT, 0);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
 		glBindVertexArray(0);
 	}
 }

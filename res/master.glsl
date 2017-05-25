@@ -2,21 +2,27 @@
 #define VERT
 precision highp float;
 
+uniform float t;
+
 #ifdef VERT
-in vec4 position;
-out vec4 out_position;
+layout(location=0) in highp vec2 in_pos;
+layout(location=1) in highp vec2 in_texCoords;
+
+out vec2 pass_texCoord;
 
 void main() {
-	//
-	out_position = position;
+	gl_Position = vec4(in_pos.x, -in_pos.y, 0, 1);
+	pass_texCoord = in_texCoords;
 }
 #endif 
 
 #ifdef FRAG
-out vec4 color;
+out highp vec4 color;
+
+in vec2 pass_texCoord;
 
 void main() {
-	color = vec4(1, 1, 1, 1);
+	color = vec4(sin(t) * 0.5 + 0.5, cos(t) * 0.5 + 0.5, 1, 1);
 }
 #endif
 

@@ -3,7 +3,6 @@ mkdir bin
 cd bin
 clear
 echo ""
-echo ""
 echo "---------- CMAKE ---------"
 export CC=clang
 export CXX=clang++
@@ -23,15 +22,18 @@ if [ $? -ne 0 ]; then
 	exit;
 fi
 
-if [[ $0 -eq "build" ]]; then
+if [[ $1 = "build" ]]; then
 	echo "Done"
 	exit;
 fi
 
-if [[ $0 -eq "debug" ]]; then
+if [[ $1 = "debug" ]]; then
 	echo ""
-	echo "---------- RUN ---------"
+	echo "---------- DEBUG ---------"
 	gdb ./src/game/GAME -x run
 else
+	echo ""
+	echo "---------- RUN ---------"
 	./src/game/GAME
 fi
+echo ""

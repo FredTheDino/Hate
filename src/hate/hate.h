@@ -3,6 +3,7 @@
 #include "loader.h"
 #include "renderengine.h"
 #include "shader.h"
+#include "clock.h"
 
 #define _HATE_
 namespace hate {
@@ -20,11 +21,13 @@ namespace hate {
 	 */
 	class Hate {
 		public:
+
 			// Static refferneces
 			static Hate*     	 CORE;
 			static Loader* 		 LOADER;
 			static RenderEngine* ENGINE;
 			static Shader*		 SHADER;
+			static Clock* 		 CLOCK;
 
 			/**
 			 * Creates a new Hate engine object.

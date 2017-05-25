@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <utility>
 #include <vector>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -88,6 +89,9 @@ namespace hate {
 		file->read(&(*buffer)[0], length);
 		file->close();
 		delete file;
+		
+		// The buffer read isn't null terminated, but it is now.
+		buffer->push_back('\0');
 	}
 
 	void toFragmentShader(std::vector<GLchar>* buffer) {
@@ -108,6 +112,31 @@ namespace hate {
 		}
 	}
 
+	std::unordered_map<std::string, int> checkUniforms(GLuint program) {
+		// Gets the number of uniforms
+		GLint count = 0;
+		glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
+
+		std::unordered_map<std::string, int> uniforms;
+
+		for (int i = 0; i < count; i++) {
+			char name[512];
+			GLenum type;
+			glGetActiveUniform(program, (GLuint)i, sizeof(name), nullptr, nullptr, &type, name);
+			std::string s(name, 0, sizeof(name));
+			uniforms.insert(std::make_pair(s, i));
+		}
+		return uniforms;
+	}
+
+	int Shader::location(std::string name) {
+		auto location = uniforms.find(name);
+		if (location != uniforms.end()) {
+			return location->second;
+		}
+		return -1;
+	}
+
 	GLuint Shader::compile() {
 		std::vector<GLchar> buffer;
 		readFileToBuffer(path, &buffer);
@@ -125,6 +154,8 @@ namespace hate {
 
 		glValidateProgram(program);
 		if (checkError(program, GL_VALIDATE_STATUS, "Validation Error", true)) throw 3;
+
+		uniforms = checkUniforms(program);
 
 		return program;
 	}
@@ -147,6 +178,7 @@ namespace hate {
 
 	void Shader::bind() {
 		glUseProgram(program);
+		glUniform1f(location("t"), Hate::CLOCK->getTime());
 	}
 
 
@@ -157,26 +189,29 @@ namespace hate {
 		stat(Hate::LOADER->getRealPath(path).c_str(), &attr);
 		long timeStamp = attr.st_mtime;
 
-		/*
-		printf("ts: %lu\n", timeStamp);
-		printf("ps: %lu\n", lastTimeStamp);
-		*/
-
-		if (lastTimeStamp < timeStamp) {
-			printf("Recompiling shader...\n");
+		if (lastTimeStamp != timeStamp) {
 			lastTimeStamp = timeStamp;
-			// We should recompile everything!
-			GLuint newProgram;
-			try {
-				newProgram = compile();
-			} catch (int e) {
-				printf("Failed to recompile shader (error: %d)\n", e);
-				return;
-			}
-
-			glDeleteProgram(program);
-			program = newProgram;
+			recompileTimer = 0;
+			return;
 		}
+
+		recompileTimer += Hate::CLOCK->getDelta();
+		float timeToRecompile = 0.1f;
+		if (recompileTimer < timeToRecompile || 1 + timeToRecompile < recompileTimer) return;
+		recompileTimer++;
+
+		// We should recompile everything!
+		printf("Recompiling shader...\n");
+		GLuint newProgram;
+		try {
+			newProgram = compile();
+		} catch (int e) {
+			printf("Failed to recompile shader (error: %d)\n", e);
+			return;
+		}
+
+		glDeleteProgram(program);
+		program = newProgram;
 	}
 #endif
 }

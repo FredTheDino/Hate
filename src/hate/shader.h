@@ -1,4 +1,5 @@
 #pragma once
+#include <unordered_map>
 #include "platform.h"
 
 namespace hate {
@@ -30,11 +31,23 @@ namespace hate {
 			// doesn't succseed, it pretends the shader
 			// isn't dirty and runs with that is has.
 			void recompileIfChanged();
+
+			// If the engine should recompile the next time.
+			double recompileTimer = 0;
 			
 			// The last time the file was changed.
 			long lastTimeStamp = 0;
 #endif
+			/**
+			 * Gets the location of the uniform with the specified name.
+			 *
+			 * If nothing is found, -1 is returned.
+			 */
+			int location(std::string name);
 		private:
+			// A list of the uniforms and thier locations.
+			std::unordered_map<std::string, int> uniforms;
+
 			// The program.
 			GLuint program;
 

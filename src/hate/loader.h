@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <vector>
+#include <string>
 
 #define _LOADER_
 namespace hate {

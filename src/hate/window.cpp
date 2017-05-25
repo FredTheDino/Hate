@@ -15,6 +15,7 @@ namespace hate {
 	Window::Window(const char* title, unsigned int monitor, bool fullscreen) 
 		: Window(0, 0, title, monitor, fullscreen) {}
 
+
 	Window::Window(unsigned int width, unsigned int height, const char* title, unsigned int monitor, bool fullscreen) {
 		int monitor_count = 0;
 		GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
@@ -45,6 +46,7 @@ namespace hate {
 		// Dat readability tho!
 		GLFWmonitor* m = fullscreen ? monitors[monitor] : NULL;
 		glfw_window = glfwCreateWindow(width, height, title, m, NULL);
+		setSize(width, height);
 
 		setIcon("icon.png");
 
@@ -56,12 +58,12 @@ namespace hate {
 
 	Window::~Window() {
 		glfwDestroyWindow(glfw_window);
+		glfwTerminate();
 	}
 
 	void Window::update() {
-		glfwPollEvents();
 		glfwSwapBuffers(glfw_window);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glfwPollEvents();
 	}
 
 	void Window::show() {
@@ -74,6 +76,7 @@ namespace hate {
 
 	void Window::setSize(unsigned int width, unsigned int height) {
 		glfwSetWindowSize(glfw_window, width, height);
+		glViewport(0, 0, width, height);
 	}
 
 	void Window::getSize(int* width, int* height) {
@@ -97,6 +100,7 @@ namespace hate {
 		unsigned int w, h;
 
 		std::vector<unsigned char> pixels;
+		printf("loader: %p\n", Hate::LOADER);
 		Hate::LOADER->quickLoadPng(path, &w, &h, &pixels);
 	
 		image.width = w;
