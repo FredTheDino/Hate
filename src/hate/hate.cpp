@@ -41,6 +41,10 @@ namespace hate {
 		SHADER = new Shader("master.glsl");
 		CLOCK  = new Clock();
 
+		// So this is apparently needed on Linux...
+		// It's here as a precaution now.
+		glEnable(GL_DEPTH_TEST);
+
 		// Call load
 		(*this->load)();
 
@@ -67,22 +71,14 @@ namespace hate {
 		e->add(new Drawable(5));
 
 		CLOCK->zero();
-
-		Mesh m;
+		Mesh* m = LOADER->loadMesh("suzanne.obj");
 		double delta = 0;
-		double timer = 0;
 		while (running) {
 			window->update();
 			running = !window->shouldClose();
 
 			CLOCK->update();
 			delta = CLOCK->getDelta();
-
-			timer += delta;
-			if (timer > 1) {
-				timer -= 1;
-				printf("FPS: %i\n", CLOCK->getFPS());
-			}
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //			ENGINE->draw();
@@ -94,7 +90,7 @@ namespace hate {
 
 			SHADER->bind();
 
-			m.draw();
+			m->draw();
 		}
 
 		delete e;

@@ -2,6 +2,8 @@
 #include "hate.h"
 #include "texture.h"
 #include "audio.h"
+#include "mesh.h"
+#include "platform.h"
 #include <unordered_map>
 #include <fstream>
 #include <vector>
@@ -98,6 +100,22 @@ namespace hate {
 			 * @param path the path to the file to load.
 			 */
 			void loadWav(std::string& path);
+
+			/**
+			 * Loads a mesh to the GPU and generates a VAO for it which is returned.
+			 *
+			 * Currently supports:
+			 * 		.obj
+			 *
+			 * This is THE way to load meshesh. If you find this function limiting,
+			 * expand it so it supports your desired format, but don't make a new 
+			 * one... You heard me!
+			 *
+			 * @param path the path to the file with the mesh.
+			 * @return VAO
+			 */
+			Mesh* loadMesh(std::string& path);
+			Mesh* loadMesh(const char* path);
 
 			/**
 			 * Loads an image without processing it with OpenGL. (CLEANUP NEEDED)

@@ -155,21 +155,26 @@ namespace hate {
 		glValidateProgram(program);
 		if (checkError(program, GL_VALIDATE_STATUS, "Validation Error", true)) throw 3;
 
-		uniforms = checkUniforms(program);
-
 		return program;
 	}
 
-	Shader::Shader(String path) {
 #ifdef DEBUG
-		// Initalize the timestamp!
+	long lastEditTime(std::string path) {
 		struct stat attr;
 		stat(Hate::LOADER->getRealPath(path).c_str(), &attr);
-		lastTimeStamp = attr.st_mtime;
+		return attr.st_mtime;
+	}
+#endif
+
+	Shader::Shader(String path) {
+
+#ifdef DEBUG
+		lastTimeStamp = lastEditTime(path);
 #endif
 
 		this->path = path;
 		program = compile();
+		uniforms = checkUniforms(program);
 	}
 
 	Shader::~Shader() {
@@ -185,9 +190,7 @@ namespace hate {
 #ifdef DEBUG
 	void Shader::recompileIfChanged() {
 		// Check if the timestamp has changed
-		struct stat attr;
-		stat(Hate::LOADER->getRealPath(path).c_str(), &attr);
-		long timeStamp = attr.st_mtime;
+		long timeStamp = lastEditTime(path);
 
 		if (lastTimeStamp != timeStamp) {
 			lastTimeStamp = timeStamp;

@@ -1,14 +1,19 @@
 #pragma once
 #include "platform.h"
 #include "math.h"
+#include <vector>
 
 namespace hate {
 	struct Vertex {
-		Vec2 position;
+		Vec3 position;
+		Vec3 normal;
 		Vec2 texCoord;
 
-		Vertex(float x, float y, float u, float v) {
-			position = Vec2(x, y);
+		Vertex() {}
+
+		Vertex(float x, float y, float z, float nx, float ny, float nz, float u, float v) {
+			position = Vec3(x, y, z);
+			normal = Vec3(nx, ny, nz);
 			texCoord = Vec2(u, v);
 		}
 	};
@@ -42,9 +47,8 @@ namespace hate {
 			 */
 			void draw();
 
-		private:
 			// Initalizes the mesh
-			void init();
+			void init(std::vector<Vertex>& verticies, std::vector<GLuint>& indicies);
 
 			// How many verticies should be draw.
 			unsigned int drawLength;

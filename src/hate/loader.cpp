@@ -2,6 +2,8 @@
 #include "lodepng.h"
 
 #include <iostream>
+#include <sstream>
+#include <assert.h>
 
 namespace hate {
 
@@ -41,6 +43,99 @@ namespace hate {
 		//TODO
 	}
 
+	std::vector<std::string> split(std::string line, char delim) {
+		std::vector<std::string> lines;
+		std::stringstream ss;
+		ss.str(line);
+
+		std::string piece;
+		while (std::getline(ss, piece, delim)) {
+			lines.push_back(piece);
+		}
+		return lines;
+	}
+
+	Mesh* Loader::loadMesh(const char* path) {
+		std::string p(path);
+		return loadMesh(p);
+	}
+	Mesh* Loader::loadMesh(std::string& path) {
+		{
+			auto m = library.find(path);
+			if (m != library.end()) {
+				return (Mesh*) m->second;
+			}
+		}
+		// Open file
+		// Send to GPU
+		// Return VBO
+		std::vector<Vertex> verticies;
+		std::vector<GLuint> indicies;
+
+		// Load into the vectors.
+		if (path.find(".obj") != std::string::npos) {
+			// NOTE: THIS IS TEXT
+			auto file = openText(path);
+			if (!file) {
+				printf("Cannot load mesh: \"%s\"\nCannot open file.", path.c_str());
+				assert(0);
+			}
+			
+			std::string line;
+			std::vector<Vec3> positions;
+			std::vector<Vec3> normals;
+			std::vector<Vec2> texCoords;
+			while (std::getline(*file, line)) {
+				auto splits = split(line, ' ');
+				if (splits[0] == "v") {
+					Vec3 pos;
+					pos.x = std::stof(splits[1]);
+					pos.y = std::stof(splits[2]);
+					pos.z = std::stof(splits[3]);
+					positions.push_back(pos);
+				} else if (splits[0] == "vn") {
+					Vec3 nor;
+					nor.x = std::stof(splits[1]);
+					nor.y = std::stof(splits[2]);
+					nor.z = std::stof(splits[3]);
+					normals.push_back(nor);
+				} else if (splits[0] == "vt") {
+					Vec2 tex;
+					tex.x = std::stof(splits[1]);
+					tex.y = std::stof(splits[2]);
+					texCoords.push_back(tex);
+				} else if (splits[0] == "f") {
+					for (int i = 1; i < splits.size(); i++) {
+						auto vert = split(splits[i], '/');
+						Vertex v;
+						v.position = positions[std::stoi(vert[0]) - 1];
+						
+						if (vert.size() > 1) {
+							if (!vert[1].empty())
+								v.texCoord = texCoords[std::stoi(vert[1]) - 1];
+							if (vert.size() == 3)
+								if (!vert[2].empty())
+									v.normal = normals[std::stoi(vert[2]) - 1];
+						}
+
+						indicies.push_back(verticies.size());
+						verticies.push_back(v);
+					}
+				}
+			}
+		} else {
+			printf("Failed to load mesh: \"%s\"\n	Unsussported file format.\n", path.c_str());
+			assert(0);
+		}
+
+		// Prepare the mesh
+		Mesh* m = new Mesh();
+		m->init(verticies, indicies);
+
+		library.insert(std::make_pair(path, m));
+
+		return m;
+	}
 
 	bool Loader::quickLoadPng(std::string path, unsigned int* width, unsigned int* height, 
 			std::vector<unsigned char>* pixels) {
