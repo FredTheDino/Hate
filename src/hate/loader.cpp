@@ -44,10 +44,7 @@ namespace hate {
 
 	bool Loader::quickLoadPng(std::string path, unsigned int* width, unsigned int* height, 
 			std::vector<unsigned char>* pixels) {
-		printf("This: %p\n", (void*)this);
-		auto cPath = getRealPath(path);
-		printf("path: %s\n", cPath.c_str());
-		unsigned int e = lodepng::decode(*pixels, *width, *height, cPath);
+		unsigned int e = lodepng::decode(*pixels, *width, *height, resource_path + path);
 		if (e) {
 			std::cout << "Decoder error for \"res/" << path << "\" "  
 					<< e << ": " << lodepng_error_text(e) << std::endl;	

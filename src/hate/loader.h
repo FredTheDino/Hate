@@ -148,6 +148,7 @@ namespace hate {
 
 			// Returns the OS path to the file
 			std::string getRealPath(std::string& path);
+
 		private:
 			
 			/**

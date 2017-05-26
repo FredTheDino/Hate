@@ -19,7 +19,6 @@ namespace hate {
 		// These can be set here.
 		CORE = this;
 		LOADER = new Loader();
-		printf("loader: %p\n", LOADER);
 		this->load = load;
 		this->clean = clean;
 

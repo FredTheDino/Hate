@@ -1,0 +1,3 @@
+TODO: Give enities a name. Scrap the component system like it is now and change it so entities have a list of stuff they can have on them and make a drawable be one of those. This way, the engine stays simple and doesn't get over engineered.
+
+Seg fault in Loader.

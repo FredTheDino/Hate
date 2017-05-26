@@ -100,7 +100,6 @@ namespace hate {
 		unsigned int w, h;
 
 		std::vector<unsigned char> pixels;
-		printf("loader: %p\n", Hate::LOADER);
 		Hate::LOADER->quickLoadPng(path, &w, &h, &pixels);
 	
 		image.width = w;
