@@ -1,14 +1,10 @@
 #pragma once
 #include <unordered_map>
-#include "component.h"
+#include "drawable.h"
+#include "transform.h"
 
 #define _ENTITY_
 namespace hate {
-
-	// Forward declaration if needed
-#ifndef _COMPONENT_
-	class Component;
-#endif
 
 	/**
 	 * The entity typename holds components witch are
@@ -17,45 +13,29 @@ namespace hate {
 	class Entity {
 		public:
 			// Creates a new entity.
-			Entity();
+			Entity(std::string name = "");
 
 			// Destroys an entity and all its components.
 			~Entity();
 
-			// Returns the component of type if it finds it, null otherwise.
-			template <class T>
-				T* get();
+			// A name that can be given during creation.
+			std::string name = "";
 
-			// Adds the component to the entity.
-			template <class T>
-				bool add(T* component);
+			// If the entity should be trashed.
+			bool trash = false;
 
-			// Removes the component from the entity.
-			template <class T>
-				void remove();
+			// A transform that every entity has.
+			Transform transform;
+			// A drawable, that allows you to draw this.
+			Drawable drawable;
 
-			// Disables a specified component.
-			template <class T>
-				void disable();
+			// Updates everything that is needed to be
+			// updated.
+			void update(float delta);
 
-			// Disables all components.
-			void disableAll();
-
-			// Enables the component.
-			template <class T>
-				void enable();
-
-			// Enables all the components.
-			void enableAll();
-	
-			// Toggles the components enabled state.
-			template <class T>
-				void toggle();
-			
-			// Toggles all the components.
-			void toggleAll();
+			// What you should do when you want to draw.
+			void draw();
 
 		private:
-			std::unordered_map<std::string, Component*> components;
 	};
 }

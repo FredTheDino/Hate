@@ -1,2 +1,3 @@
 #!/usr/bin/bash
-nvim src/**/*.h src/**/*.cpp res/master.glsl
+nvim TODO src/**/*.h src/**/*.cpp res/master.glsl
+

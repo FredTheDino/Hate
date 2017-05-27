@@ -4,6 +4,8 @@
 #include "renderengine.h"
 #include "shader.h"
 #include "clock.h"
+#include "camera.h"
+#include "entitymanager.h"
 
 #define _HATE_
 namespace hate {
@@ -23,11 +25,13 @@ namespace hate {
 		public:
 
 			// Static refferneces
-			static Hate*     	 CORE;
-			static Loader* 		 LOADER;
-			static RenderEngine* ENGINE;
-			static Shader*		 SHADER;
-			static Clock* 		 CLOCK;
+			static Hate*     		CORE;
+			static Loader* 			LOADER;
+			static RenderEngine*	ENGINE;
+			static Shader*			SHADER;
+			static Clock* 			CLOCK;
+			static Camera*			CAMERA;
+			static EntityManager* 	EM;
 
 			/**
 			 * Creates a new Hate engine object.

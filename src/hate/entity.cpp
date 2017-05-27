@@ -1,81 +1,26 @@
 #include "entity.h"
+#include "hate.h"
+#include "entitymanager.h"
 
 namespace hate {
 
-	Entity::Entity() {}
-
-	Entity::~Entity() {
-		for (auto c : components) {
-			if (c.second)
-				delete c.second;
-		}
+	Entity::Entity(std::string name) {
+		this->name = name;
+		if (!name.empty())
+			Hate::EM->add(this, name);
+		else
+			Hate::EM->add(this);
 	}
 
-	template <class T> T* Entity::get() {
-		T target;
-		auto found = components.find(target.getKey());
+	Entity::~Entity() {}
 
-		if (found == components.end()) {
-			return nullptr;
-		}
+	void Entity::update(float delta) {
 
-		return (T*) found->second;
 	}
 
-	template <class T> bool Entity::add(T* component) {
-		if (!get<T>()) {
-			components.insert(std::pair<std::string, Component*>(component->getKey(), component));
-			component->setParent(this);
-			component->init();
-			return true;
-		}
-		return false;
-	}
-
-	template <class T> void Entity::remove() {
-		T* target = get<T>();
-		if (target) {
-			delete target;
-			components.erase(target->getKey());
-		}
-	}
-
-	template <class T> void Entity::disable() {
-		T* c = get<T>();
-		if (c) {
-			c->disable();
-		}
-	}
-
-	void Entity::disableAll() {
-		for (auto c : components) {
-			c.second->disable();
-		}
-	}
-
-	template <class T> void Entity::enable() {
-		T* c = get<T>();
-		if (c) {
-			c->enable();
-		}
-	}
-
-	void Entity::enableAll() {
-		for (auto c : components) {
-			c.second->disable();
-		}
-	}
-
-	template <class T> void Entity::toggle() {
-		T* c = get<T>();
-		if (c) {
-			c->toggle();
-		}
-	}
-
-	void Entity::toggleAll() {
-		for (auto c : components) {
-			c.second->toggle();
+	void Entity::draw() {
+		if (drawable.canDraw()) {
+			drawable.draw(transform.getMat());
 		}
 	}
 }

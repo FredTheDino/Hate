@@ -1,30 +1,34 @@
 #pragma once
-#include "component.h"
+#include <vector>
 #include "texture.h"
 #include "mesh.h"
+#include "math.h"
 
 
 #define _DRAWABLE_
 namespace hate {
-#ifndef _COMPONENT_
-	class Component;
-#endif
+	enum TextureName {
+		DIFFUSE,
+		SPECULAR,
+		NORMAL,
+		NUM_TEXTURES
+	};
+
 	/**
 	 * This is a component that can be drawn.
 	 * They should each implement the drawing function.
 	 */
-	class Drawable : public Component {
+	class Drawable {
 		public:
 			// Constructs a new drawable
-			Drawable(int layer=0);
+			Drawable();
+			Drawable(const char* path, int layer=0);
+			Drawable(std::string path, int layer=0);
 
 			// Destructor
 			~Drawable();
 
-			// So we can seperate them
-			virtual std::string getKey() { return "drawable-base"; };
-
-			virtual void init();
+			void init(std::string path, int layer=0);
 
 			/**
 			 * Sets the layer for drawing.
@@ -32,6 +36,13 @@ namespace hate {
 			 * setting the layer yourself
 			 */
 			void setLayer(int l);
+
+			/**
+			 * If the drawable can be drawn
+			 * or not. Base implementation
+			 * checks if there is a mesh.
+			 */
+			bool canDraw();
 
 			/**
 			 * Returns the layer of this drawable.
@@ -50,7 +61,9 @@ namespace hate {
 			 * By default this uses a simple orthographic shader,
 			 * but this can also be over written.
 			 */
-			virtual void draw();
+			void draw(Mat4 m);
+
+			Texture* textures[NUM_TEXTURES];
 
 		private:
 			// The layer is the draworder of the drawables.
@@ -58,9 +71,9 @@ namespace hate {
 			int layer;
 
 			// The mesh the drawable should use.
-			Mesh mesh;
-			
-			// The texture the mesh should use
-			Texture texture;
+			Mesh* mesh = nullptr;
+
+			// If the drawable has been initalized.
+			bool initalized = false;
 	};
 }

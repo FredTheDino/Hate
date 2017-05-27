@@ -184,6 +184,11 @@ namespace hate {
 	void Shader::bind() {
 		glUseProgram(program);
 		glUniform1f(location("t"), Hate::CLOCK->getTime());
+
+		Mat4 p = Hate::CAMERA->getProjection();
+		glUniformMatrix4fv(location("projection"), &p._01 - &p._00, GL_TRUE, &p._00);
+		Mat4 w = Hate::CAMERA->getWorld();
+		glUniformMatrix4fv(location("world"), &w._01 - &w._00, GL_FALSE, &w._00);
 	}
 
 
@@ -209,7 +214,12 @@ namespace hate {
 		try {
 			newProgram = compile();
 		} catch (int e) {
+			timeToRecompile = 0;
 			printf("Failed to recompile shader (error: %d)\n", e);
+			return;
+		} catch(...) {
+			timeToRecompile = 0;
+			printf("Unknown error loading shader...\n");
 			return;
 		}
 

@@ -18,6 +18,7 @@ namespace hate {
 		}
 	}
 
+	/*
 	void RenderEngine::draw() {
 		for (auto layer : layers) {
 			for (Drawable* d : layer.second) {
@@ -25,4 +26,5 @@ namespace hate {
 			}
 		}
 	}
+	*/
 }

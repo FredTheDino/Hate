@@ -54,8 +54,8 @@ namespace hate {
 
 			/**
 			 * Renders everything in the render engine.
-			 */
 			void draw();
+			 */
 
 		private:
 			// The layers for rendering
