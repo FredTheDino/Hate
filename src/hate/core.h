@@ -35,4 +35,8 @@ namespace hate {
 	// might be set allready, and as such
 	// should preferably not be tampered with.
 	extern GLFWwindow* window;
+
+	// A flag that controls if the game should
+	// keep running or not,
+	extern bool running;
 }
