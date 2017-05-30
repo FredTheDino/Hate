@@ -17,27 +17,26 @@ The library is using OpenGL with GLEW, GLFW, maybe FreeType and OpenAL when that
 dependancies to a minimum to make it as portable and flexible ass possible. Other dependenies are included in the 
 source code, but these are the external ones.
 
-----------------------------------
 ## Checklist (I love this stuff)
 ### Core
-[] A main loop (I'm not setting the bar high)
-[] A nice little simple math library.
-[] Some form of gamestates. Maybe even some level file format.
-[] Basic rendering functionality, like drawing a quad at a position.
-[] Basic keyboard input, preferably allready with rebindable keys.
-[] Basic audio playback, playing a sound by calling a function.
+[ ] A main loop (I'm not setting the bar high)
+[ ] A nice little simple math library.
+[ ] Some form of gamestates. Maybe even some level file format.
+[ ] Basic rendering functionality, like drawing a quad at a position.
+[ ] Basic keyboard input, preferably allready with rebindable keys.
+[ ] Basic audio playback, playing a sound by calling a function.
 ### Entities
-[] Decide on how entities should work.
+[ ] Decide on how entities should work.
 ### Rendering
-[] Render textures.
-[] Render sub sprites.
-[] Simple animations.
-[] Layering.
-[] Paralax alternatives.
-[] Font rendering. (Probably have to use Freetype...)
+[ ] Render textures.
+[ ] Render sub sprites.
+[ ] Simple animations.
+[ ] Layering.
+[ ] Paralax alternatives.
+[ ] Font rendering. (Probably have to use Freetype...)
 ### Behaviours - Depends on a lot of stuff
-[] Set up the basic node system
-[] Make a GUI interface (Might need splitting up)
-[] Make it run in a seperate window? This might be usefull.
+[ ] Set up the basic node system
+[ ] Make a GUI interface (Might need splitting up)
+[ ] Make it run in a seperate window? This might be usefull.
 ### Plan some more
-[] Preferably finish this.
+[ ] Preferably finish this.
