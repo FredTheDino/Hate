@@ -5,7 +5,6 @@
 // 
 // The external libraries headers are also loaded here.
 //
-
 #pragma once
 #ifdef WIN32 // We're on windows
 
@@ -14,6 +13,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
+#include <stdio.h>
 
 #elif __APPLE__ // Macintosh
 

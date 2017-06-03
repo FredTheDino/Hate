@@ -1,5 +1,9 @@
 #include "core.h"
+#include "graphics.h"
+#include "loader.h"
+#include "shader.h"
 #include <stdio.h>
+#include <cmath>
 #include <string>
 
 #define WINDOW_WIDTH  800
@@ -20,7 +24,7 @@ namespace hate {
 
 		// GLFW stuff.
 		if (!glfwInit()) 
-			printf("Failed to initalze GLFW\n");
+			printf("Failed to initalze GLFW - Window and IO library\n");
 
 		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL); // Not sure I like these hard constants, might be better to pass this stuff in via a struct.
 		glfwSetWindowCloseCallback(window, close_callback);
@@ -30,8 +34,17 @@ namespace hate {
 
 		// @FIXME, we currently set Vsync to true, allways... Maybe not do that? And the clear color... We need to fix some stuff here...
 		glfwSwapInterval(1);
-		glClearColor(0.2, 0.0, 0.4, 1.0);
-		
+
+		find_resource_location();
+
+		if (glewInit())
+			printf("Failed to initalize GLEW - Extension Wrangler\n");
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_MULTISAMPLE);
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+		glSampleCoverage(1.0, GL_TRUE);
+
+		init_graphics();
 	}
 
 	void destory_hate() {
@@ -41,10 +54,15 @@ namespace hate {
 
 	void run_hate() {
 		printf("We are running!\n");
+		shader s = load_shader("master.glsl");
 		while (running) {
 			glfwPollEvents();
 			glfwSwapBuffers(window);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			use_program(s);
+			float t = glfwGetTime();
+			draw_quad(0, 0, 1, 1);
 		}
 	}
 }
