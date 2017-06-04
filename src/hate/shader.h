@@ -12,10 +12,10 @@
 namespace hate {
 	// The shader struct 
 	struct shader {
-#ifdef DEBUG
+		// These are used for recompilation.
 		long edit_time = 0;
-		float timer = 0;
-#endif
+		float timer = 10;
+
 		GLuint program;
 		std::string path;
 	};
@@ -37,4 +37,8 @@ namespace hate {
 	// the rest of the program... But it is
 	// needed for the hot-swapable shader.)
 	extern void use_shader(shader& s);
+
+	// Recompiles the shader if it is needed,
+	// has to be called every frame.
+	extern void recompile_shader(shader* s, bool use_timer = false);
 }

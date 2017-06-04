@@ -16,6 +16,9 @@ namespace hate {
 			struct {
 				float x, y;
 			};
+			struct {
+				float r, g;
+			};
 			float _[2];
 		};
 
@@ -83,8 +86,39 @@ namespace hate {
 				float _[16];
 			};
 			
+			// Inintalizes a new matrix.
 			mat4 (float d = 0);
-
+			
+			// Multiplies the two matricies.
 			mat4 operator* (mat4 o); 
 	};
+
+	// #Functional #Precompiled #Rad
+	inline int num_elements(mat4 m) { return 16; }
+
+	//
+	// Some simple to use matrix manipulations functions.
+	//
+
+	// Adds translation to the matrix, or generates a new one.
+	extern mat4 translation(float x, float y = 0, float z = 0);
+	extern mat4 translation(mat4 m, float x, float y = 0, float z = 0);
+
+	// Adds in rotation in the matrix, around the z-axis 
+	//
+	// The angle is in radians.
+	//
+	// (This is made for 2D stuff after all)
+	extern mat4 rotation(float angle);
+	extern mat4 rotation(mat4 m, float angle);
+
+	// Multiples the scale applied by the matrix.
+	extern mat4 scaling(float scale_x, float scale_y = 1, float scale_z = 1);
+	extern mat4 scaling(mat4 m, float scale_x, float scale_y = 1, float scale_z = 1);
+
+	// Generates a brand spanking new transform that can be sent into OpenGL.
+	extern mat4 transform(vec2 position, vec2 scale, float angle);
+
+	// Generaties an orthographic projection matrix.
+	extern mat4 ortho_project(vec2 position, float aspect_ratio, float zoom = 1);
 }

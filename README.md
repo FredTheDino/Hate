@@ -19,7 +19,7 @@ source code, but these are the external ones.
 
 ## Checklist (I love this stuff)
 ### Core
-[ ] A main loop (I'm not setting the bar high)
+[x] A main loop (I'm not setting the bar high)
 [ ] A nice little simple math library.
 [ ] Some form of gamestates. Maybe even some level file format.
 [ ] Basic rendering functionality, like drawing a quad at a position.

@@ -157,27 +157,39 @@ namespace hate {
 	}
 
 	void use_shader(shader& s) {
-#ifdef DEBUG
-			long edit_time = get_edit_time(s.path);
-			if (edit_time != s.edit_time) {
-				s.timer = 0;
-				s.edit_time = edit_time;
-			}
-
-			s.timer += 1.0 / 60.0;
-
-			if (s.timer > 0.5 && s.timer < 1.5) {
-				s.timer++;
-				delete_shader(s);
-				shader _s = load_shader(s.path);
-				if (_s.program != -1) {
-					s = _s;
-				}
-			}
-#endif
-
 		glUseProgram(s.program);
 		float t = glfwGetTime();
 		glUniform1f(0, t);
+	}
+
+	void recompile_shader(shader* s, bool use_timer) {
+		const float time_to_compile = 0.2f;
+
+		long edit_time = get_edit_time(s->path);
+		if (edit_time != s->edit_time) {
+			s->edit_time = edit_time;
+			if (use_timer) {
+				s->timer = 0;
+			} else {
+				delete_shader(*s);
+				shader _s = load_shader(s->path);
+				if (_s.program != -1) {
+					*s = _s;
+				}
+
+			}
+		}
+
+		if (s->timer > 1 + time_to_compile) return;
+
+		s->timer += 1.0 / 60.0;
+		if (s->timer > time_to_compile) {
+			s->timer++;
+			delete_shader(*s);
+			shader _s = load_shader(s->path);
+			if (_s.program != -1) {
+				*s = _s;
+			}
+		}
 	}
 }

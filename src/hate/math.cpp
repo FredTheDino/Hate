@@ -96,4 +96,68 @@ namespace hate {
 		} 
 		return a;
 	}
+	// Adds translation to the matrix, or generates a new one.
+	mat4 translation(float x, float y, float z) {
+		return translation(mat4(0), x, y, z);
+	}
+
+	mat4 translation(mat4 m, float x, float y, float z) {
+		m._03 += x;
+		m._13 += y;
+		m._23 += z;
+		return m;
+	}
+
+	// Adds in rotation in the matrix, around the z-axis 
+	//
+	// The angle is in radians.
+	//
+	// (This is made for 2D stuff after all)
+	mat4 rotation(float angle) {
+		mat4 r;
+		float s = sin(angle);
+		float c = cos(angle);
+		r._00 =  c;
+		r._01 = -s;
+		r._10 =  s;
+		r._10 =  c;
+		return r;
+	}
+
+	mat4 rotation(mat4 m, float angle) {
+		mat4 r = rotation(angle);
+		return r * m;
+	}
+
+	// Multiples the scale applied by the matrix.
+	mat4 scaling(float scale_x, float scale_y, float scale_z) {
+		mat4 s(1);
+		s._00 = scale_x;
+		s._11 = scale_y;
+		s._22 = scale_z;
+		return s;
+	}
+
+	mat4 scaling(mat4 m, float scale_x, float scale_y, float scale_z) {
+		mat4 s = scaling(scale_x, scale_y, scale_z);
+		return s * m;
+	}
+
+	// Generates a brand spanking new transform that can be sent into OpenGL.
+	mat4 transform(vec2 position, vec2 scale, float angle) {
+		mat4 result = scaling(scale.x, scale.y);
+		result = rotation(result, angle);
+		result = translation(result, position.x, position.y);
+		return result;
+	}
+
+	mat4 ortho_project(vec2 position, float aspect_ratio, float zoom) {
+		mat4 p(1);
+		p._00 = aspect_ratio * zoom;
+		p._11 = zoom;
+		p._03 = -position.x;
+		p._13 = -position.y;
+
+		return p;
+	}
 }

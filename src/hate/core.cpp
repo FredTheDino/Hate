@@ -59,8 +59,7 @@ namespace hate {
 
 		use_shader(s);
 		int w, h;
-		glfwGetWindowWidth(window, &w);
-		glfwGetWindowHeight(window, &h);
+		glfwGetWindowSize(window, &w, &h);
 		
 		while (running) {
 			glfwPollEvents();
@@ -68,8 +67,9 @@ namespace hate {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 #ifdef DEBUG
-			use_shader(s);
+			recompile_shader(&s, true);
 #endif
+			use_shader(s);
 
 			float t = glfwGetTime();
 			glActiveTexture(GL_TEXTURE0);

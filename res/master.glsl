@@ -44,7 +44,7 @@ out highp vec4 color;
 
 in vec2 pass_texCoord;
 
-const vec3 lit = vec3(0.2, 0.95, 0.22);
+const vec3 lit = vec3(0.95, 0.0, 0.22);
 const vec3 unlit = vec3(0.0, 0.01, 0.05);
 
 vec3 get_normal(sampler2D tex, vec2 coord) {
