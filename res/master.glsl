@@ -51,7 +51,9 @@ vec3 get_normal(sampler2D tex, vec2 coord) {
 	vec4 s = texture(tex, coord);
 	vec3 normal = s.xyz;
 	// We translate the normal.
-	// Why does this work? Why is it 0.75 and not 0.5?
+
+	// @WTF!?
+	// Why does this work?! Why is it 0.75 and not 0.5?
 	float a = 0.75;
 	normal -= vec3(a, a, a);
 	normal = normalize(normal);
