@@ -75,4 +75,25 @@ namespace hate {
 		result.y = y / l;
 		return result;
 	}
+
+	// Creates a new matrix.
+	mat4::mat4 (float d) {
+		for (int i = 0; i < 16; i++) {
+			if (i % 5 == 0)
+				_[i] = d;
+			else
+				_[i] = 0;
+		}
+	}
+	
+	// Multiplying with another matrix
+	mat4 mat4::operator* (mat4 o) {
+		mat4 a;
+		for (int i = 0; i < 16; i++) for (int j = 0; j < 16; j++) {
+			for (int k = 0; k < 4; k++) {
+				a._[i * 4 + j] += _[i * 4 + k] * o._[k * 4 + j];
+			}
+		} 
+		return a;
+	}
 }

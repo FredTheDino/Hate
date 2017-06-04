@@ -44,6 +44,9 @@ namespace hate {
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glSampleCoverage(1.0, GL_TRUE);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		init_graphics();
 	}
 
@@ -54,6 +57,7 @@ namespace hate {
 
 	void run_hate() {
 		printf("We are running!\n");
+		texture te = load_texture("disk_norm.png", false);
 		shader s = load_shader("master.glsl");
 		while (running) {
 			glfwPollEvents();
@@ -62,6 +66,9 @@ namespace hate {
 
 			use_program(s);
 			float t = glfwGetTime();
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, te.tex_id);
+			glUniform1i(10, 0);
 			draw_quad(0, 0, 1, 1);
 		}
 	}

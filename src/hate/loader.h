@@ -12,19 +12,28 @@
 #include <vector>
 
 namespace hate {
+	struct texture {
+		int w, h;
+		GLuint tex_id;
+		int sprites_x = 1;
+		int sprites_y = 1;
+		int current_sprite = 0;
+	};
+
 	// Scans through a number of parent
 	// directories for the "res/.res" 
 	// file which marks a resource 
 	// directory.
 	extern void find_resource_location();
 
-	// Loads a PNG into a pixel array.
-	//
-	// The value reterned is a possible error code.
-	// 0 - Means everything went well.
-	// 1 - Means something went wrong.
-	extern int load_png(std::string path, unsigned int& width, 
-			unsigned int& height, std::vector<unsigned char>& pixels);
+	// Loads a texture from a file and 
+	// sets up a GLTexture with the 
+	// desired specifications.
+	texture load_texture(std::string path, bool linear_filtering = false, GLenum wrap_style = GL_REPEAT, bool use_mipmaps = true); 
+
+	// Deletes a texutre... I mean, comeon,
+	// it's perty obiouse...
+	extern void delete_texture(texture t);
 
 	struct wav_header {
 		uint8_t		riff[4];        // RIFF Header Magic header
