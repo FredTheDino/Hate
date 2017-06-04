@@ -14,9 +14,11 @@ layout(location=5) uniform highp float h;
 layout(location=6) uniform highp mat4 transform;
 layout(location=7) uniform highp mat4 world;
 
-//layout(location=8) uniform
+layout(location=8) uniform highp mat4 projection;
 
-layout(location=10) uniform sampler2D normal_map;
+layout(location=9) uniform bool use_lighting;
+layout(location=10) uniform sampler2D color_map;
+layout(location=11) uniform sampler2D normal_map;
 
 
 #ifdef VERT
@@ -42,15 +44,17 @@ out highp vec4 color;
 
 in vec2 pass_texCoord;
 
-const vec3 lit = vec3(0.75, 0.1, 0.1);
+const vec3 lit = vec3(0.2, 0.95, 0.22);
 const vec3 unlit = vec3(0.0, 0.01, 0.05);
 
 vec3 get_normal(sampler2D tex, vec2 coord) {
 	vec4 s = texture(tex, coord);
 	vec3 normal = s.xyz;
-	// We translate the normal
-	normal -= vec3(0.5, 0.5, 0.5);
-	normal = normal * 2.0;
+	// We translate the normal.
+	// Why does this work? Why is it 0.75 and not 0.5?
+	float a = 0.75;
+	normal -= vec3(a, a, a);
+	normal = normalize(normal);
 
 	// If the alpha is 0, so is the normal.
 	return normal * s.w;
@@ -68,16 +72,5 @@ void main() {
 	vec3 shaded = mix(unlit, lit, max(lightness, 0.0));
 	
 	color = vec4(shaded, alpha);
-
-	float a = normal.x * 0.5 + 0.5;
-	if (abs(a - 0.5) <= 0.05)
-		a = 0.0;
-	float b = normal.y * 0.5 + 0.5;
-	if (abs(b - 0.5) <= 0.05)
-		b = 0.0;
-	float c = normal.z * 0.5 + 0.5;
-	if (abs(c - 0.5) <= 0.05)
-		c = 0.0;
-	color = vec4(a, b, c, alpha);
 }
 #endif

@@ -6,8 +6,8 @@
 #include <cmath>
 #include <string>
 
-#define WINDOW_WIDTH  800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH  600
+#define WINDOW_HEIGHT 400
 #define WINDOW_TITLE  "Hello World"
 
 namespace hate {
@@ -20,8 +20,6 @@ namespace hate {
 	}
 
 	void init_hate() {
-		printf("We are initalized!\n");
-
 		// GLFW stuff.
 		if (!glfwInit()) 
 			printf("Failed to initalze GLFW - Window and IO library\n");
@@ -56,19 +54,27 @@ namespace hate {
 	}
 
 	void run_hate() {
-		printf("We are running!\n");
-		texture te = load_texture("disk_norm.png", false);
+		texture te = load_texture("monkey_norm.png", false);
 		shader s = load_shader("master.glsl");
+
+		use_shader(s);
+		int w, h;
+		glfwGetWindowWidth(window, &w);
+		glfwGetWindowHeight(window, &h);
+		
 		while (running) {
 			glfwPollEvents();
 			glfwSwapBuffers(window);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			use_program(s);
+#ifdef DEBUG
+			use_shader(s);
+#endif
+
 			float t = glfwGetTime();
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, te.tex_id);
-			glUniform1i(10, 0);
+			glUniform1i(11, 0);
 			draw_quad(0, 0, 1, 1);
 		}
 	}

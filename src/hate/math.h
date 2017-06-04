@@ -78,7 +78,7 @@ namespace hate {
 						_30,
 						_31,
 						_32,
-						_33,
+						_33;
 				};
 				float _[16];
 			};
@@ -86,5 +86,5 @@ namespace hate {
 			mat4 (float d = 0);
 
 			mat4 operator* (mat4 o); 
-	}
+	};
 }

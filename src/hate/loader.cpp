@@ -1,8 +1,10 @@
 #include "loader.h"
 #include <fstream>
-#define MAX_DEPTH 5
+#include <sys/stat.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+#define MAX_DEPTH 5
 
 namespace hate {
 	std::string os_path = "res/";
@@ -66,6 +68,14 @@ namespace hate {
 
 	void delete_texture(texture t) {
 		glDeleteTextures(1, &t.tex_id);
+	}
+
+	long get_edit_time(std::string path) {
+#ifdef __linux__
+		struct stat attr;
+    	stat(get_real_path(path).c_str(), &attr);
+		return attr.st_mtime;
+#endif
 	}
 
 	std::string get_real_path(std::string path) {

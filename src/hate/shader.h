@@ -12,7 +12,10 @@
 namespace hate {
 	// The shader struct 
 	struct shader {
-		unsigned long long edit_time = 0;
+#ifdef DEBUG
+		long edit_time = 0;
+		float timer = 0;
+#endif
 		GLuint program;
 		std::string path;
 	};
@@ -23,6 +26,15 @@ namespace hate {
 	// 		/path/to/file.frag
 	extern shader load_shader(std::string path);
 
+	// Clears a shader from memory by letting
+	// OpenGL dealocate it.
+	extern void delete_shader(shader s);
+
 	// Uses the program
-	extern void use_program(shader s);
+	//
+	// (I dislike that the shader is passed
+	// by refference, it isn't uniform with
+	// the rest of the program... But it is
+	// needed for the hot-swapable shader.)
+	extern void use_shader(shader& s);
 }

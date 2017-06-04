@@ -54,6 +54,8 @@ namespace hate {
 	extern int load_wav(std::string path, wav_header& header, 
 			std::vector<char>& data);
 
+	extern long get_edit_time(std::string path);
+
 	// Returns the os specific path.
 	extern std::string get_real_path(std::string path);
 }
