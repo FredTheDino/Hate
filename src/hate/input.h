@@ -1,0 +1,28 @@
+#pragma once
+#include "basic.h"
+#include <string>
+
+namespace hate {
+	// Loads the specified input map.
+	extern void load_input_map(std::string path);
+
+	// Updates the input map, by changeing
+	// pressed states to down.
+	extern void update_input_map();
+
+	// Checks if they input is down.
+	extern bool is_down(std::string name);
+	
+	// Checks if they input is pressed (Same frame as it is pressed).
+	extern bool is_pressed(std::string name);
+
+	// Checks if the input was released this frame.
+	extern bool is_released(std::string name);
+
+	// Checks if the input is released.
+	extern bool is_up(std::string name);
+
+	// Checks if the input has changed from the last frame, in other
+	// words it checks if the key is pressed or released.
+	extern bool is_changed(std::string name);
+}

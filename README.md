@@ -20,15 +20,16 @@ source code, but these are the external ones.
 ## Checklist (I love this stuff)
 ### Core
 [x] A main loop (I'm not setting the bar high)
-[ ] A nice little simple math library.
-[ ] Some form of gamestates. Maybe even some level file format.
-[ ] Basic rendering functionality, like drawing a quad at a position.
-[ ] Basic keyboard input, preferably allready with rebindable keys.
+[x] A nice little simple math library.
+[ ] Some form of gamestates. Maybe even some level file format. (Need to think more on this, but I want to use level files and make a dedicated editor.)
+[x] Basic rendering functionality, like drawing a quad at a position.
+[x] Basic keyboard input, preferably allready with rebindable keys.
 [ ] Basic audio playback, playing a sound by calling a function.
 ### Entities
 [ ] Decide on how entities should work.
+[ ] Implement them. (I'm really good at planning)
 ### Rendering
-[ ] Render textures.
+[x] Render textures.
 [ ] Render sub sprites.
 [ ] Simple animations.
 [ ] Layering.

@@ -2,6 +2,7 @@
 #include "graphics.h"
 #include "loader.h"
 #include "shader.h"
+#include "input.h"
 #include <stdio.h>
 #include <cmath>
 #include <string>
@@ -46,6 +47,8 @@ namespace hate {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		init_graphics();
+
+		load_input_map("input.map");
 	}
 
 	void destory_hate() {
@@ -60,9 +63,13 @@ namespace hate {
 		use_shader(s);
 		int w, h;
 		glfwGetWindowSize(window, &w, &h);
+
+		float y = 0;
 		
 		while (running) {
-			glfwPollEvents();
+			// @Tought: glfwPollEvents is in "update_input_map", not sure if it's a good idea.
+			update_input_map();
+
 			glfwSwapBuffers(window);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -71,11 +78,19 @@ namespace hate {
 #endif
 			use_shader(s);
 
+			if (is_down("up")) {
+				y += 1 / 60.0;
+			}
+
+			if (is_down("down")) {
+				y -= 1 / 60.0;
+			}
+
 			float t = glfwGetTime();
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, te.tex_id);
 			glUniform1i(11, 0);
-			draw_quad(0, 0, 1, 1);
+			draw_quad(0, y, 1, 1);
 		}
 	}
 }
