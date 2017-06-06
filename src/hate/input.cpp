@@ -2,6 +2,7 @@
 #include "loader.h"
 #include "core.h"
 #include "clock.h"
+#include "misc.h"
 #include <map>
 #include <fstream>
 #include <sstream>
@@ -55,22 +56,6 @@ namespace hate {
 
 	// Input format:
 	// name [K/J] (joy_id) button
-
-	// Because C++ doesn't offer this in the std library.
-	std::vector<std::string> split(std::string source, char point) {
-		std::vector<std::string> out;
-
-		std::stringstream ss;
-		ss.str(source);
-		std::string item;
-
-		while (std::getline(ss, item, point)) {
-			out.push_back(item);
-		}
-		
-		return out;
-	}
-
 	void load_input_map(std::string path) {
 		std::ifstream file;
 		file.open(get_real_path(path));

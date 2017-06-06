@@ -1,7 +1,10 @@
 #include "basic.h"
 #include <vector>
+#include <fstream>
 #include "core.h"
 #include "math.h"
+#include "misc.h"
+#include "loader.h"
 #include "graphics.h"
 
 namespace hate {
@@ -111,4 +114,145 @@ namespace hate {
 		// Don't know if this works!
 		glUniformMatrix4fv(8, &p._01 - &p._00, GL_FALSE, &p._[0]);
 	}
+
+	// FONTS
+	
+	// Loads a font.
+	font load_font(std::string path) {
+		// Load in the texture.
+		font f;
+		f.tex = load_texture(path + ".png");
+
+		// Parse the .fnt file
+		std::ifstream file;
+		file.open(get_real_path(path + ".fnt"));
+
+		if (!file) {
+			// Errors?
+		}
+
+		std::string line;
+		while (std::getline(file, line)) {
+			auto parse = split(line);
+
+			// We only care about the "char", the rest is allready known.
+			if (parse[0] != "char") continue;
+
+			float w, h;
+			w = 1 / (float) f.tex.w;
+			h = 1 / (float) f.tex.h;
+
+			face font_face;
+			// @Performance: When the character isn't needed to be drawn, 
+			// it's set to 0 in everything but adavnce and id. We could
+			// skipp parseing the rest of the line.
+			font_face.id = stoi(split(parse[1], '=')[1]);
+			font_face.u =  stoi(split(parse[2], '=')[1]) * w;
+			font_face.v =  stoi(split(parse[3], '=')[1]) * h;
+			font_face.w =  stoi(split(parse[4], '=')[1]) * w;
+			font_face.h =  stoi(split(parse[5], '=')[1]) * h;
+			font_face.offset_x = 
+			      stoi(split(parse[6], '=')[1]) * w;
+			font_face.offset_y = 
+			      stoi(split(parse[7], '=')[1]) * h;
+			font_face.advance = 
+			      stoi(split(parse[8], '=')[1]) * w;
+
+			// There, wasn't that hard was it?
+			f.faces[font_face.id] = font_face;
+		}
+		
+		return f;
+	}
+
+	GLuint text_vbo = -1;
+	GLuint text_vao = -1;
+
+	// Renders a pice of text with the specified font to the screen.
+	void draw_text(std::string text, float size, font& f, float x, float y) {
+		std::vector<vertex> verticies;
+		verticies.reserve(text.size() * 6);
+
+		// Generate the mesh with coordinates.
+		float cur = x;
+		for (char c : text) {
+			// ff stands for font face
+			face ff = f.faces[c];
+
+			if (ff.h != 0) {
+				float bx   = cur + ff.offset_x * size;
+				float bx_n = bx + ff.w * size;
+
+				float by   = ff.offset_y * size;
+				float by_n = by + ff.h * size;
+
+				float u    = ff.u;
+				float u_n  = u + ff.w;
+
+				float v    = ff.v;
+				float v_n  = v + ff.h;
+
+				verticies.push_back(vertex(bx  , by_n, u  , v_n));
+				verticies.push_back(vertex(bx  , by  , u  , v));	
+				verticies.push_back(vertex(bx_n, by_n, u_n, v_n));
+				verticies.push_back(vertex(bx  , by  , u  , v));
+				verticies.push_back(vertex(bx_n, by  , u_n, v));
+				verticies.push_back(vertex(bx_n, by_n, u_n, v_n));
+			}
+			
+			cur += ff.advance * size;
+		}
+
+		// Get ready to render!
+		if (text_vao == -1) {
+			glGenVertexArrays(1, &text_vao);
+			glGenBuffers(1, &text_vao);
+		}
+
+		// Assumes the master shader is used.
+		
+		
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, f.tex.tex_id);
+		glUniform1i(10, 1);
+
+		glUniform1i(12, 1);
+		glUniform1f(13, 1.0);
+		glBindVertexArray(text_vao);
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, text_vbo);
+			glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(vertex), 
+					&verticies[0], GL_DYNAMIC_DRAW);
+
+			// Position
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 
+					sizeof(vertex), (GLvoid*) offsetof(vertex, position));
+
+			// Texture coordinate
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 
+					sizeof(vertex), (GLvoid*) offsetof(vertex, uv));
+		}
+		// Draw
+		glDrawArrays(GL_TRIANGLES, 0, verticies.size());
+
+		glBindVertexArray(0);
+		// Reset the state.
+		glUniform1i(12, 0);
+	}
+
+	// Gets the length of the text in the coordinate space with the specified
+	// size.
+	float get_length_of_text(std::string text, float size, font& f) {
+		float total_length = 0;
+
+		for (char c : text) {
+			total_length += f.faces[c].advance * size;
+		}
+
+		return total_length;
+	}
+
+
 }

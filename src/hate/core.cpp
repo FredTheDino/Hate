@@ -86,6 +86,8 @@ namespace hate {
 		glfwGetWindowSize(window, &w, &h);
 
 		float y = 0;
+
+		font f = load_font("fonts/nimbus");
 		
 		reset_clock();
 		while (running) {
@@ -122,6 +124,8 @@ namespace hate {
 			draw_quad(0, y, 1, 1);
 			glBindTexture(GL_TEXTURE_2D, t2.tex_id);
 			draw_quad(0.1, sin(get_clock_time()) * 0.1, 1, 1);
+
+			draw_text("Hello world!", 2, f, -0.5f, 0);
 			
 			// Updates the graphics
 			glfwSwapBuffers(window);

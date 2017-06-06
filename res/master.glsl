@@ -20,6 +20,13 @@ layout(location=9) uniform bool use_lighting;
 layout(location=10) uniform sampler2D color_map;
 layout(location=11) uniform sampler2D normal_map;
 
+layout(location=12) uniform int shader_type;
+
+// Font stuff
+layout(location=13) uniform float gamma;
+
+const int DEFAULT = 0;
+const int TEXT_RENDER = 1;
 
 #ifdef VERT
 layout(location=0) in highp vec2 in_pos;
@@ -27,16 +34,37 @@ layout(location=1) in highp vec2 in_texCoord;
 
 out vec2 pass_texCoord;
 
-void main() {
+void default_render() {
 	vec2 pos = (vec4(in_pos, 0.0, 1.0) * projection).xy;
 	if (use_transform) {
 		// TODO
-		gl_Position = vec4(pos, 0, 1.0);
+		gl_Position = vec4(pos, 0.0, 1.0);
 	} else {
-		gl_Position = vec4(x + w * pos.x, y - h * pos.y, 0, 1.0);
+		gl_Position = vec4(x + w * pos.x, y + h * pos.y, 0, 1.0);
 	}
 
-	pass_texCoord = vec2(in_texCoord.x, in_texCoord.y);
+	pass_texCoord = in_texCoord;
+}
+
+void text_render() {
+	vec2 pos;
+	if (use_transform) {
+		pos = (vec4(in_pos, 0.0, 1.0) * projection).xy;
+	} else {
+		pos = in_pos * mat2(projection);
+	}
+
+	gl_Position = vec4(pos, 0.0, 1.0);
+
+	pass_texCoord = in_texCoord;
+}
+
+void main() {
+	if (shader_type == DEFAULT) {
+		default_render();
+	} else if (shader_type == TEXT_RENDER) {
+		text_render();
+	}
 }
 #endif 
 
@@ -63,7 +91,7 @@ vec3 get_normal(sampler2D tex, vec2 coord) {
 	return normal * s.w;
 }
 
-void main() {
+void default_render() {
 	float speed = 2.0;
 	vec3 light_dir = normalize(vec3(sin(t), cos(t), 0.0));
 	//vec3 normal = normalize(vec3(pass_texCoord.x - 0.5, pass_texCoord.y - 0.5, 0.5));
@@ -78,6 +106,23 @@ void main() {
 		color = vec4(shaded, 1.0);
 	} else {
 		color = vec4(1.0, 1.0, 1.0, 0.0);
+	}
+}
+
+void text_render() {
+	// TODO
+	float dist = texture(color_map, pass_texCoord).w;
+	float g = gamma * 1.0;
+	float b = 1.0;
+	float alpha = smoothstep(b - g, b + g, dist);
+	color = vec4(1.0, 1.0, 1.0, alpha);
+}
+
+void main() {
+	if (shader_type == DEFAULT) {
+		default_render();
+	} else if (shader_type == TEXT_RENDER) {
+		text_render();
 	}
 }
 #endif

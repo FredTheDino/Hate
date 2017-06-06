@@ -51,6 +51,7 @@ namespace hate {
 		GLenum format = GL_RGBA;
 		if (comp == 1) {
 			format = GL_RED;
+			printf("1 chanel!\n");
 		} else if (comp == 2) {
 			format = GL_RED | GL_GREEN;
 		} else if (comp == 3) {

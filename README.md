@@ -50,3 +50,4 @@ source code, but these are the external ones.
 
 
 # JUST DO THE FONT RENDERING
+Okay, so the quads are correct.

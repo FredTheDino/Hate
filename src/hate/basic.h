@@ -20,3 +20,4 @@
 #else // We don't know what we're on... Maybe pot?
 #error "Unknown platform, none of the compiler flags: 'WIN32', '__linux__' or '__APPLE__' were set."
 #endif
+

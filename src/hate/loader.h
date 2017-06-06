@@ -8,17 +8,11 @@
 //
 #pragma once
 #include "basic.h"
+#include "graphics.h"
 #include <string>
 #include <vector>
 
 namespace hate {
-	struct texture {
-		int w, h;
-		GLuint tex_id;
-		int sprites_x = 1;
-		int sprites_y = 1;
-		int current_sprite = 0;
-	};
 
 	// Scans through a number of parent
 	// directories for the "res/.res" 
