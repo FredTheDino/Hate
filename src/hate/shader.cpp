@@ -1,5 +1,6 @@
 #include "shader.h"
 #include "loader.h"
+#include "clock.h"
 #include <string>
 #include <fstream>
 
@@ -171,9 +172,9 @@ namespace hate {
 			if (use_timer) {
 				s->timer = 0;
 			} else {
-				delete_shader(*s);
 				shader _s = load_shader(s->path);
 				if (_s.program != -1) {
+					delete_shader(*s);
 					*s = _s;
 				}
 
@@ -182,12 +183,12 @@ namespace hate {
 
 		if (s->timer > 1 + time_to_compile) return;
 
-		s->timer += 1.0 / 60.0;
+		s->timer += get_clock_delta();
 		if (s->timer > time_to_compile) {
 			s->timer++;
-			delete_shader(*s);
 			shader _s = load_shader(s->path);
 			if (_s.program != -1) {
+				delete_shader(*s);
 				*s = _s;
 			}
 		}

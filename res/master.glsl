@@ -28,11 +28,12 @@ layout(location=1) in highp vec2 in_texCoord;
 out vec2 pass_texCoord;
 
 void main() {
+	vec2 pos = (vec4(in_pos, 0.0, 1.0) * projection).xy;
 	if (use_transform) {
 		// TODO
-		gl_Position = vec4(in_pos, 0, 1.0);
+		gl_Position = vec4(pos, 0, 1.0);
 	} else {
-		gl_Position = vec4(x + w * in_pos.x, y - h * in_pos.y, 0, 1.0);
+		gl_Position = vec4(x + w * pos.x, y - h * pos.y, 0, 1.0);
 	}
 
 	pass_texCoord = vec2(in_texCoord.x, in_texCoord.y);
@@ -73,6 +74,10 @@ void main() {
 	float lightness = dot(normal, light_dir);
 	vec3 shaded = mix(unlit, lit, max(lightness, 0.0));
 	
-	color = vec4(shaded, alpha);
+	if (alpha == 1.0) {
+		color = vec4(shaded, 1.0);
+	} else {
+		color = vec4(1.0, 1.0, 1.0, 0.0);
+	}
 }
 #endif

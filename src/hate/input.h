@@ -6,6 +6,9 @@ namespace hate {
 	// Loads the specified input map.
 	extern void load_input_map(std::string path);
 
+	// For hotloading the input map, clears everything.
+	extern void reload_input_map(std::string path, bool use_timer = false);
+
 	// Updates the input map, by changeing
 	// pressed states to down.
 	extern void update_input_map();

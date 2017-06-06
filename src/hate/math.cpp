@@ -1,4 +1,6 @@
 #include "math.h"
+#include <string.h>
+#include <stdio.h>
 
 namespace hate {
 	
@@ -79,10 +81,11 @@ namespace hate {
 	// Creates a new matrix.
 	mat4::mat4 (float d) {
 		for (int i = 0; i < 16; i++) {
-			if (i % 5 == 0)
+			if (i % 5 == 0) {
 				_[i] = d;
-			else
+			} else {
 				_[i] = 0;
+			}
 		}
 	}
 	
@@ -151,12 +154,13 @@ namespace hate {
 		return result;
 	}
 
-	mat4 ortho_project(vec2 position, float aspect_ratio, float zoom) {
+	mat4 ortho_project(vec2 position, float aspect_ratio, vec2 zoom) {
 		mat4 p(1);
-		p._00 = aspect_ratio * zoom;
-		p._11 = zoom;
+		p._00 = zoom.x;
+		p._11 = aspect_ratio * zoom.y;
 		p._03 = -position.x;
 		p._13 = -position.y;
+
 
 		return p;
 	}

@@ -1,3 +1,8 @@
-# The keys should be caps...
+# This is a comment, it isn't parsed.
+# All input names are case sensative.
 up K W
 down K S
+down K LEFT_SHIFT
+up K RIGHT_SHIFT
+left K A
+right K D

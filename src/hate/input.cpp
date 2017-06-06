@@ -1,7 +1,8 @@
 #include "input.h"
 #include "loader.h"
 #include "core.h"
-#include <unordered_map>
+#include "clock.h"
+#include <map>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -20,8 +21,37 @@ namespace hate {
 		int button;
 	};
 
-	std::unordered_map<std::string, std::vector<input>> key_map;
-	std::unordered_map<std::string, key_state> state_map;
+	std::map<std::string, std::vector<input>> key_map;
+	std::map<std::string, key_state> state_map;
+	long input_map_edit_time = 0;
+	float reload_timer = 0;
+
+	void reload_input_map(std::string path, bool use_timer) {
+		const float time_to_reload = 0.2f;
+
+		long edit_time = get_edit_time(path);
+		if (input_map_edit_time != edit_time) {
+			input_map_edit_time = edit_time;
+			if (use_timer) {
+				reload_timer = 0;
+			} else {
+				key_map.clear();
+				state_map.clear();
+				load_input_map(path);
+			}
+		}
+
+		if (reload_timer > 1 + time_to_reload) return;
+
+		reload_timer += get_clock_delta();
+		if (reload_timer > time_to_reload) {
+			reload_timer += 1;
+
+			key_map.clear();
+			state_map.clear();
+			load_input_map(path);
+		}
+	}
 
 	// Input format:
 	// name [K/J] (joy_id) button
@@ -44,6 +74,12 @@ namespace hate {
 	void load_input_map(std::string path) {
 		std::ifstream file;
 		file.open(get_real_path(path));
+
+		if (file) {
+			input_map_edit_time = get_edit_time(path);
+		} else {
+			// Something went wrong.
+		}
 		
 		std::string line;
 		while (std::getline(file, line)) {
@@ -55,13 +91,44 @@ namespace hate {
 			auto name = parse[0];
 			input i;
 			if (parse[1] == "K") {
-				i.button = parse[2][0];
+				// Make sure they're uppercase
+				for (auto& c : parse[2]) { c = toupper(c); }
+				
+				// Is it a single key?
+				if (parse[2].size() == 1) {
+					i.button = toupper(parse[2][0]);
+				} else {
+					// It's a special key
+					if (parse[2] == "SPACE") {
+						i.button = GLFW_KEY_SPACE;
+					} else if (parse[2] == "UP") {
+						i.button = GLFW_KEY_UP;
+					} else if (parse[2] == "DOWN") {
+						i.button = GLFW_KEY_DOWN;
+					} else if (parse[2] == "LEFT") {
+						i.button = GLFW_KEY_LEFT;
+					} else if (parse[2] == "RIGHT") {
+						i.button = GLFW_KEY_RIGHT;
+					} else if (parse[2] == "LEFT_SHIFT") {
+						i.button = GLFW_KEY_LEFT_SHIFT;
+					} else if (parse[2] == "RIGHT_SHIFT") {
+						i.button = GLFW_KEY_RIGHT_SHIFT;
+					} else if (parse[2] == "RIGHT_CONTROL") {
+						i.button = GLFW_KEY_RIGHT_CONTROL;
+					} else if (parse[2] == "LEFT_CONTROL") {
+						i.button = GLFW_KEY_LEFT_CONTROL;
+					} else if (parse[2] == "RIGHT_SUPER") {
+						i.button = GLFW_KEY_RIGHT_SUPER;
+					} else if (parse[2] == "LEFT_SUPER") {
+						i.button = GLFW_KEY_LEFT_SUPER;
+					} 
+				}
 			} else if (parse[1] == "J") {
 				// TODO: Do parsing for the input.
 			}
 
 			auto it = key_map.find(name);
-			if (it != key_map.end()) {
+			if (it == key_map.end()) {
 				std::vector<input> inputs;
 				inputs.push_back(i);
 				key_map.insert(std::make_pair(name, inputs));

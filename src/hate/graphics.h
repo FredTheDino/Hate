@@ -4,8 +4,19 @@
 // by default.
 //
 #pragma once
+#include "math.h"
 
 namespace hate {
+	struct camera {
+		vec2 position = vec2(0, 0);
+		vec2 zoom = vec2(1, 1);
+	};
+
+	extern camera cam;
+
+	// Sends in the camera matrix.
+	extern void use_projection(camera c);
+
 	// Initalizes the graphics, by registering some basic
 	// meshes and initalizeing the shaders on the graphics card.
 	//

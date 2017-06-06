@@ -12,6 +12,12 @@ through a visual programming language which allows fast itteration and rapid pro
 
 But be warned, this is aimed to be a simple little game library or "engine" if you want to be technical.
 
+## Objectifying entities
+In this engine entities are just a collection of data being passed around, and it should be able 
+to be passed around as fast as possible. This is why entities are past via refference and a 
+refference should never be stored. Since they might get deleted when the frame ends and we don't
+want that to crash us, do we? 
+
 ## What is it built with?
 The library is using OpenGL with GLEW, GLFW, maybe FreeType and OpenAL when that gets implemented. And I try to keep
 dependancies to a minimum to make it as portable and flexible ass possible. Other dependenies are included in the 
@@ -41,3 +47,6 @@ source code, but these are the external ones.
 [ ] Make it run in a seperate window? This might be usefull.
 ### Plan some more
 [ ] Preferably finish this.
+
+
+# JUST DO THE FONT RENDERING

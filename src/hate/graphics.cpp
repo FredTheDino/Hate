@@ -1,5 +1,6 @@
 #include "basic.h"
 #include <vector>
+#include "core.h"
 #include "math.h"
 #include "graphics.h"
 
@@ -15,6 +16,8 @@ namespace hate {
 		unsigned	ebo;
 		unsigned 	draw_count;
 	};
+
+	camera cam;
 
 	struct vertex {
 		vec2 position;
@@ -100,5 +103,12 @@ namespace hate {
 		glUniform1f(4, w);
 		glUniform1f(5, h);
 		draw_mesh(quad);
+	}
+
+	// Who doesn't want to use a camera
+	void use_projection(camera c) {
+		mat4 p = ortho_project(c.position, (float) window_width / (float) window_height, c.zoom);
+		// Don't know if this works!
+		glUniformMatrix4fv(8, &p._01 - &p._00, GL_FALSE, &p._[0]);
 	}
 }
