@@ -16,3 +16,7 @@ pkg_search_module (GLFW REQUIRED glfw3)
 # Link the libs
 include_directories (ENGINE ${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
 target_link_libraries (ENGINE ${GLFW_LIBRARIES} ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES})
+
+# Link OpenAL
+include_directories (ENGINE "${CMAKE_SOURCE_DIR}/src/openal/include")
+target_link_libraries (ENGINE ${GLFW_LIBRARIES} ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} ${OpenAL})

@@ -27,6 +27,8 @@ namespace hate {
 	void resize_callback(GLFWwindow* window, int new_width, int new_height) {
 		window_width = new_width;
 		window_height = new_height;
+
+		glViewport(0, 0, new_width, new_height);
 	}
 
 	void init_hate() {
@@ -37,16 +39,17 @@ namespace hate {
 		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL); // Not sure I like these hard constants, might be better to pass this stuff in via a struct.
 		window_width = WINDOW_WIDTH;
 		window_height = WINDOW_HEIGHT;
-
-		glfwSetWindowCloseCallback(window, close_callback);
 		
+		glfwSetWindowSizeLimits(window, 600, 400, GLFW_DONT_CARE, GLFW_DONT_CARE);
+		glfwSetWindowCloseCallback(window, close_callback);
+		glfwSetWindowSizeCallback(window, resize_callback);
 		// For GLEW, turns out this is important
 		glfwMakeContextCurrent(window);	
 
 		// @FIXME, we currently set Vsync to true, allways... 
 		// Maybe not do that? And the clear color... We need 
 		// some sort of initalizer object.
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 
 		find_resource_location();
 
@@ -87,7 +90,7 @@ namespace hate {
 
 		float y = 0;
 
-		font f = load_font("fonts/nimbus");
+		font f = load_font("fonts/droid_sans");
 		
 		reset_clock();
 		while (running) {
@@ -114,7 +117,7 @@ namespace hate {
 			reload_input_map("input.map", true);
 			recompile_shader(&s, true);
 #endif
-			cam.position.y = sin(get_clock_time());
+			//cam.position.y = sin(get_clock_time());
 			use_shader(s);
 			use_projection(cam);
 
@@ -123,15 +126,19 @@ namespace hate {
 			glUniform1i(11, 0);
 			draw_quad(0, y, 1, 1);
 			glBindTexture(GL_TEXTURE_2D, t2.tex_id);
-			draw_quad(0.1, sin(get_clock_time()) * 0.1, 1, 1);
+			draw_quad(0.1, cos(get_clock_time()) * 0.5, 1, 1);
 
-			draw_text("Hello world!", 2, f, -0.5f, 0);
+			float size = 3 + sin(get_clock_time());
+			std::string text = "WOAH!?"; //"FPS: " + std::to_string(get_clock_fps());
+			float text_width = get_length_of_text(text, size, f);
+			draw_text(text, size, f, - text_width / 2, 0, vec4(1.0, sin(get_clock_time()), 0.5, 1.0));
 			
 			// Updates the graphics
 			glfwSwapBuffers(window);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
+		delete_font(f);
 		delete_texture(te);
 		delete_texture(t2);
 		delete_shader(s);

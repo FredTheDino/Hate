@@ -14,6 +14,7 @@
 
 #pragma once
 #include "basic.h"
+#include <AL/al.h>
 
 namespace hate {
 	// Initalizes the engine,

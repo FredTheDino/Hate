@@ -23,7 +23,10 @@ layout(location=11) uniform sampler2D normal_map;
 layout(location=12) uniform int shader_type;
 
 // Font stuff
-layout(location=13) uniform float gamma;
+layout(location=13) uniform float min_edge;
+layout(location=14) uniform float max_edge;
+layout(location=15) uniform vec4 text_color;
+
 
 const int DEFAULT = 0;
 const int TEXT_RENDER = 1;
@@ -35,12 +38,11 @@ layout(location=1) in highp vec2 in_texCoord;
 out vec2 pass_texCoord;
 
 void default_render() {
-	vec2 pos = (vec4(in_pos, 0.0, 1.0) * projection).xy;
 	if (use_transform) {
 		// TODO
-		gl_Position = vec4(pos, 0.0, 1.0);
+		gl_Position = vec4(in_pos, 0.0, 1.0) * projection;
 	} else {
-		gl_Position = vec4(x + w * pos.x, y + h * pos.y, 0, 1.0);
+		gl_Position = vec4(x + w * in_pos.x, y + h * in_pos.y, 0, 1.0) * projection;
 	}
 
 	pass_texCoord = in_texCoord;
@@ -112,10 +114,8 @@ void default_render() {
 void text_render() {
 	// TODO
 	float dist = texture(color_map, pass_texCoord).w;
-	float g = gamma * 1.0;
-	float b = 1.0;
-	float alpha = smoothstep(b - g, b + g, dist);
-	color = vec4(1.0, 1.0, 1.0, alpha);
+	float alpha = smoothstep(min_edge, max_edge, dist);
+	color = vec4(text_color.xyz, text_color.w * alpha);
 }
 
 void main() {

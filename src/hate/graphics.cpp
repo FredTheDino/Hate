@@ -110,7 +110,7 @@ namespace hate {
 
 	// Who doesn't want to use a camera
 	void use_projection(camera c) {
-		mat4 p = ortho_project(c.position, (float) window_width / (float) window_height, c.zoom);
+		mat4 p = ortho_project(c.position, 0, (float) window_width / (float) window_height, c.zoom);
 		// Don't know if this works!
 		glUniformMatrix4fv(8, &p._01 - &p._00, GL_FALSE, &p._[0]);
 	}
@@ -121,7 +121,7 @@ namespace hate {
 	font load_font(std::string path) {
 		// Load in the texture.
 		font f;
-		f.tex = load_texture(path + ".png");
+		f.tex = load_texture(path + ".png", true, GL_REPEAT, false);
 
 		// Parse the .fnt file
 		std::ifstream file;
@@ -165,11 +165,18 @@ namespace hate {
 		return f;
 	}
 
+	void delete_font(font& f) {
+		delete_texture(f.tex);
+		f.faces.clear();
+	}
+
 	GLuint text_vbo = -1;
 	GLuint text_vao = -1;
 
 	// Renders a pice of text with the specified font to the screen.
-	void draw_text(std::string text, float size, font& f, float x, float y) {
+	void draw_text(std::string text, float size, font& f, 
+			float x, float y, vec4 color, float spacing, 
+			float min_edge, float max_edge) {
 		std::vector<vertex> verticies;
 		verticies.reserve(text.size() * 6);
 
@@ -200,7 +207,7 @@ namespace hate {
 				verticies.push_back(vertex(bx_n, by_n, u_n, v_n));
 			}
 			
-			cur += ff.advance * size;
+			cur += (ff.advance + ff.offset_x) * size * spacing;
 		}
 
 		// Get ready to render!
@@ -217,7 +224,9 @@ namespace hate {
 		glUniform1i(10, 1);
 
 		glUniform1i(12, 1);
-		glUniform1f(13, 1.0);
+		glUniform1f(13, min_edge);
+		glUniform1f(14, max_edge);
+		glUniform4f(15, color.x, color.y, color.z, color.w);
 		glBindVertexArray(text_vao);
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, text_vbo);
@@ -244,11 +253,12 @@ namespace hate {
 
 	// Gets the length of the text in the coordinate space with the specified
 	// size.
-	float get_length_of_text(std::string text, float size, font& f) {
+	float get_length_of_text(std::string text, float size, font& f, float spacing) {
 		float total_length = 0;
 
 		for (char c : text) {
-			total_length += f.faces[c].advance * size;
+			auto ff = f.faces[c];
+			total_length += (ff.advance + ff.offset_x) * size * spacing;
 		}
 
 		return total_length;

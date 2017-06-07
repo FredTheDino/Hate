@@ -19,9 +19,11 @@ refference should never be stored. Since they might get deleted when the frame e
 want that to crash us, do we? 
 
 ## What is it built with?
-The library is using OpenGL with GLEW, GLFW, maybe FreeType and OpenAL when that gets implemented. And I try to keep
-dependancies to a minimum to make it as portable and flexible ass possible. Other dependenies are included in the 
-source code, but these are the external ones.
+The library is using OpenGL with GLEW, GLFW, and OpenAL Soft. The lastter is 
+compiled with the engine, so that should not keep you up at night. And I try 
+to keep dependancies to a minimum to make it as portable and flexible ass 
+possible. Other dependenies are included in the source code, but these are 
+the external ones.
 
 ## Checklist (I love this stuff)
 ### Core
@@ -40,7 +42,7 @@ source code, but these are the external ones.
 [ ] Simple animations.
 [ ] Layering.
 [ ] Paralax alternatives.
-[ ] Font rendering. (Probably have to use Freetype...)
+[x] Font rendering. (Probably have to use Freetype...)
 ### Behaviours - Depends on a lot of stuff
 [ ] Set up the basic node system
 [ ] Make a GUI interface (Might need splitting up)
@@ -48,6 +50,5 @@ source code, but these are the external ones.
 ### Plan some more
 [ ] Preferably finish this.
 
-
-# JUST DO THE FONT RENDERING
-Okay, so the quads are correct.
+## Stuff that needs fixing
+- Text that doesn't move with the screen shouldn't rotate if the camera rotates. Fixed by removing.

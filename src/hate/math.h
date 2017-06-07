@@ -6,6 +6,37 @@
 #include <cmath>
 
 namespace hate {
+	// I almost only need this for color...
+	// Might rework this into a seperate color
+	// data structure if that's all I want.
+	class vec4 {
+		public:
+			union {
+				struct {
+					float
+						x,
+						y,
+						z,
+						w;
+				};
+				struct {
+					float
+						r,
+						g,
+						b,
+						a;
+				};
+				float _[4];
+			};
+
+			vec4(float x = 0, float y = 0, float z = 0, float w = 0) {
+				r = x;
+				g = y;
+				b = z;
+				a = w;
+			}
+	};
+
 	// If you need 2 floats, or a direction
 	// in 2D space, this is you jam.
 	class vec2 {
@@ -120,5 +151,5 @@ namespace hate {
 	extern mat4 transform(vec2 position, vec2 scale, float angle);
 
 	// Generaties an orthographic projection matrix.
-	extern mat4 ortho_project(vec2 position, float aspect_ratio, vec2 zoom = vec2(1, 1));
+	extern mat4 ortho_project(vec2 position, float angle, float aspect_ratio, vec2 zoom = vec2(1, 1));
 }
