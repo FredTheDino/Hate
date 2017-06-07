@@ -4,6 +4,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#ifdef _WIN32
+// Way to go windows!
+#include "GLFW/glfw3.h"
+#include <Windows.h>
+#include <WinBase.h>
+#endif
+
 #define MAX_DEPTH 5
 
 namespace hate {
@@ -76,6 +83,34 @@ namespace hate {
 		struct stat attr;
     	stat(get_real_path(path).c_str(), &attr);
 		return attr.st_mtime;
+#elif _WIN32
+		union fk_windows_systemtime {
+			long time;
+			struct {
+				WORD y;
+				WORD m;
+				WORD d;
+				WORD h;
+				WORD mi;
+				WORD s;
+			};
+		};
+
+		FILETIME creationTime,
+			lpLastAccessTime,
+			lastWriteTime;
+		GetFileTime(CreateFile(get_real_path(path).c_str(), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0), &creationTime, &lpLastAccessTime, &lastWriteTime);
+		SYSTEMTIME systemTime;
+		FileTimeToSystemTime(&creationTime, &systemTime);
+		fk_windows_systemtime fk;
+		fk.y = systemTime.wYear;
+		fk.m = systemTime.wMonth; 
+		fk.d = systemTime.wDay;
+		fk.h = systemTime.wHour;
+		fk.mi= systemTime.wMinute;
+		fk.s = systemTime.wSecond;
+
+		return fk.time;
 #endif
 	}
 

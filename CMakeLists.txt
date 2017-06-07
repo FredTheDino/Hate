@@ -6,7 +6,7 @@ set (CMAKE_CXX_STANDARD_REQUIRE ON)
 
 add_definitions (-DDEBUG)
 
-project (Hate CXX)
+project (hate CXX)
 
 add_subdirectory("src")
 

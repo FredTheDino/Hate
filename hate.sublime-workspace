@@ -1,0 +1,353 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"swa",
+				"swapB"
+			],
+			[
+				"swap",
+				"swapA"
+			],
+			[
+				"for",
+				"for\tFor Loop"
+			],
+			[
+				"un",
+				"genUnoriginal"
+			],
+			[
+				"utf",
+				"utf8_decode"
+			],
+			[
+				"revi",
+				"reciver"
+			],
+			[
+				"auto",
+				"autofocus\tAttr"
+			],
+			[
+				"met",
+				"meta\tTag"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/glfw/CMakeLists.txt",
+			"settings":
+			{
+				"buffer_size": 14215,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 104.0,
+		"last_filter": "Install",
+		"selected_items":
+		[
+			[
+				"Install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Con",
+				"Install Package Control"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/E/Dev/C++/Hate"
+	],
+	"file_history":
+	[
+		"/E/Dev/C++/Tea2.0/.gitignore",
+		"/E/Dev/Java/HamPieEngine/HamPieEngine/res/shader/gui.frag",
+		"/E/Dev/Java/HamPieEngine/HamPieEngine/res/shader/gui.vert",
+		"/C/Users/Eddie-boi/Desktop/hello.py",
+		"/C/Users/Eddie-boi/Desktop/temp/mall.py",
+		"/C/Users/Eddie-boi/Desktop/temp/random.py",
+		"/C/Users/Eddie-boi/Desktop/temp/out.txt",
+		"/C/Users/Eddie-boi/Desktop/temp/out",
+		"/C/Users/Eddie-boi/Desktop/out.txt",
+		"/E/Dev/C++/Tea2.0/src/engine/inputsystem.cpp",
+		"/E/Dev/C++/Tea2.0/res/input.map",
+		"/E/Apache24/htdocs/zip.sh",
+		"/E/Apache24/htdocs/gen.bat",
+		"/E/Dev/C++/Tea2.0/res/sfx/a.wav",
+		"/E/Dev/C++/Tea2.0/res/sfx/andreas.wav",
+		"/E/Dev/C++/Tea2.0/src/engine/CMakeLists.txt",
+		"/E/Dev/C++/Tea2.0/src/CMakeLists.txt",
+		"/E/Dev/C++/Tea2.0/README.md",
+		"/E/Dev/C++/Tea2.0/src/game/CMakeLists.txt"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"}*/\n",
+			"result",
+			"make0Turn",
+			"str(",
+			"Math",
+			" :",
+			"(seed",
+			"mysql_query ( ",
+			"utf8_decode(",
+			"$row",
+			" mysql_query (",
+			"p>",
+			"Cracker",
+			"game",
+			"tea"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/glfw/CMakeLists.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14215,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 25.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "hate.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"glfw/cmake",
+				"src\\glfw\\CMakeLists.txt"
+			],
+			[
+				"cm",
+				"src\\CMakeLists.txt"
+			],
+			[
+				"",
+				"E:\\Dev\\Java\\HamPieEngine\\HamPieEngine\\res\\shader\\gui.frag"
+			],
+			[
+				"read",
+				"README.md"
+			],
+			[
+				"input.",
+				"res\\input.map"
+			],
+			[
+				"po",
+				"post.php"
+			],
+			[
+				"wr",
+				"write.php"
+			],
+			[
+				"pos",
+				"post.php"
+			],
+			[
+				"inde",
+				"index.php"
+			],
+			[
+				"foot",
+				"footer.php"
+			],
+			[
+				"hea",
+				"header.php"
+			],
+			[
+				"foo",
+				"footer.php"
+			],
+			[
+				"in",
+				"index.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 131.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
