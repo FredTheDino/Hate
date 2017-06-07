@@ -50,5 +50,5 @@ the external ones.
 ### Plan some more
 [ ] Preferably finish this.
 
-## Stuff that needs fixing
-- Text that doesn't move with the screen shouldn't rotate if the camera rotates. Fixed by removing.
+## TODO
+Audio, add in some audio and fix the rest while making a game.
