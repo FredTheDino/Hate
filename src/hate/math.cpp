@@ -154,7 +154,7 @@ namespace hate {
 		return result;
 	}
 
-	mat4 ortho_project(vec2 position, float angle, float aspect_ratio, vec2 zoom) {
+	mat4 ortho_project(float angle, float aspect_ratio, vec2 zoom) {
 		mat4 p(1);
 		float a = zoom.x;
 		// OpenGL is upside down.
@@ -167,9 +167,6 @@ namespace hate {
 		p._01 = -a * s;
 		p._10 =  b * s;
 		p._11 =  b * c;
-		p._03 = -position.x;
-		p._13 = -position.y;
-
 
 		return p;
 	}

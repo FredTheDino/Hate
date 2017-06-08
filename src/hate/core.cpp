@@ -18,6 +18,7 @@ namespace hate {
 	GLFWwindow* window = nullptr;
 	int window_width;
 	int window_height;
+	float window_aspect_ratio;
 
 	// Callbacks
 	void close_callback(GLFWwindow* window) {
@@ -28,7 +29,15 @@ namespace hate {
 		window_width = new_width;
 		window_height = new_height;
 
+		window_aspect_ratio = (float) new_width / new_height;
+
 		glViewport(0, 0, new_width, new_height);
+	}
+
+	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+	{
+		mouse_position.x = xpos;
+		mouse_position.y = ypos;
 	}
 
 	void init_hate() {
@@ -39,17 +48,19 @@ namespace hate {
 		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL); // Not sure I like these hard constants, might be better to pass this stuff in via a struct.
 		window_width = WINDOW_WIDTH;
 		window_height = WINDOW_HEIGHT;
+		window_aspect_ratio = (float) window_width / window_height;
 		
 		glfwSetWindowSizeLimits(window, 600, 400, GLFW_DONT_CARE, GLFW_DONT_CARE);
 		glfwSetWindowCloseCallback(window, close_callback);
 		glfwSetWindowSizeCallback(window, resize_callback);
+		glfwSetCursorPosCallback(window, cursor_position_callback);
 		// For GLEW, turns out this is important
 		glfwMakeContextCurrent(window);	
 
 		// @FIXME, we currently set Vsync to true, allways... 
 		// Maybe not do that? And the clear color... We need 
 		// some sort of initalizer object.
-		glfwSwapInterval(0);
+		glfwSwapInterval(1);
 
 		find_resource_location();
 
@@ -107,31 +118,34 @@ namespace hate {
 			}
 
 			if (is_down("left"))
-				cam.position.x += get_clock_delta();
-
-			if (is_down("right"))
 				cam.position.x -= get_clock_delta();
 
+			if (is_down("right"))
+				cam.position.x += get_clock_delta();
 
 #ifdef DEBUG
 			reload_input_map("input.map", true);
 			recompile_shader(&s, true);
 #endif
-			//cam.position.y = sin(get_clock_time());
+			cam.position.y = sin(get_clock_time());
 			use_shader(s);
 			use_projection(cam);
 
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, te.tex_id);
+			draw_color(vec4(0.74, 0.2, 0.6, 1.0));
 			glUniform1i(11, 0);
-			draw_quad(0, y, 1, 1);
-			glBindTexture(GL_TEXTURE_2D, t2.tex_id);
-			draw_quad(0.1, cos(get_clock_time()) * 0.5, 1, 1);
+			draw_sprite(0, y, 1, 1, &te, &te);
+
+			draw_sprite(0.1, cos(get_clock_time()) * 0.5, 1, 1, &t2, &t2);
+
+			//printf("to_gl: %f, %f\n", mouse_to_gl().x, mouse_to_gl().y);
+			draw_sprite(mouse_to_gl().x, mouse_to_gl().y, 0.2, 0.2, &t2, &t2, 0, false);
 
 			float size = 3 + sin(get_clock_time());
 			std::string text = "WOAH!?"; //"FPS: " + std::to_string(get_clock_fps());
 			float text_width = get_length_of_text(text, size, f);
-			draw_text(text, size, f, - text_width / 2, 0, vec4(1.0, sin(get_clock_time()), 0.5, 1.0));
+			draw_text(text, size, f, sin(get_clock_time()) - text_width / 2, 0, vec4(1.0, sin(get_clock_time()), 0.5, 1.0));
 			
 			// Updates the graphics
 			glfwSwapBuffers(window);

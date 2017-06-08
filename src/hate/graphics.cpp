@@ -96,10 +96,66 @@ namespace hate {
 		quad = new_mesh(indicies, verticies);
 	}
 
-	// This function is nice to have.
-	void draw_quad(float x, float y, float w, float h) {
+	void draw_sprite(texture* color, texture* normal, int sub_sprite) {
+		int draw_mode = 0;
+		if (color) 
+			draw_mode |= 0b01;
+		if (normal)
+			draw_mode |= 0b10;
+
+		glUniform1i(17, draw_mode);
+		if (color) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, color->tex_id);
+			glUniform1i(10, 0);
+		}
+		if (normal) {
+			glActiveTexture(GL_TEXTURE0 + 1);
+			glBindTexture(GL_TEXTURE_2D, color->tex_id);
+			glUniform1i(11, 1);
+		}
+
+		glUniform1i(20, sub_sprite);
+		if (color) {
+			glUniform2i(19, color->sprites_x, color->sprites_y);
+		} else if (normal) {
+			glUniform2i(19, normal->sprites_x, normal->sprites_y);
+		}
+
+		draw_mesh(quad);
+	}
+
+	void draw_sprite(float x, float y, float w, float h, texture* color, texture* normal, int sub_sprite, bool translate) {
 		// Don't use a transform
 		glUniform1i(1, 0);
+		glUniform1i(16, translate);
+
+		glUniform1f(2, x);
+		glUniform1f(3, y);
+		glUniform1f(4, w);
+		glUniform1f(5, h);
+		
+		draw_sprite(color, normal, sub_sprite);
+	}
+
+	void draw_sprite(mat4 m, texture* color, texture* normal, int sub_sprite, bool translate) {
+		glUniform1i(1, 1);
+		glUniform1i(16, translate);
+
+		draw_sprite(color, normal, sub_sprite);
+	}
+
+
+	void draw_color(vec4 color) {
+		glUniform4f(18, color.r, color.g, color.b, color.a);
+	}
+
+	// This function is nice to have.
+	void draw_quad(float x, float y, float w, float h, bool translate) {
+		// Don't use a transform
+		glUniform1i(1, 0);
+		glUniform1i(16, translate);
+		glUniform1i(17, 0);
 
 		glUniform1f(2, x);
 		glUniform1f(3, y);
@@ -108,11 +164,21 @@ namespace hate {
 		draw_mesh(quad);
 	}
 
+	void draw_quad(mat4 m, bool translate) {
+		glUniform1i(1, 1);
+		glUniform1i(16, translate);
+		glUniform1i(17, 0);
+
+		glUniformMatrix4fv(6, &m._01 - &m._00, GL_FALSE, &m._[0]);
+	}
+
 	// Who doesn't want to use a camera
 	void use_projection(camera c) {
-		mat4 p = ortho_project(c.position, 0, (float) window_width / (float) window_height, c.zoom);
+		mat4 p = ortho_project(0, window_aspect_ratio, c.zoom);
+		mat4 t = translation(-c.position.x, -c.position.y);
 		// Don't know if this works!
 		glUniformMatrix4fv(8, &p._01 - &p._00, GL_FALSE, &p._[0]);
+		glUniformMatrix4fv(7, &t._01 - &t._00, GL_FALSE, &t._[0]);
 	}
 
 	// FONTS

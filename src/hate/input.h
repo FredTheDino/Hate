@@ -1,5 +1,6 @@
 #pragma once
 #include "basic.h"
+#include "math.h"
 #include <string>
 
 namespace hate {
@@ -8,6 +9,8 @@ namespace hate {
 
 	// For hotloading the input map, clears everything.
 	extern void reload_input_map(std::string path, bool use_timer = false);
+
+	// KEYBOARD AND JOYSTICK
 
 	// Updates the input map, by changeing
 	// pressed states to down.
@@ -28,4 +31,11 @@ namespace hate {
 	// Checks if the input has changed from the last frame, in other
 	// words it checks if the key is pressed or released.
 	extern bool is_changed(std::string name);
+
+	// MOUSE
+	// A nice little reffernce for the mouse position.
+	extern vec2 mouse_position;
+
+	// Returns the mouse position in OpenGL coords.
+	extern vec2 mouse_to_gl();
 }

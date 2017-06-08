@@ -33,6 +33,7 @@ the external ones.
 [x] Basic rendering functionality, like drawing a quad at a position.
 [x] Basic keyboard input, preferably allready with rebindable keys.
 [ ] Basic audio playback, playing a sound by calling a function.
+[ ] Add all the dependencies into the source code.
 ### Entities
 [ ] Decide on how entities should work.
 [ ] Implement them. (I'm really good at planning)

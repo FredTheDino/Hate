@@ -25,7 +25,6 @@ namespace hate {
 		unsigned int tex_id;
 		int sprites_x = 1;
 		int sprites_y = 1;
-		int current_sprite = 0;
 	};
 
 	// This data type corresponds to a single face, that
@@ -92,6 +91,14 @@ namespace hate {
 	// except add some bloat to the graphcis cards memory.
 	extern void init_graphics();
 
+	// If you want to bind a texture to it.
+	extern void draw_sprite(float x, float y, float w, float h, texture* color, texture* normal, int sub_sprite = 0, bool translate = true);
+	extern void draw_sprite(mat4 m, texture* color, texture* normal, int sub_sprite = 0, bool translate = true);
+
+	// Specifies the color for these meshes.
+	extern void draw_color(vec4 color);
+
 	// Draws a rectangle in a previousely specified color.
-	extern void draw_quad(float x, float y, float w, float h);
+	extern void draw_quad(float x, float y, float w, float h, bool translate = true);
+	extern void draw_quad(mat4 transform, bool translate = true);
 }

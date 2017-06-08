@@ -188,4 +188,18 @@ namespace hate {
 		auto s = state_map[name];
 		return s == RELEASED || s == PRESSED;
 	}
+
+	// MOUSE
+
+	vec2 mouse_position = vec2(0, 0);
+
+	vec2 mouse_to_gl() {
+		vec2 gl_pos;
+
+		gl_pos.x =  2 * mouse_position.x / window_width - 1;
+		// @Performance: Maybe multiply x and scale y by something instead? No...
+		gl_pos.y = (2 * mouse_position.y / window_height - 1) / window_aspect_ratio;
+
+		return gl_pos;
+	}
 }

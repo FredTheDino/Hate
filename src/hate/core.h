@@ -36,8 +36,10 @@ namespace hate {
 	// might be set allready, and as such
 	// should preferably not be tampered with.
 	extern GLFWwindow* window;
+
 	extern int window_width;
 	extern int window_height;
+	extern float window_aspect_ratio;
 
 	// A flag that controls if the game should
 	// keep running or not,
