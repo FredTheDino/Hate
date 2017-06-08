@@ -2,7 +2,6 @@
 #include "basic.h"
 
 namespace hate {
-
 	// What you want to look at.
 	float time = 0;
 	float delta = 0;
@@ -22,6 +21,7 @@ namespace hate {
 	void update_clock()  {
 		float t = glfwGetTime();
 		delta = t - time;
+		
 		time = t;
 
 		frames++;

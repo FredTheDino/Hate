@@ -71,14 +71,29 @@ namespace hate {
 		std::string real_path = get_real_path(path);
 		std::ifstream file(real_path);
 
-		file.seekg(0, std::ios::end);
-		auto length = file.tellg();
-		file.seekg(0, std::ios::beg);
+		if (!file) {
+			printf("Error loading file: %s\n", path.c_str());
+			return;
+		}
+
+#ifdef _WIN32 //__linux__
+		file.seekg(0, file.end);
+		int length = file.tellg();
+		file.seekg(0, file.beg);
 
 		buffer->resize(length);
 
 		file.read(&(*buffer)[0], length);
 		file.close();
+#elif _WIN32
+		std::string line;
+		while (std::getline(file, line)) {
+			for (char c : line)
+				buffer->push_back(c);
+			buffer->push_back('\n');
+		}
+#endif
+		
 		// We need this, since C-strings are 
 		// null terminated and OpenGL is a C api.
 		buffer->push_back('\0');

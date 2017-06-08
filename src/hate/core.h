@@ -16,6 +16,7 @@
 #include "basic.h"
 #include <AL/al.h>
 
+
 namespace hate {
 	// Initalizes the engine,
 	// by loading GLEW, and initalizing

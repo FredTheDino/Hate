@@ -6,6 +6,7 @@
 // The external libraries headers are also loaded here.
 //
 #pragma once
+
 #ifdef _WIN32 // We're on windows
 
 #include <GL/glew.h>
@@ -20,9 +21,9 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
-#elif __APPLE__ // Macintoss
+#elif _APPLE_ // Macintoss
 
-#else // We don't know what we're on... Maybe pot?
-#error "Unknown platform, none of the compiler flags: 'WIN32', '__linux__' or '__APPLE__' were set."
+#else // We don't know what you're on... Maybe pot?
+#error "Unknown platform, none of the compiler flags: '_WIN32', '__linux__' or '__APPLE__' were set."
 #endif
 

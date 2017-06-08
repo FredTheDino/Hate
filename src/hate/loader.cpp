@@ -6,12 +6,11 @@
 
 #ifdef _WIN32
 // Way to go windows!
-#include "GLFW/glfw3.h"
-#include <Windows.h>
-#include <WinBase.h>
+#include "basic.h"
+#include "clock.h"
 #endif
 
-#define MAX_DEPTH 5
+#define MAX_DEPTH 10
 
 namespace hate {
 	std::string os_path = "res/";
@@ -29,7 +28,7 @@ namespace hate {
 				if (i == MAX_DEPTH - 1) {
 					// We totally failed... This is a critical error.
 					printf("Failed to find resource directory.\n");
-					assert(i != MAX_DEPTH - 1);
+					assert(false);
 				}
 			}
 		}
@@ -58,7 +57,6 @@ namespace hate {
 		GLenum format = GL_RGBA;
 		if (comp == 1) {
 			format = GL_RED;
-			printf("1 chanel!\n");
 		} else if (comp == 2) {
 			format = GL_RED | GL_GREEN;
 		} else if (comp == 3) {
@@ -84,33 +82,9 @@ namespace hate {
     	stat(get_real_path(path).c_str(), &attr);
 		return attr.st_mtime;
 #elif _WIN32
-		union fk_windows_systemtime {
-			long time;
-			struct {
-				WORD y;
-				WORD m;
-				WORD d;
-				WORD h;
-				WORD mi;
-				WORD s;
-			};
-		};
-
-		FILETIME creationTime,
-			lpLastAccessTime,
-			lastWriteTime;
-		GetFileTime(CreateFile(get_real_path(path).c_str(), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0), &creationTime, &lpLastAccessTime, &lastWriteTime);
-		SYSTEMTIME systemTime;
-		FileTimeToSystemTime(&creationTime, &systemTime);
-		fk_windows_systemtime fk;
-		fk.y = systemTime.wYear;
-		fk.m = systemTime.wMonth; 
-		fk.d = systemTime.wDay;
-		fk.h = systemTime.wHour;
-		fk.mi= systemTime.wMinute;
-		fk.s = systemTime.wSecond;
-
-		return fk.time;
+		// On windows, we reload them every N seconds, because I have a life.
+#define RELOAD_TIME 5
+		return floor(get_clock_time() / RELOAD_TIME);
 #endif
 	}
 
