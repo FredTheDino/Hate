@@ -17,14 +17,14 @@ layout(location=7) uniform highp mat4 world;
 
 layout(location=8) uniform highp mat4 projection;
 
-layout(location=17) uniform int texture_mode; // 0 = color, 1 = color_map, 2 = normal_map. Or them.
+layout(location=17) uniform highp int texture_mode; // 0 = color, 1 = color_map, 2 = normal_map. Or them.
 layout(location=19) uniform vec2 sprites;
-layout(location=20) uniform int sprite_id;
+layout(location=20) uniform highp int sprite_id;
 layout(location=10) uniform sampler2D color_map;
 layout(location=11) uniform sampler2D normal_map;
 layout(location=18) uniform vec4 draw_color; // = vec4(1.0, 1.0, 1.0, 1.0);
 
-layout(location=12) uniform int shader_type;
+layout(location=12) uniform highp int shader_type;
 
 // Font stuff
 layout(location=13) uniform float min_edge;
