@@ -11,9 +11,10 @@
 #include <thread>
 
 namespace hate {
+
 	// Runs the thread, this is the main loop
 	// of the thread and is handled by the engine.
-	extern void _run();
+	extern void start_audio_thread();
 
 
 	/* Thoughts so far:
@@ -44,5 +45,7 @@ namespace hate {
 	 * and make sure it works.
 	 */
 	
+	extern void play_sound();
+
 
 }

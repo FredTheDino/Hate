@@ -86,6 +86,8 @@ void main() {
 		default_render();
 	} else if (shader_type == TEXT_RENDER) {
 		text_render();
+	} else {
+		gl_Position = vec4(in_pos, 0.0, 1.0);
 	}
 }
 #endif 
