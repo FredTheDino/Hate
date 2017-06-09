@@ -36,6 +36,9 @@ namespace hate {
 	// Initalizes everything with openAL.
 	extern void init_audio();
 
+	// De initalizes everything.
+	extern void destroy_audio();
+
 	// Updates all audio
 	extern void update_audio();
 

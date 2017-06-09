@@ -64,6 +64,11 @@ namespace hate {
 		printf("[OpenAL] Renderer: %s\n", alGetString(AL_RENDERER));
 	}
 
+	void destroy_audio() {
+		alcDestroyContext(context);
+		alcCloseDevice(device);
+	}
+
 	void set_sound_info(sound_info const& info) {
 		assert(info.type >= 0);
 		assert(info.type < SOUND_TYPE_LENGTH);
