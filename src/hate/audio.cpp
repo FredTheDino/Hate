@@ -3,6 +3,7 @@
 #include <AL/alc.h>
 #include <stack>
 #include <map>
+#include <assert.h> 
 
 namespace hate {
 	struct sound_info {
@@ -43,6 +44,10 @@ namespace hate {
 
 	// Initalizes OpenAL
 	void init_audio() {
+		for (int i = 0; i < SOUND_TYPE_LENGTH; i++) {
+			global_gain[i] = 1.0f;
+		}
+
 		device = alcOpenDevice(NULL);
 		if (!device) {
 			printf("AL Error: no audio output device\n");
@@ -59,16 +64,41 @@ namespace hate {
 		printf("[OpenAL] Renderer: %s\n", alGetString(AL_RENDERER));
 	}
 
+	void set_sound_info(sound_info const& info) {
+		assert(info.type >= 0);
+		assert(info.type < SOUND_TYPE_LENGTH);
+
+		ALuint source = info.source;
+
+		alSourcei(source, AL_BUFFER, info.buffer);
+
+		alSourcef(source, AL_PITCH, info.target_pitch);
+
+		alSourcef(source, AL_GAIN, info.target_gain * global_gain[info.type]);
+
+		if (info.positional) {
+			alSourcei(source, AL_SOURCE_RELATIVE, false);
+			alSource3f(source, AL_POSITION, info.position.x, info.position.y, 0);
+		} else {
+			alSourcei(source, AL_SOURCE_RELATIVE, true);
+			alSource3f(source, AL_POSITION, 0, 0, 0);
+		}
+
+		alSource3f(source, AL_VELOCITY, 0, 0, 0);
+
+		alSourcei(source, AL_LOOPING, info.loop);
+	}
+
 	// Updates the audio engine.
 	void update_audio() {
 		for (auto& s : sources) {
 			if (!s.second.used) continue;
-			if (!s.second.is_persistent && !is_stopped(s.first)) {
+			if (!s.second.is_persistent && is_stopped(s.first)) {
 				// It's unused.
 				s.second.used = false;
 				free_sources.push(s.first);
 			} else {
-				set_sound_info(s);
+				set_sound_info(s.second);
 			}
 		}
 	}
@@ -81,48 +111,31 @@ namespace hate {
 		global_gain[type] = gain;
 	}
 
-	void set_sound_info(sound_info const& info) {
-		assert(type < 0);
-		assert(type > SOUND_TYPE_LENGTH);
-
-		alSourcei(source, AL_BUFFER, info.buffer);
-
-		alSourcef(source, AL_PITCH, info.pitch);
-
-		alSourcef(source, AL_GAIN, info.gain * global_gain[info.type]);
-
-		alSource3f(source, AL_POSITION, info.position.x, info.position.y, 0);
-
-		alSource3f(source, AL_VELOCITY, 0, 0, 0);
-
-		alSourcei(source, AL_LOOPING, info.loop);
-	}
-
 	sound_info find_free_source() {
 		sound_info info;
 		if (free_sources.empty()) {
 			// We have to make a new source.
-			alGenSources((ALuint)1, &source);
-			info.source = source;
+			alGenSources((ALuint)1, &info.source);
 		} else {
 			// We can use a premade one.
-			source = free_sources.top();
+			info.source = free_sources.top();
 			free_sources.pop();
-			info = sources[source];
+			info = sources[info.source];
 		}
 
+		info.is_persistent = false;
 		info.used = true;
-		source[info.source] = info;
+		sources[info.source] = info;
 		return info;
 	}
 
-#define PITCH_DELTA 0.01f
-#define GAIN_DELTA  0.05f
+#define PITCH_DELTA 0.10f
+#define GAIN_DELTA  0.10f
 
 	// Randomizes the sounds, just a bit.
 	void perturb_sound(float* gain, float* pitch) {
-		*gain  = *gain  + ((float) rand() / MAX_RAND - 0.5f) * GAIN_DELTA; 
-		*pitch = *pitch + ((float) rand() / MAX_RAND - 0.5f) * PITCH_DELTA; 
+		*gain  += *gain  * ((float) rand() / RAND_MAX - 0.5f) * GAIN_DELTA; 
+		*pitch += *pitch * ((float) rand() / RAND_MAX - 0.5f) * PITCH_DELTA; 
 	}
 
 	// Plays a sound but ignores the position.
@@ -130,24 +143,25 @@ namespace hate {
 			float pitch, bool loop) {
 		sound_info info = find_free_source();
 
-		info.is_persistent = false;
-		info.type = type;
-		info.gain = gain;
-		info.pitch = pitch;
-		info.loop = loop;
-
 		if (perturb) {
-			perturb_sound(&info.gain, &info.pitch);
+			perturb_sound(&gain, &pitch);
 		}
 
-		set_sound_info(source, info);
+		info.type = type;
+		info.buffer = s.buffer;
+		info.target_gain = gain;
+		info.target_pitch = pitch;
+		info.positional = false;
+		info.loop = loop;
+
+		set_sound_info(info);
 
 		// Now we can play!
-		alSourcePlay(source);
+		alSourcePlay(info.source);
 
 		// Add it to the list of sources
-		sources[info.sources] = info;
-		return source;
+		sources[info.source] = info;
+		return info.source;
 	}
 
 	// Plays a sound at the specified position. 
@@ -155,24 +169,24 @@ namespace hate {
 			float pitch, bool loop, vec2 pos) {
 		sound_info info = find_free_source();
 
-		info.is_persistent = false;
-		info.buffer = s.buffer;
-		info.type = type;
-		info.gain = gain;
-		info.pitch = pitch;
-		info.position = pos;
-		info.loop = loop;
-
 		if (perturb) {
-			perturb_sound(&info.gain, &info.pitch);
+			perturb_sound(&gain, &pitch);
 		}
 
-		set_sound_info(source, info);
+		info.buffer = s.buffer;
+		info.type = type;
+		info.target_gain = gain;
+		info.target_pitch = pitch;
+		info.position = pos;
+		info.positional = true;
+		info.loop = loop;
+
+		set_sound_info(info);
 	
 		// Now we can play!
-		alSourcePlay(source);
+		alSourcePlay(info.source);
 
-		return source;
+		return info.source;
 	}
 
 	void persistant_sound(ALuint source) {
@@ -196,45 +210,45 @@ namespace hate {
 	// If the sound is playing or not.
 	bool is_playing(ALuint source) {
 		int state;
-		alGetSourceState(source, AL_SOURCE_STATE, state);
+		alGetSourcei(source, AL_SOURCE_STATE, &state);
 		return state == AL_PLAYING;
 	}
 
-	bool is_stopped(Aluint source) {
+	bool is_stopped(ALuint source) {
 		int state;
-		alGetSourceState(source, AL_SOURCE_STATE, state);
+		alGetSourcei(source, AL_SOURCE_STATE, &state);
 		return state == AL_STOPPED || state == AL_INITIAL;
 	}
 
 	bool is_paused(ALuint source) {
 		int state;
-		alGetSourceState(source, AL_SOURCE_STATE, state);
+		alGetSourcei(source, AL_SOURCE_STATE, &state);
 		return state == AL_PAUSED;
 	}
 
 	// Sets the buffer.
 	void set_sound_buffer(ALuint source, sound s) {
-
+		sources[source].buffer = s.buffer;
 	}
 
 	// Sets if the source should loop.
 	void set_sound_loop(ALuint source, bool loop) {
-		sources[sources].loop = loop;
+		sources[source].loop = loop;
 	}
 
 	// Sets the gain of a source.
 	void set_sound_gain(ALuint source, float new_gain) {
-		sources[sources].gain = new_gain;
+		sources[source].target_gain = new_gain;
 	}
 
 	// Sets the pitch of a source.
 	void set_sound_pitch(ALuint source, float new_pitch) {
-		sources[sources].pitch = new_pitch;
+		sources[source].target_pitch = new_pitch;
 	}
 
 	// Spoiler! This sets the position of the sound.
 	void set_sound_position(ALuint source, vec2 pos) {
-		sources[sources].position = pos;
+		sources[source].position = pos;
 	}
 	
 	// Does what it says on the tin.
@@ -246,7 +260,7 @@ namespace hate {
 
 	float get_pitch(ALuint source) {
 		float pitch;
-		alGetSourcef(source, AL_PITCH, &gain);
+		alGetSourcef(source, AL_PITCH, &pitch);
 		return pitch;
 	}
 }

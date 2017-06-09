@@ -89,7 +89,6 @@ namespace hate {
 		shader s = load_shader("master.glsl");
 
 		auto sound_file = load_wav("a.wav");
-		play_sound(sound_file, MUSIC);
 
 		use_shader(s);
 		int w, h;
@@ -105,12 +104,18 @@ namespace hate {
 			// @Tought: glfwPollEvents is in "update_input_map", not sure if it's a good idea.
 			update_input_map();
 
+			update_audio();
+
 			if (is_down("up")) {
 				y += get_clock_delta();
 			}
 
 			if (is_down("down")) {
 				y -= get_clock_delta();
+			}
+
+			if (is_changed("down")) {
+				auto s = play_sound(sound_file, MUSIC, true);
 			}
 
 			if (is_down("left"))
