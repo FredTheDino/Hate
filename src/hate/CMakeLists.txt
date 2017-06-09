@@ -12,6 +12,9 @@ find_package (OpenGL REQUIRED)
 include_directories   (ENGINE ${OPENGL_INCLUDE_DIR})
 target_link_libraries (ENGINE ${OPENGL_LIBRARIES})
 
+
+target_link_libraries(ENGINE OpenAL)
+
 # Hopefully, this is legacy
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	INCLUDE_DIRECTORIES(ENGINE "${CMAKE_SOURCE_DIR}/src/include")

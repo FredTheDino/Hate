@@ -78,6 +78,25 @@ namespace hate {
 	mesh quad;
 		
 	void init_graphics() {
+		// But first we need glew
+		if (glewInit())
+			printf("Failed to initalize GLEW - Extension Wrangler\n");
+		
+		// GL default settings.
+		printf("[OpenGL] Version: %s\n", glGetString(GL_VERSION));
+		printf("[OpenGL] Vendor: %s\n", glGetString(GL_VENDOR));
+
+		//glEnable(GL_DEPTH_TEST); @This is needed on Linux if we want to use it.
+		glDisable(GL_DEPTH_TEST); // For safety
+
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+
+		glEnable(GL_MULTISAMPLE); // I don't know if these work...
+		glSampleCoverage(1.0, GL_TRUE);
+
+		glEnable(GL_BLEND); // Alpha blending
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		std::vector<int> indicies;
 		std::vector<vertex> verticies;
 

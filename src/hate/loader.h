@@ -9,6 +9,7 @@
 #pragma once
 #include "basic.h"
 #include "graphics.h"
+#include "audio.h"
 #include <string>
 #include <vector>
 
@@ -31,22 +32,24 @@ namespace hate {
 
 	struct wav_header {
 		uint8_t		riff[4];        // RIFF Header Magic header
-		uint32_t	chunkSize;      // RIFF Chunk Size
+		uint32_t	chunk_size;      // RIFF Chunk Size
 		uint8_t		wave[4];        // WAVE Header
 		// "fmt" sub-chunk
 		uint8_t		fmt[4];         // FMT header
-		uint32_t	subchunkSize;   // Size of the fmt chunk
-		uint16_t	audioFormat;    // Audio format
-		uint16_t	numOfChan;      // Number of channels 1=Mono 2=Stereo
-		uint32_t	samplesPerSec;  // Sampling Frequency in Hz
-		uint32_t	bytesPerSec;    // bytes per second
-		uint16_t	blockAlign;     // 2=16-bit mono, 4=16-bit stereo
-		uint16_t	bitsPerSample; // Number of bits per sample
+		uint32_t	subchunk_size;   // Size of the fmt chunk
+		uint16_t	audio_format;    // Audio format
+		uint16_t	num_of_chan;      // Number of channels 1=Mono 2=Stereo
+		uint32_t	samples_per_sec;  // Sampling Frequency in Hz
+		uint32_t	bytes_per_sec;    // bytes per second
+		uint16_t	block_align;     // 2=16-bit mono, 4=16-bit stereo
+		uint16_t	bits_per_sample; // Number of bits per sample
 	};
 
 	// Opens a wav file and reads in the data.
-	extern int load_wav(std::string path, wav_header& header, 
-			std::vector<char>& data);
+	extern sound load_wav(std::string path);
+
+	// Deletes a sound.
+	extern void delete_sound(sound s);
 
 	extern long get_edit_time(std::string path);
 

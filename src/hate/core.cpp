@@ -40,8 +40,7 @@ namespace hate {
 		mouse_position.y = ypos;
 	}
 
-	void init_hate() {
-		// GLFW stuff.
+	void make_window() {
 		if (!glfwInit()) 
 			printf("Failed to initalze GLFW - Window and IO library\n");
 
@@ -61,27 +60,21 @@ namespace hate {
 		// Maybe not do that? And the clear color... We need 
 		// some sort of initalizer object.
 		glfwSwapInterval(1);
+	}
 
+	void init_hate() {
+		// Those don't really have dependancies.
 		find_resource_location();
-
-		if (glewInit())
-			printf("Failed to initalize GLEW - Extension Wrangler\n");
-
-		// GL Stuff
-		//glEnable(GL_DEPTH_TEST); @This is needed on Linux if we want to use it.
-		glDisable(GL_DEPTH_TEST); // For safety
-
-		glClearColor(0.0, 0.0, 0.0, 1.0);
-
-		glEnable(GL_MULTISAMPLE); // I don't know if these work...
-		glSampleCoverage(1.0, GL_TRUE);
-
-		glEnable(GL_BLEND); // Alpha blending
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		init_graphics();
-
 		load_input_map("input.map"); // Load that map!
+
+		// GLFW stuff.
+		make_window();
+
+		// This needs a window
+		init_graphics();
+		
+		// Set up that audio!
+		init_audio();
 	}
 
 	void destory_hate() {
@@ -94,6 +87,9 @@ namespace hate {
 		texture te = load_texture("monkey_norm.png", false);
 		texture t2 = load_texture("torus_norm.png", false);
 		shader s = load_shader("master.glsl");
+
+		auto sound_file = load_wav("a.wav");
+		play_sound(sound_file, MUSIC);
 
 		use_shader(s);
 		int w, h;
@@ -152,6 +148,7 @@ namespace hate {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
+		delete_sound(sound_file);
 		delete_font(f);
 		delete_texture(te);
 		delete_texture(t2);

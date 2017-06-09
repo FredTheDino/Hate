@@ -4,6 +4,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include <AL/al.h>
+#include <AL/alc.h>
+
 #ifdef _WIN32
 // Way to go windows!
 #include "basic.h"
@@ -74,6 +77,75 @@ namespace hate {
 
 	void delete_texture(texture t) {
 		glDeleteTextures(1, &t.tex_id);
+	}
+
+	struct wav_chunk {
+		uint8_t         id[4];
+		uint32_t        size;
+	};
+
+	sound load_sound(std::vector<char>& data, int format, int samples_per_sec) {
+		sound s;
+		s.format = format;
+		alGenBuffers(1, &s.buffer);
+		alBufferData(s.buffer, format, &data[0], data.size(), samples_per_sec);
+
+		return s;
+	}
+
+	sound load_wav(std::string path) {
+		ALenum format;
+		wav_header header;
+		std::vector<char> data;	
+		
+		// C-style!
+		FILE* file = fopen(get_real_path(path).c_str(), "rb");
+
+		if (!file) {
+			printf("Error loading file: \"%s\"\n", path.c_str());
+			assert(0);
+		}
+
+		if (!fread(&header, sizeof(wav_header), 1, file)) {
+			printf("Error loading file: \"%s\"\n", path.c_str());
+			assert(0);
+		}
+
+		format = 0x1100;
+		format |= (16 == header.bits_per_sample) * 0b0001;
+		format |= (2 == header.num_of_chan)      * 0b0010;
+
+		char chunk_name[] = "data";
+		wav_chunk chunk;
+		while (1) {
+			fread(&chunk, sizeof(wav_chunk), 1, file);
+			for (int i = 0; i < 5; i++) {
+				if (i == 4) goto escape_while;
+				if (chunk_name[i] != chunk.id[i]) break;
+			}
+
+			if (fseek(file, chunk.size, SEEK_CUR)) {
+				printf("\"%s\" isn't a .wav file! It's AaaAAaaAAAA!\n", path.c_str());
+				assert(0);
+			}
+			printf("Another header!?\n");
+		}
+
+		// This is not a bad idea, since there aren't any resources allocated
+		// between here and the goto, it's merely a convinience to
+		// save me from using another bool.
+escape_while:
+
+		data.resize(chunk.size);
+
+		fread(&data[0], sizeof(char), data.size(), file); 
+
+		return load_sound(data, format, header.samples_per_sec);
+	}
+
+
+	void delete_sound(sound s) {
+		alDeleteBuffers(1, &s.buffer);
 	}
 
 	long get_edit_time(std::string path) {
