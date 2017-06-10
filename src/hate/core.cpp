@@ -4,6 +4,7 @@
 #include "shader.h"
 #include "input.h"
 #include "clock.h"
+#include "entity.h"
 #include <stdio.h>
 #include <cmath>
 #include <string>

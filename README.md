@@ -52,4 +52,27 @@ the external ones.
 [ ] Preferably finish this.
 
 ## TODO
-Audio, add in some audio and fix the rest while making a game.
+
+Transform.h
+
+### Entities
+Thoughs this far:
+	All entities share these properties:
+		They all have a transform.
+		They all have a layer they're drawn on.
+		They all have a void pointer that can point to extra information.
+
+		They all have a way to be updated.
+		They all have a way to be drawn (Even if that means not being drawn).
+
+		They all have a behaviour attached which can do nothing.
+	
+	The update function can be replaced with anything that takes
+	in a delta and the entitiy.
+
+	All entities can be seralized and saved as text in a text file. And
+	reproduced at run time.
+
+	
+
+

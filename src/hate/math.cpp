@@ -146,8 +146,12 @@ namespace hate {
 		return s * m;
 	}
 
+	mat4 gen_transform(transform const& t) {
+		return gen_transform(t.position, t.scale, t.rotation);
+	}
+
 	// Generates a brand spanking new transform that can be sent into OpenGL.
-	mat4 transform(vec2 position, vec2 scale, float angle) {
+	mat4 gen_transform(vec2 position, vec2 scale, float angle) {
 		mat4 result = scaling(scale.x, scale.y);
 		result = rotation(result, angle);
 		result = translation(result, position.x, position.y);

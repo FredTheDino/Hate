@@ -124,6 +124,13 @@ namespace hate {
 			mat4 operator* (mat4 o); 
 	};
 
+	// A transform, because it's usefull.
+	struct transform {
+		vec2 position;
+		vec2 scale;
+		float rotation;
+	};
+
 	// #Functional #Precompiled #Rad
 	inline int num_elements(mat4 m) { return 16; }
 
@@ -148,7 +155,8 @@ namespace hate {
 	extern mat4 scaling(mat4 m, float scale_x, float scale_y = 1, float scale_z = 1);
 
 	// Generates a brand spanking new transform that can be sent into OpenGL.
-	extern mat4 transform(vec2 position, vec2 scale, float angle);
+	extern mat4 gen_transform(transform const& t);
+	extern mat4 gen_transform(vec2 position, vec2 scale, float angle);
 
 	// Generaties an orthographic projection matrix.
 	extern mat4 ortho_project(float angle, float aspect_ratio, vec2 zoom = vec2(1, 1));
