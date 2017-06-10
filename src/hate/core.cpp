@@ -4,7 +4,6 @@
 #include "shader.h"
 #include "input.h"
 #include "clock.h"
-#include "entity.h"
 #include <stdio.h>
 #include <cmath>
 #include <string>
@@ -20,6 +19,7 @@ namespace hate {
 	int window_width;
 	int window_height;
 	float window_aspect_ratio;
+	entity_system em;
 
 	// Callbacks
 	void close_callback(GLFWwindow* window) {
@@ -89,11 +89,14 @@ namespace hate {
 		texture t2 = load_texture("torus_norm.png", false);
 		shader s = load_shader("master.glsl");
 
+		entity e;
+		add_entity(em, e);
+		e.update = &another_update;
+		add_entity(em, e);
+
 		auto sound_file = load_wav("a.wav");
 
 		use_shader(s);
-		int w, h;
-		glfwGetWindowSize(window, &w, &h);
 
 		float y = 0;
 
@@ -135,7 +138,8 @@ namespace hate {
 
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, te.tex_id);
-			draw_color(vec4(0.74, 0.2, 0.6, 1.0));
+			draw_color(vec4(0.74, 0.2, sin(get_clock_time()) * 0.4f + 0.2, 1.0));
+			draw_quad(0, 0, 0.5, 0.5);
 			glUniform1i(11, 0);
 			draw_sprite(0, y, 1, 1, &te, &te);
 
@@ -148,7 +152,11 @@ namespace hate {
 			std::string text = "WOAH!?"; //"FPS: " + std::to_string(get_clock_fps());
 			float text_width = get_length_of_text(text, size, f);
 			draw_text(text, size, f, sin(get_clock_time()) - text_width / 2, 0, vec4(1.0, sin(get_clock_time()), 0.5, 1.0));
+
+			update(em, get_clock_delta());
 			
+			draw(em);
+
 			// Updates the graphics
 			glfwSwapBuffers(window);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

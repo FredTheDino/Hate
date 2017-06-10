@@ -18,12 +18,10 @@ namespace hate {
 	struct entity;
 
 	// Something to default the update function to.
-	void dummy_update(entity* e, float delta) {
-		printf("Running default update!\n");
-	}
+	extern void dummy_update(entity* e, float delta);
 	
 	// Something to default the draw function to.
-	void dummy_draw(entity* e) {}
+	extern void dummy_draw(entity* e);
 
 	// This is your one stop shop for "game objects".
 	//
@@ -89,6 +87,9 @@ namespace hate {
 
 	// Updates this entity system.
 	extern void update(entity_system& em, float delta);
+
+	// Draws all the entities.
+	extern void draw(entity_system& em);
 
 	// @Thoughs: I don't need this function, I can just use .by_id[id] instead. 
 	// This would only be to claeify code and I don't want to add that

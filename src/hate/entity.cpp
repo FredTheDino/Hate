@@ -2,22 +2,39 @@
 #include <assert.h>
 
 namespace hate {
+	// Some dummy functions for the entity.
+	//
+	// Something to default the update function to.
+	extern void dummy_update(entity* e, float delta) {
+		printf("Running default update!\n");
+	}
+	
+	// Something to default the draw function to.
+	extern void dummy_draw(entity* e) {
+		printf("Guess who's being draw!\n");
+	}
+
 	unsigned int add_entity(entity_system& em, entity const& e) {
 		// @Robuestness: We're currently adding stuff to
 		// the end, this is probably a bad idea...
 		//
 		// See notes in header file.
 
+		unsigned int id = 0;
+
 		// Gets the ID of the last index.
 		auto it = em.by_id.rbegin();
-		it++;
-		unsigned int id = it->first;
-		// This ID should be unused.
-		id++;
-		
-		// If we have reached the boundry, something has
-		// gone wrong, probably...
-		assert (id < - 2);
+		if (it != em.by_id.rend()) {
+			it++;
+			id = it->first;
+			// This ID should be unused.
+			id++;
+
+			// If we have reached the boundry, something has
+			// gone wrong, probably...
+			assert (id < - 2);
+		}
+
 
 		// Copies it.
 		em.by_id[id] = e;
@@ -78,7 +95,6 @@ namespace hate {
 	void update(entity_system& em, float delta) {
 		auto it = em.by_layer.begin();
 
-
 		entity* current;
 		while (it != em.by_layer.end()) {
 			current = it->second;
@@ -97,6 +113,17 @@ namespace hate {
 				it = em.by_layer.erase(it);
 				continue;
 			}
+			it++;
+		}
+	}
+
+	void draw(entity_system& em) {
+		auto it = em.by_layer.begin();
+
+		entity* current;
+		while (it != em.by_layer.end()) {
+			current = it->second;
+			current->draw(current);
 			it++;
 		}
 	}
