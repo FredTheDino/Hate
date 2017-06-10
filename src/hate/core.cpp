@@ -159,5 +159,7 @@ namespace hate {
 		delete_texture(te);
 		delete_texture(t2);
 		delete_shader(s);
+
+		destroy_audio();
 	}
 }

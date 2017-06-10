@@ -32,16 +32,16 @@ the external ones.
 [ ] Some form of gamestates. Maybe even some level file format. (Need to think more on this, but I want to use level files and make a dedicated editor.)
 [x] Basic rendering functionality, like drawing a quad at a position.
 [x] Basic keyboard input, preferably allready with rebindable keys.
-[ ] Basic audio playback, playing a sound by calling a function.
-[ ] Add all the dependencies into the source code.
+[x] Basic audio playback, playing a sound by calling a function.
+[ ] Add all the dependencies into the source code. // No.
 ### Entities
 [ ] Decide on how entities should work.
 [ ] Implement them. (I'm really good at planning)
 ### Rendering
 [x] Render textures.
-[ ] Render sub sprites.
+[x] Render sub sprites.
 [ ] Simple animations.
-[ ] Layering.
+[ ] Layering. // Requires the entity system...
 [ ] Paralax alternatives.
 [x] Font rendering. (Probably have to use Freetype...)
 ### Behaviours - Depends on a lot of stuff
