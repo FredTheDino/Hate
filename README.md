@@ -33,30 +33,36 @@ the external ones.
 [x] Basic rendering functionality, like drawing a quad at a position.
 [x] Basic keyboard input, preferably allready with rebindable keys.
 [x] Basic audio playback, playing a sound by calling a function.
-[ ] Add all the dependencies into the source code. // No.
-### Entities
-[ ] Decide on how entities should work.
-[ ] Implement them. (I'm really good at planning)
+[-] Add all the dependencies into the source code. (Lets not, it might be worth investigating for GLFW but I have a feeling GLEW is gonna be a touch nut.)
+### Entities and Behaviours
+[x] Decide on how entities should work.
+[x] Implement them. (Looks like my planning payed off)
+[ ] Set up the basic node systems.
+[ ] Chips! (Or crisps if you're british)
+[ ] Make a GUI interface (Might need splitting up)
+[ ] Make it run in a seperate window? This might be usefull.
 ### Rendering
 [x] Render textures.
 [x] Render sub sprites.
-[ ] Simple animations.
-[ ] Layering. // Requires the entity system...
-[ ] Paralax alternatives.
-[x] Font rendering. (Probably have to use Freetype...)
-### Behaviours - Depends on a lot of stuff
-[ ] Set up the basic node system
-[ ] Make a GUI interface (Might need splitting up)
-[ ] Make it run in a seperate window? This might be usefull.
+[-] Simple animations. (It's kinda in, it's maybe a bit more manual then I'd like...)
+[x] Layering. 
+[ ] Paralax alternatives. (Is it needed? I'm thinking of holding of on this for now.)
+[x] Font rendering. 
 ### Plan some more
 [ ] Preferably finish this.
 
 ## TODO
 
-Transform.h
+Next step: 
+	Make it possible to load entire files of entities.
+	Make it possible to save entire files of entities.
+	Start work on the behaviours.
+		I need to figure out how to store them in text.
+		How will chips work?
+		Set up the linked lists.
 
 ### Entities
-Thoughs this far:
+Thoughs this far: #OldNews
 	All entities share these properties:
 		They all have a transform.
 		They all have a layer they're drawn on.
@@ -72,7 +78,4 @@ Thoughs this far:
 
 	All entities can be seralized and saved as text in a text file. And
 	reproduced at run time.
-
-	
-
 

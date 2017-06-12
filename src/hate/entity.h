@@ -29,6 +29,10 @@ namespace hate {
 	// ONLY BE READ. They don't actually update
 	// in the entity_system, but maybe they should?
 	struct entity {
+		// A destructor is needed since the object 
+		// can point to anything, and that needs
+		// garbage collection.
+		~entity();
 		// This decides if it should be destroyed efter the cycle.
 		bool trash = false;
 		// The id of the entity, almost garanteed unique, unless
@@ -94,15 +98,6 @@ namespace hate {
 
 	// Draws all the entities.
 	extern void draw(entity_system& em);
-
-	// @Thoughs: I don't need this function, I can just use .by_id[id] instead. 
-	// This would only be to claeify code and I don't want to add that
-	// at this point.
-	//
-	// Returns the entity associated with this id.
-	// @Unity: Should I really return this by refference? It's not
-	// done anywhere else...
-	// extern entity& get_entity(entity_system& em, unsigned int id);
 
 	// Clears out the entity_system.
 	extern void clear_entity_system(entity_system& em);

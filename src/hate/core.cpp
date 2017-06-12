@@ -4,6 +4,7 @@
 #include "shader.h"
 #include "input.h"
 #include "clock.h"
+#include "level.cpp"
 #include <stdio.h>
 #include <cmath>
 #include <string>
@@ -67,6 +68,7 @@ namespace hate {
 		// Those don't really have dependancies.
 		find_resource_location();
 		load_input_map("input.map"); // Load that map!
+		initalize_entity_types();
 
 		// GLFW stuff.
 		make_window();
@@ -95,6 +97,9 @@ namespace hate {
 		entity e;
 		add_entity(em, e);
 		e.update = &another_update;
+		add_entity(em, e);
+		e = deserialize_entity("base hello_world 2 3 1 1 0 0");
+		printf("Name: %f\n", e.t.position.x);
 		add_entity(em, e);
 
 		auto sound_file = load_wav("a.wav");

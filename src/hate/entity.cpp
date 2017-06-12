@@ -2,6 +2,13 @@
 #include <assert.h>
 
 namespace hate {
+	entity::~entity() {
+		if (trash && data) {
+			delete data;
+			data = nullptr;
+		}
+	}
+
 	// Some dummy functions for the entity.
 	//
 	// Something to default the update function to.
