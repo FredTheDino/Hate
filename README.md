@@ -27,29 +27,29 @@ the external ones.
 
 ## Checklist (I love this stuff)
 ### Core
-[x] A main loop (I'm not setting the bar high)
-[x] A nice little simple math library.
-[ ] Some form of gamestates. Maybe even some level file format. (Need to think more on this, but I want to use level files and make a dedicated editor.)
-[x] Basic rendering functionality, like drawing a quad at a position.
-[x] Basic keyboard input, preferably allready with rebindable keys.
-[x] Basic audio playback, playing a sound by calling a function.
-[-] Add all the dependencies into the source code. (Lets not, it might be worth investigating for GLFW but I have a feeling GLEW is gonna be a touch nut.)
+- [x] A main loop (I'm not setting the bar high)
+- [x] A nice little simple math library.
+- [ ] Some form of gamestates. Maybe even some level file format. (Need to think more on this, but I want to use level files and make a dedicated editor.)
+- [x] Basic rendering functionality, like drawing a quad at a position.
+- [x] Basic keyboard input, preferably allready with rebindable keys.
+- [x] Basic audio playback, playing a sound by calling a function.
+- [-] Add all the dependencies into the source code. (Lets not, it might be worth investigating for GLFW but I have a feeling GLEW is gonna be a touch nut.)
 ### Entities and Behaviours
-[x] Decide on how entities should work.
-[x] Implement them. (Looks like my planning payed off)
-[ ] Set up the basic node systems.
-[ ] Chips! (Or crisps if you're british)
-[ ] Make a GUI interface (Might need splitting up)
-[ ] Make it run in a seperate window? This might be usefull.
+- [x] Decide on how entities should work.
+- [x] Implement them. (Looks like my planning payed off)
+- [ ] Set up the basic node systems.
+- [ ] Chips! (Or crisps if you're british)
+- [ ] Make a GUI interface (Might need splitting up)
+- [ ] Make it run in a seperate window? This might be usefull.
 ### Rendering
-[x] Render textures.
-[x] Render sub sprites.
-[-] Simple animations. (It's kinda in, it's maybe a bit more manual then I'd like...)
-[x] Layering. 
-[ ] Paralax alternatives. (Is it needed? I'm thinking of holding of on this for now.)
-[x] Font rendering. 
+- [x] Render textures.
+- [x] Render sub sprites.
+- [-] Simple animations. (It's kinda in, it's maybe a bit more manual then I'd like...)
+- [x] Layering. 
+- [ ] Paralax alternatives. (Is it needed? I'm thinking of holding of on this for now.)
+- [x] Font rendering. 
 ### Plan some more
-[ ] Preferably finish this.
+- [ ] Preferably finish this.
 
 ## TODO
 
