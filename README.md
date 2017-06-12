@@ -44,7 +44,7 @@ the external ones.
 ### Rendering
 - [x] Render textures.
 - [x] Render sub sprites.
-- [-] Simple animations. (It's kinda in, it's maybe a bit more manual then I'd like...)
+- [x] Simple animations. (It's kinda in, it's maybe a bit more manual then I'd like...)
 - [x] Layering. 
 - [ ] Paralax alternatives. (Is it needed? I'm thinking of holding of on this for now.)
 - [x] Font rendering. 
@@ -54,28 +54,28 @@ the external ones.
 ## TODO
 
 Next step: 
-	Make it possible to load entire files of entities.
-	Make it possible to save entire files of entities.
-	Start work on the behaviours.
-		I need to figure out how to store them in text.
-		How will chips work?
-		Set up the linked lists.
 
-### Entities
-Thoughs this far: #OldNews
-	All entities share these properties:
-		They all have a transform.
-		They all have a layer they're drawn on.
-		They all have a void pointer that can point to extra information.
+- Make it possible to load entire files of entities.
+- Make it possible to save entire files of entities.
 
-		They all have a way to be updated.
-		They all have a way to be drawn (Even if that means not being drawn).
+- Start work on the behaviours.
+- I need to figure out how to store them in text.
+- How will chips work?
+- Set up the linked lists.
 
-		They all have a behaviour attached which can do nothing.
-	
-	The update function can be replaced with anything that takes
-	in a delta and the entitiy.
+### Entities (Toughts this far Old)
+All entities share these properties:
+- They all have a transform.
+- They all have a layer they're drawn on.
+- They all have a void pointer that can point to extra information.
 
-	All entities can be seralized and saved as text in a text file. And
-	reproduced at run time.
+- They all have a way to be updated.
+- They all have a way to be drawn (Even if that means not being drawn).
+
+- They all have a behaviour attached which can do nothing.
+  
+- The update function can be replaced with anything that takes
+  in a delta and the entitiy.
+
+- All entities can be seralized and saved as text in a text file. And reproduced at run time.
 
