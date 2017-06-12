@@ -83,6 +83,9 @@ namespace hate {
 		glfwTerminate();
 	}
 
+	void another_update(entity* e, float delta) {
+	}
+
 	void run_hate() {
 
 		texture te = load_texture("monkey_norm.png", false);
@@ -111,10 +114,12 @@ namespace hate {
 			update_audio();
 
 			if (is_down("up")) {
+				cam.zoom *= 1.1f;
 				y += get_clock_delta();
 			}
 
 			if (is_down("down")) {
+				cam.zoom *= 0.9f;
 				y -= get_clock_delta();
 			}
 
@@ -132,6 +137,7 @@ namespace hate {
 			reload_input_map("input.map", true);
 			recompile_shader(&s, true);
 #endif
+
 			cam.position.y = sin(get_clock_time());
 			use_shader(s);
 			use_projection(cam);
@@ -141,7 +147,7 @@ namespace hate {
 			draw_color(vec4(0.74, 0.2, sin(get_clock_time()) * 0.4f + 0.2, 1.0));
 			draw_quad(0, 0, 0.5, 0.5);
 			glUniform1i(11, 0);
-			draw_sprite(0, y, 1, 1, &te, &te);
+			draw_sprite(0, y, 1, 1, &te);
 
 			draw_sprite(0.1, cos(get_clock_time()) * 0.5, 1, 1, &t2, &t2);
 

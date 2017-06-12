@@ -5,14 +5,10 @@ namespace hate {
 	// Some dummy functions for the entity.
 	//
 	// Something to default the update function to.
-	extern void dummy_update(entity* e, float delta) {
-		printf("Running default update!\n");
-	}
+	extern void dummy_update(entity* e, float delta) {}
 	
 	// Something to default the draw function to.
-	extern void dummy_draw(entity* e) {
-		printf("Guess who's being draw!\n");
-	}
+	extern void dummy_draw(entity* e) {}
 
 	unsigned int add_entity(entity_system& em, entity const& e) {
 		// @Robuestness: We're currently adding stuff to

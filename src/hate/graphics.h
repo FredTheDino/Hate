@@ -14,7 +14,7 @@ namespace hate {
 	// camera.
 	struct camera {
 		vec2 position = vec2(0, 0);
-		vec2 zoom = vec2(1, 1);
+		float zoom = 1.0f;
 		// Disabled for now.
 		//float rotation = 0;
 	};
@@ -92,8 +92,8 @@ namespace hate {
 	extern void init_graphics();
 
 	// If you want to bind a texture to it.
-	extern void draw_sprite(float x, float y, float w, float h, texture* color, texture* normal, int sub_sprite = 0, bool translate = true);
-	extern void draw_sprite(mat4 m, texture* color, texture* normal, int sub_sprite = 0, bool translate = true);
+	extern void draw_sprite(float x, float y, float w, float h, texture* color, texture* normal = nullptr, int sub_sprite = 0, bool translate = true);
+	extern void draw_sprite(mat4 m, texture* color, texture* normal = nullptr, int sub_sprite = 0, bool translate = true);
 
 	// Specifies the color for these meshes.
 	extern void draw_color(vec4 color);

@@ -37,6 +37,8 @@ namespace hate {
 		unsigned int id;
 		// A name that can be used for identification.
 		std::string name = "Entity";
+		// This decides what kind of entity this is.
+		std::string type = "base";
 		// A transform for position, scale and rotation.
 		transform t;
 		// A layer to be drawn on.
@@ -45,6 +47,7 @@ namespace hate {
 		// A bunch of extra data.
 		void* data = nullptr;
 
+		// Maybe not have these here...
 		// How this should be updated.
 		void (*update)(entity*, float) = &dummy_update;
 		// How this should be drawn.
@@ -53,6 +56,7 @@ namespace hate {
 		// A behaviour.
 		behaviour b;
 	};
+
 
 	// A way to keep track of entities and updates them in bulk.
 	struct entity_system {

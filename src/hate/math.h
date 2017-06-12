@@ -159,5 +159,5 @@ namespace hate {
 	extern mat4 gen_transform(vec2 position, vec2 scale, float angle);
 
 	// Generaties an orthographic projection matrix.
-	extern mat4 ortho_project(float angle, float aspect_ratio, vec2 zoom = vec2(1, 1));
+	extern mat4 ortho_project(float angle, float aspect_ratio, float zoom = 1.0f);
 }

@@ -45,6 +45,8 @@ void default_render() {
 
 	if (translate_projection) {
 		m = world + m;
+	} else {
+		m[3][3] = 1.0f;
 	}
 
 	if (use_transform) {
