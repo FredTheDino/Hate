@@ -1,7 +1,10 @@
 #include "level.h"
 #include "misc.h"
 #include "graphics.h"
+#include "loader.h"
+#include <fstream>
 #include <sstream>
+
 
 namespace hate {
 
@@ -33,47 +36,64 @@ namespace hate {
 		return e;
 	}
 
+
 	entity deserialize_entity(std::string serialized_data) {
 		serialized_entity data = split(serialized_data);
-		if (data[0] == "base") {
-			return deserialize_base_entity(data);
-		} else {
-			return entity_types[data[0]].deserialize(data);
-		}
+		return entity_types[data[0]].deserialize(data);
 	}
 
 	void load_level(std::string path, entity_system* em) {
-		// TODO
+		std::string real_path = get_real_path(path);
+		std::ifstream file(real_path.c_str());
+
+		std::string line;
+		while(std::getline(file, line)) {
+			// If it starts with a hash, it's a comment.
+			if (line[0] == '#') continue;
+			add_entity(*em, deserialize_entity(line));
+		}
+
 		return;
 	}
 
 	void save_level(std::string path, entity_system* em) {
-		// TODO
-		return;
+		std::string real_path = get_real_path(path);
+		std::ofstream file(real_path.c_str());
+
+		for (auto& e : em->by_id) {
+			file << entity_types[e.second.type].serialize(&e.second);
+			file << "\n";
+		}
+
+		file.close();
 	}
 
 	// BASE ENTITY STUFF.
 	
 	void delete_base(entity* e) {}
 
-	entity deserialize_base(serialized_entity const& data) {
-		return deserialize_base_entity(data);
-	}
-
 	std::string serialize_base(entity* e) {
 		std::stringstream ss;
 		ss << e->type;
+		ss << " ";
 		ss << e->name;
+		ss << " ";
 
 		ss << e->t.position.x;
+		ss << " ";
 		ss << e->t.position.y;
+		ss << " ";
 
 		ss << e->t.scale.y;
+		ss << " ";
 		ss << e->t.scale.y;
+		ss << " ";
 
 		ss << e->t.rotation;
+		ss << " ";
 
 		ss << e->layer;
+		ss << " ";
 
 		return ss.str();
 	}
@@ -92,7 +112,7 @@ namespace hate {
 		type.delete_entity = &delete_base;
 
 		type.serialize = &serialize_base;
-		type.deserialize = &deserialize_base;
+		type.deserialize = &deserialize_base_entity;
 
 		type.draw = &draw_base;
 		type.update = &update_base;
