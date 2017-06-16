@@ -26,6 +26,15 @@ namespace hate {
 		int sprites_x = 1;
 		int sprites_y = 1;
 	};
+	
+	// A nice bundle of data related to 
+	// meshes. 
+	struct mesh {
+		unsigned	vbo;
+		unsigned	vao;
+		unsigned	ebo = 0;
+		unsigned 	draw_count;
+	};
 
 	// This data type corresponds to a single face, that
 	// can be drawn to the screen.
@@ -62,19 +71,35 @@ namespace hate {
 	// Clears the font data so OpenGL doens't get mad.
 	extern void delete_font(font& f);
 	
+#define MIN_EDGE 0.48f
+#define MAX_EDGE 0.5f
 	// Renders a pice of text with the specified font to the screen.
 	extern void draw_text(std::string text, float size, font& f, 
 			float x, float y, vec4 color = vec4(0, 0, 0, 1.0), 
 			float spacing = 1.0f, 
-			float min_edge = 0.45f, float max_edge = 0.5f);
+			float min_edge = MIN_EDGE, float max_edge = MAX_EDGE);
 
+	// Generates a mesh with the specified text in the font.
+	//
+	// This procedure is also called by "draw_text", but
+	// this allows you to make optemizations, like not 
+	// re generating the text if it is the same as last frame.
+	mesh generate_text_mesh(std::string text, float size, font& f, 
+			float x, float y, float spacing = 1.0f);
+
+	// Draws the generated text_mesh.
+	void draw_text_mesh(mesh m, font& f, 
+			vec4 color = vec4(0, 0, 0, 1.0), 
+			float min_edge = MIN_EDGE, float max_edge = MAX_EDGE);
+
+	// Deletes a mesh, suprise...
+	void delete_mesh(mesh m);
 
 	// Gets the length of the text in the coordinate space with the specified
 	// size.
 	extern float get_length_of_text(std::string text, float size, font& f, float spacing = 1.0f);
 
 	// GENERAL RENDERING
-	
 
 	// The global and standardlyused camera.
 	extern camera cam;
@@ -82,6 +107,8 @@ namespace hate {
 	// Sends in the camera matrix.
 	extern void use_projection(camera c);
 
+	// This draws a mesh, any mesh.
+	void draw_mesh(mesh m);
 
 	// Initalizes the graphics, by registering some basic
 	// meshes and initalizeing the shaders on the graphics card.

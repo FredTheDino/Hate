@@ -61,7 +61,7 @@ namespace hate {
 		// @FIXME, we currently set Vsync to true, allways... 
 		// Maybe not do that? And the clear color... We need 
 		// some sort of initalizer object.
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 	}
 
 	void init_hate() {
@@ -90,6 +90,7 @@ namespace hate {
 
 	void run_hate() {
 
+
 		texture te = load_texture("monkey_norm.png", false);
 		texture t2 = load_texture("torus_norm.png", false);
 		shader s = load_shader("master.glsl");
@@ -108,87 +109,64 @@ namespace hate {
 		auto sound_file = load_wav("a.wav");
 
 		use_shader(s);
+		draw_color(vec4(0.74f, 0.2f, 0.2f, 1.0f));
 
 		float y = 0;
 
 		font f = load_font("fonts/droid_sans");
 		
 		reset_clock();
+		float delta;
+		float min_e = 0.5f;
+
+		std::string old_text = "NaN";
+		mesh t_m = generate_text_mesh(old_text, 10.0, f, 0, 0);
 		while (running) {
 			update_clock();
+			delta = get_clock_delta();
 			// @Tought: glfwPollEvents is in "update_input_map", not sure if it's a good idea.
 			update_input_map();
 
 			update_audio();
-/*
-			if (is_down("up")) {
-				cam.zoom *= 1.1f;
-				y += get_clock_delta();
-			}
-
-			if (is_down("down")) {
-				cam.zoom *= 0.9f;
-				y -= get_clock_delta();
-			}
-
-			if (is_changed("down")) {
-				auto s = play_sound(sound_file, MUSIC, true);
-			}
-
-			if (is_down("left"))
-				cam.position.x -= get_clock_delta();
-
-			if (is_down("right"))
-				cam.position.x += get_clock_delta();
-
-#ifdef DEBUG
-			reload_input_map("input.map", true);
-			recompile_shader(&s, true);
-			use_shader(s);
-#endif
-
-			cam.position.y = sin(get_clock_time());
-			use_projection(cam);
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, te.tex_id);
-			draw_color(vec4(0.74, 0.2, sin(get_clock_time()) * 0.4f + 0.2, 1.0));
-			draw_quad(0, 0, 0.5, 0.5);
-			glUniform1i(11, 0);
-			draw_sprite(0, y, 1, 1, &te);
-
-			draw_sprite(0.1, cos(get_clock_time()) * 0.5, 1, 1, &t2, &t2);
-
-			//printf("to_gl: %f, %f\n", mouse_to_gl().x, mouse_to_gl().y);
-			draw_sprite(mouse_to_gl().x, mouse_to_gl().y, 0.2, 0.2, &t2, &t2, 0, false);
-
-			float size = 3 + sin(get_clock_time());
-			std::string text = "WOAH!?"; //"FPS: " + std::to_string(get_clock_fps());
-			float text_width = get_length_of_text(text, size, f);
-			draw_text(text, size, f, sin(get_clock_time()) - text_width / 2, 0, vec4(1.0, sin(get_clock_time()), 0.5, 1.0));
-*/
 
 
+			#undef DEBUG
 #ifdef DEBUG
 			reload_input_map("input.map", true);
 			recompile_shader(&s, true);
 			use_shader(s);
 #endif
 			if (is_down("up")) {
-				cam.zoom *= 1.1f;
+				cam.zoom /= 1.0f + delta;
 			}
 
 			if (is_down("down")) {
-				cam.zoom *= 0.9f;
+				cam.zoom *= 1.0f + delta;
+			}
+
+			if (is_down("left")) {
+				cam.position.x -= delta * 2;
+			}
+
+			if (is_down("right")) {
+				cam.position.x += delta * 2;
 			}
 
 			update(em, get_clock_delta());
 			
 			use_projection(cam);
 
-			draw_color(vec4(0.74, 0.2, sin(get_clock_time()) * 0.4f + 0.2, 1.0));
+			draw_sprite(0.1, 0.5, 1, 1, &t2, &t2);
 
-			draw_sprite(0.1, cos(get_clock_time()) * 0.5, 1, 1, &t2, &t2);
+			std::string text = "fps ";
+			text += std::to_string(get_clock_fps());
+			if (old_text != text) {
+				delete_mesh(t_m);
+				t_m = generate_text_mesh(text, 10.0, f, 0, 0);
+				old_text = text;
+			}
+			draw_text_mesh(t_m, f, vec4(1.0, 1.0, 1.0, 1.0));
+			//draw_text(text, 10, f, 0, 2, vec4(0.75f, 0.2f, 0.75f, 1.0f));
 
 			draw(em);
 

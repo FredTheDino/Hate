@@ -71,14 +71,14 @@ void default_render() {
 }
 
 void text_render() {
-	vec2 pos;
+	vec4 pos;
 	if (translate_projection) {
-		pos = (vec4(in_pos, 0.0, 1.0) * (projection + world)).xy;
+		pos = vec4(in_pos, 0.0, 1.0) * (projection + world);
 	} else {
-		pos = in_pos * mat2(projection);
+		pos = vec4(in_pos * mat2(projection), 0.0, 1.0);
 	}
 
-	gl_Position = vec4(pos, 0.0, 1.0);
+	gl_Position = pos;
 
 	pass_texCoord = in_texCoord;
 }

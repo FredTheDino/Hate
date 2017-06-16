@@ -8,17 +8,6 @@
 #include "graphics.h"
 
 namespace hate {
-	// A nice bundle of data related to 
-	// meshes. 
-	//
-	// Maybe it should be exported, but
-	// it is hiden away in here for now.
-	struct mesh {
-		unsigned	vbo;
-		unsigned	vao;
-		unsigned	ebo;
-		unsigned 	draw_count;
-	};
 
 	camera cam;
 
@@ -36,9 +25,41 @@ namespace hate {
 
 	void draw_mesh(mesh m) {
 		glBindVertexArray(m.vao);
-		glDrawElements(GL_TRIANGLES, m.draw_count, GL_UNSIGNED_INT, 0);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		if (m.ebo != 0) {
+			glDrawElements(GL_TRIANGLES, m.draw_count, GL_UNSIGNED_INT, 0);
+		} else {
+			glDrawArrays(GL_TRIANGLES, 0, m.draw_count);
+		}
 		glBindVertexArray(0);
+	}
+
+	mesh new_mesh(std::vector<vertex> const& verticies) {
+		mesh m;
+		glGenVertexArrays(1, &m.vao);
+
+		glGenBuffers(1, &m.vbo);
+
+		m.draw_count = verticies.size();
+
+		glBindVertexArray(m.vao);
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, m.vbo);
+			glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(vertex), 
+					&verticies[0], GL_STATIC_DRAW);
+			
+
+			// Position
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 
+					sizeof(vertex), (GLvoid*) offsetof(vertex, position));
+
+			// Texture coordinate
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 
+					sizeof(vertex), (GLvoid*) offsetof(vertex, uv));
+		}
+		glBindVertexArray(0);
+		return m;
 	}
 
 	mesh new_mesh(std::vector<int> const& indicies, std::vector<vertex> const& verticies) {
@@ -72,6 +93,15 @@ namespace hate {
 		}
 		glBindVertexArray(0);
 		return m;
+	}
+
+	void delete_mesh(mesh m) {
+		glDeleteVertexArrays(1, &m.vao);
+		glDeleteBuffers(1, &m.vbo);
+
+		if (m.ebo) {
+			glDeleteBuffers(1, &m.ebo);
+		}
 	}
 
 	// Create this on init
@@ -189,6 +219,7 @@ namespace hate {
 		glUniform1i(17, 0);
 
 		glUniformMatrix4fv(6, &m._01 - &m._00, GL_FALSE, &m._[0]);
+		draw_mesh(quad);
 	}
 
 	// Who doesn't want to use a camera
@@ -255,13 +286,7 @@ namespace hate {
 		f.faces.clear();
 	}
 
-	GLuint text_vbo = -1;
-	GLuint text_vao = -1;
-
-	// Renders a pice of text with the specified font to the screen.
-	void draw_text(std::string text, float size, font& f, 
-			float x, float y, vec4 color, float spacing, 
-			float min_edge, float max_edge) {
+	mesh generate_text_mesh(std::string text, float size, font& f, float x, float y, float spacing) {
 		std::vector<vertex> verticies;
 		verticies.reserve(text.size() * 6);
 
@@ -295,15 +320,15 @@ namespace hate {
 			cur += (ff.advance + ff.offset_x) * size * spacing;
 		}
 
-		// Get ready to render!
-		if (text_vao == -1) {
-			glGenVertexArrays(1, &text_vao);
-			glGenBuffers(1, &text_vao);
-		}
+		mesh m = new_mesh(verticies);
+		return m;
+		// Draw
+		//glDrawArrays(GL_TRIANGLES, 0, verticies.size());
+	}
 
-		// Assumes the master shader is used.
-		
-		
+	void draw_text_mesh(mesh m, font& f, vec4 color, float min_edge, float max_edge) {
+		// Assumes the master shader is used,
+		// might be dumb...
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, f.tex.tex_id);
 		glUniform1i(10, 1);
@@ -312,28 +337,36 @@ namespace hate {
 		glUniform1f(13, min_edge);
 		glUniform1f(14, max_edge);
 		glUniform4f(15, color.x, color.y, color.z, color.w);
-		glBindVertexArray(text_vao);
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, text_vbo);
-			glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(vertex), 
-					&verticies[0], GL_DYNAMIC_DRAW);
 
-			// Position
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 
-					sizeof(vertex), (GLvoid*) offsetof(vertex, position));
+		draw_mesh(m);
 
-			// Texture coordinate
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 
-					sizeof(vertex), (GLvoid*) offsetof(vertex, uv));
-		}
-		// Draw
-		glDrawArrays(GL_TRIANGLES, 0, verticies.size());
-
-		glBindVertexArray(0);
 		// Reset the state.
 		glUniform1i(12, 0);
+	}
+
+	// Renders a pice of text with the specified font to the screen.
+	void draw_text(std::string text, float size, font& f, 
+			float x, float y, vec4 color, float spacing, 
+			float min_edge, float max_edge) {
+
+		// Assumes the master shader is used,
+		// might be dumb...
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, f.tex.tex_id);
+		glUniform1i(10, 1);
+
+		glUniform1i(12, 1);
+		glUniform1f(13, min_edge);
+		glUniform1f(14, max_edge);
+		glUniform4f(15, color.x, color.y, color.z, color.w);
+		mesh m = generate_text_mesh(text, size, f, x, y, spacing);
+		draw_mesh(m);
+		
+		// Reset the state.
+		glUniform1i(12, 0);
+
+		delete_mesh(m);
+
 	}
 
 	// Gets the length of the text in the coordinate space with the specified
@@ -348,6 +381,4 @@ namespace hate {
 
 		return total_length;
 	}
-
-
 }
