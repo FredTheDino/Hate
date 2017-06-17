@@ -136,6 +136,7 @@ namespace hate {
 			recompile_shader(&s, true);
 			use_shader(s);
 #endif
+			/*
 			if (is_down("up")) {
 				cam.zoom /= 1.0f + delta;
 			}
@@ -151,6 +152,7 @@ namespace hate {
 			if (is_down("right")) {
 				cam.position.x += delta * 2;
 			}
+			*/
 
 			update(em, get_clock_delta());
 			

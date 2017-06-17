@@ -26,7 +26,7 @@ namespace hate {
 
 	// Runs the engine, this enters a loop
 	// that breaks when the program should 
-	// exit, so de initalize stuff after
+	// exit, so deinitalize stuff after
 	// this call.
 	extern void run_hate();
 

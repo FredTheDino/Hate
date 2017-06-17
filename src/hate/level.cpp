@@ -7,6 +7,7 @@
 
 
 namespace hate {
+	std::unordered_map<std::string, entity_type> entity_types;
 
 	void register_entity_type(entity_type const& type) {
 		// Makes a safe working copy.

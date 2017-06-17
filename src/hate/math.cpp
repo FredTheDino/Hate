@@ -73,6 +73,9 @@ namespace hate {
 	vec2 vec2::normalize() const {
 		float l = length();
 		vec2 result;
+
+		if (l == 0) return result;
+
 		result.x = x / l;
 		result.y = y / l;
 		return result;

@@ -73,6 +73,7 @@ namespace hate {
 			if (line[0] == '#') continue;
 
 			auto parse = split(line, ' ');
+			if (parse.size() < 2) continue;
 			auto name = parse[0];
 			input i;
 			if (parse[1] == "K") {

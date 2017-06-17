@@ -16,6 +16,8 @@ typedef std::vector<std::string> serialized_entity;
 
 
 namespace hate {
+#ifndef _ENTITY_TYPE_
+#define _ENTITY_TYPE_
 	// A type of type.
 	struct entity_type {
 		//
@@ -45,9 +47,10 @@ namespace hate {
 		// How to update this type of entity.
 		void (*update)(entity*, float);
 	};
+#endif
 
 	// The list of all registerd entity types.
-	std::unordered_map<std::string, entity_type> entity_types;
+	extern std::unordered_map<std::string, entity_type> entity_types;
 
 	// Sets up everything by registering some base types.
 	extern void initalize_entity_types();

@@ -2,7 +2,10 @@
 # All input names are case sensative.
 up K W
 down K S
-down K LEFT_SHIFT
-up K RIGHT_SHIFT
 left K A
 right K D
+
+up K UP
+down K DOWN
+left K LEFT
+right K RIGHT
