@@ -37,10 +37,10 @@ namespace hate {
 	}
 
 	// The dot product, if you don't know this, look it up.
-	float vec2::dot(vec2 other) const {
+	float dot(vec2 const& a, vec2 const& b) {
 		float result;
 		for (int i = 0; i < 2; i++) {
-			result = other._[i] * _[i];
+			result = a._[i] * b._[i];
 		}
 		return result;
 	}
@@ -55,29 +55,41 @@ namespace hate {
 	// clockwise or clockwise order.
 	//
 	// But yeah, it's wierd.
-	float vec2::cross(vec2 other) const {
-		return x * other.y - y * other.x;
+	float coss(vec2 const& a, vec2 const& b) {
+		return a.x * b.y - a.y * b.x;
 	}
 
 	// The langth, squared...
-	float vec2::length_squared() const {
-		return x * x + y * y;
+	float length_squared(vec2 const& a) {
+		return a.x * a.x + a.y * a.y;
 	}
 
 	// The length of the vector.
-	float vec2::length() const {
-		return sqrt(length_squared());
+	float length(vec2 const& a) {
+		return sqrt(length_squared(a));
 	}
 
 	// Creates a normalized copy.
-	vec2 vec2::normalize() const {
-		float l = length();
+	vec2 normalize(vec2 const& a) {
+		float l = length(a);
 		vec2 result;
 
 		if (l == 0) return result;
 
-		result.x = x / l;
-		result.y = y / l;
+		result.x = a.x / l;
+		result.y = a.y / l;
+		return result;
+	}
+
+	// It, spoilers, rotates a vector.
+	vec2 rotate(vec2 const& a, float angle) {
+		vec2 result;
+
+		float c = cos(angle);
+		float s = sin(angle);
+		result.x = c * a.x - s * a.y;
+		result.y = s * a.x + c * a.y;
+
 		return result;
 	}
 
@@ -95,13 +107,27 @@ namespace hate {
 	// Multiplying with another matrix
 	mat4 mat4::operator* (mat4 o) {
 		mat4 a;
-		for (int i = 0; i < 16; i++) for (int j = 0; j < 16; j++) {
+		for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) {
 			for (int k = 0; k < 4; k++) {
 				a._[i * 4 + j] += _[i * 4 + k] * o._[k * 4 + j];
 			}
 		} 
 		return a;
 	}
+	// Prints the matrix.
+	void print_mat(char const* prefix, mat4 const& m) {
+		printf("%s:\n", prefix);
+
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				printf("%f, ", m._[4 * i + j]);
+			}
+			printf("\b\b \n");
+		}
+	}
+
+	
+		
 	// Adds translation to the matrix, or generates a new one.
 	mat4 translation(float x, float y, float z) {
 		return translation(mat4(0), x, y, z);
@@ -126,7 +152,7 @@ namespace hate {
 		r._00 =  c;
 		r._01 = -s;
 		r._10 =  s;
-		r._10 =  c;
+		r._11 =  c;
 		return r;
 	}
 
@@ -158,6 +184,7 @@ namespace hate {
 		mat4 result = scaling(scale.x, scale.y);
 		result = rotation(result, angle);
 		result = translation(result, position.x, position.y);
+		result._33 = 1.0f;
 		return result;
 	}
 

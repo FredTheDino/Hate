@@ -64,31 +64,36 @@ namespace hate {
 
 		// Scales the vector by a scaler.
 		vec2 operator* (float scale) const; 
-
-		// The dot product, if you don't know this, look it up.
-		float dot(vec2 other) const; 
-
-		// This isn't really a cross product,
-		// but it is the dot product of the two
-		// vectors after one has been rotated 90 
-		// degrees.
-		//
-		// This can be used for telling if the 
-		// points in a polygon are named in counter
-		// clockwise or clockwise order.
-		//
-		// But yeah, it's wierd.
-		float cross(vec2 other) const; 
-
-		// The langth, squared...
-		float length_squared() const; 
-
-		// The length of the vector.
-		float length() const; 
-
-		// Creates a normalized copy.
-		vec2 normalize() const; 
 	};
+
+	// The dot product, if you don't know this, look it up.
+	float dot(vec2 const& a, vec2 const& b); 
+
+	// This isn't really a cross product,
+	// but it is the dot product of the two
+	// vectors after one has been rotated 90 
+	// degrees.
+	//
+	// This can be used for telling if the 
+	// points in a polygon are named in counter
+	// clockwise or clockwise order.
+	//
+	// But yeah, it's wierd.
+	float cross(vec2 const& a, vec2 const& b); 
+
+	// The langth, squared...
+	float length_squared(vec2 const& a); 
+
+	// The length of the vector.
+	float length(vec2 const& a); 
+
+	// Creates a normalized copy.
+	vec2 normalize(vec2 const& a); 
+
+	// Rotates the vector around the origin by
+	// the angle "angle". Note that this uses
+	// radians.
+	vec2 rotate(vec2 const& a, float angle);
 
 	// A row major matrix implementation that
 	// cuts out all the fluff.
@@ -137,6 +142,9 @@ namespace hate {
 	//
 	// Some simple to use matrix manipulations functions.
 	//
+
+	// Prints the matrix.
+	extern void print_mat(char const* prefix, mat4 const& m);
 
 	// Adds translation to the matrix, or generates a new one.
 	extern mat4 translation(float x, float y = 0, float z = 0);
