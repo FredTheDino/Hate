@@ -36,7 +36,9 @@ int sign(float f) {
 	return 1;
 }
 
+float t = 0;
 void update_player(entity* e, float delta) {
+	t += delta;
 	player_data* p = ((player_data*) e->data);
 
 	if (is_down("left")) {
@@ -62,10 +64,32 @@ void update_player(entity* e, float delta) {
 	e->t.position = e->t.position + rotate(vec2(0, -1), e->t.rotation) * p->vel * delta;
 }
 
+
 void draw_player(entity* e) {
-	mat4 t = gen_transform(e->t);
-	print_mat("trans", t);
-	draw_quad(t);
+
+	mat4 main_transform = gen_transform(e->t);
+
+	vec4 turret_position = main_transform * vec4(0, -0.01f, 0, 1);
+
+	auto p = ortho_project(0, window_aspect_ratio, cam.zoom);
+	p = translation(p, -cam.position.x, -cam.position.y);
+	print_mat("p:", p);
+
+	vec2 mouse_pos = p * mouse_to_gl();
+
+	printf("X: %f\tY: %f\n", mouse_pos.x, mouse_pos.y);
+
+	float angle = atan2(turret_position.x - mouse_pos.x, turret_position.y - mouse_pos.y);
+
+	mat4 turret_tansform = rotation(angle);
+
+	draw_color(vec4(1, 0, 1, 1));
+
+	draw_quad(main_transform);
+
+	draw_color(vec4(1, 1, 0, 1));
+
+	draw_quad(main_transform * turret_tansform);
 }
 
 inline void register_player_type() {

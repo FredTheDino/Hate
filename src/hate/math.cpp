@@ -103,9 +103,17 @@ namespace hate {
 			}
 		}
 	}
+
+	float& mat4::operator[] (int i) {
+		return this->_[i];
+	}
+
+	const float& mat4::operator[] (int i) const{
+		return this->_[i];
+	}
 	
 	// Multiplying with another matrix
-	mat4 mat4::operator* (mat4 o) {
+	mat4 mat4::operator* (mat4 o) const {
 		mat4 a;
 		for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) {
 			for (int k = 0; k < 4; k++) {
@@ -114,6 +122,22 @@ namespace hate {
 		} 
 		return a;
 	}
+
+	vec4 mat4::operator* (vec4 a) const {
+		vec4 out;
+		
+		for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) {
+			out._[j] += _[i * 4 + j];
+		}
+
+		return out;
+	}
+
+	vec2 mat4::operator* (vec2 a) const {
+		vec4 out = (*this) * vec4(a.x, a.y, 0, 1);
+		return vec2(out.x, out.y);
+	}
+
 	// Prints the matrix.
 	void print_mat(char const* prefix, mat4 const& m) {
 		printf("%s:\n", prefix);
@@ -146,7 +170,7 @@ namespace hate {
 	//
 	// (This is made for 2D stuff after all)
 	mat4 rotation(float angle) {
-		mat4 r;
+		mat4 r(1.0);
 		float s = sin(angle);
 		float c = cos(angle);
 		r._00 =  c;
@@ -184,7 +208,6 @@ namespace hate {
 		mat4 result = scaling(scale.x, scale.y);
 		result = rotation(result, angle);
 		result = translation(result, position.x, position.y);
-		result._33 = 1.0f;
 		return result;
 	}
 
@@ -205,5 +228,135 @@ namespace hate {
 		p._33 = zoom;
 
 		return p;
+
+	}
+	
+	mat4 invert(mat4 const& m) {
+		mat4 inv;
+		float det;
+		int i;
+
+		inv[0] = m[5]  * m[10] * m[15] - 
+			m[5]  * m[11] * m[14] - 
+			m[9]  * m[6]  * m[15] + 
+			m[9]  * m[7]  * m[14] +
+			m[13] * m[6]  * m[11] - 
+			m[13] * m[7]  * m[10];
+
+		inv[4] = -m[4]  * m[10] * m[15] + 
+			m[4]  * m[11] * m[14] + 
+			m[8]  * m[6]  * m[15] - 
+			m[8]  * m[7]  * m[14] - 
+			m[12] * m[6]  * m[11] + 
+			m[12] * m[7]  * m[10];
+
+		inv[8] = m[4]  * m[9] * m[15] - 
+			m[4]  * m[11] * m[13] - 
+			m[8]  * m[5] * m[15] + 
+			m[8]  * m[7] * m[13] + 
+			m[12] * m[5] * m[11] - 
+			m[12] * m[7] * m[9];
+
+		inv[12] = -m[4]  * m[9] * m[14] + 
+			m[4]  * m[10] * m[13] +
+			m[8]  * m[5] * m[14] - 
+			m[8]  * m[6] * m[13] - 
+			m[12] * m[5] * m[10] + 
+			m[12] * m[6] * m[9];
+
+		inv[1] = -m[1]  * m[10] * m[15] + 
+			m[1]  * m[11] * m[14] + 
+			m[9]  * m[2] * m[15] - 
+			m[9]  * m[3] * m[14] - 
+			m[13] * m[2] * m[11] + 
+			m[13] * m[3] * m[10];
+
+		inv[5] = m[0]  * m[10] * m[15] - 
+			m[0]  * m[11] * m[14] - 
+			m[8]  * m[2] * m[15] + 
+			m[8]  * m[3] * m[14] + 
+			m[12] * m[2] * m[11] - 
+			m[12] * m[3] * m[10];
+
+		inv[9] = -m[0]  * m[9] * m[15] + 
+			m[0]  * m[11] * m[13] + 
+			m[8]  * m[1] * m[15] - 
+			m[8]  * m[3] * m[13] - 
+			m[12] * m[1] * m[11] + 
+			m[12] * m[3] * m[9];
+
+		inv[13] = m[0]  * m[9] * m[14] - 
+			m[0]  * m[10] * m[13] - 
+			m[8]  * m[1] * m[14] + 
+			m[8]  * m[2] * m[13] + 
+			m[12] * m[1] * m[10] - 
+			m[12] * m[2] * m[9];
+
+		inv[2] = m[1]  * m[6] * m[15] - 
+			m[1]  * m[7] * m[14] - 
+			m[5]  * m[2] * m[15] + 
+			m[5]  * m[3] * m[14] + 
+			m[13] * m[2] * m[7] - 
+			m[13] * m[3] * m[6];
+
+		inv[6] = -m[0]  * m[6] * m[15] + 
+			m[0]  * m[7] * m[14] + 
+			m[4]  * m[2] * m[15] - 
+			m[4]  * m[3] * m[14] - 
+			m[12] * m[2] * m[7] + 
+			m[12] * m[3] * m[6];
+
+		inv[10] = m[0]  * m[5] * m[15] - 
+			m[0]  * m[7] * m[13] - 
+			m[4]  * m[1] * m[15] + 
+			m[4]  * m[3] * m[13] + 
+			m[12] * m[1] * m[7] - 
+			m[12] * m[3] * m[5];
+
+		inv[14] = -m[0]  * m[5] * m[14] + 
+			m[0]  * m[6] * m[13] + 
+			m[4]  * m[1] * m[14] - 
+			m[4]  * m[2] * m[13] - 
+			m[12] * m[1] * m[6] + 
+			m[12] * m[2] * m[5];
+
+		inv[3] = -m[1] * m[6] * m[11] + 
+			m[1] * m[7] * m[10] + 
+			m[5] * m[2] * m[11] - 
+			m[5] * m[3] * m[10] - 
+			m[9] * m[2] * m[7] + 
+			m[9] * m[3] * m[6];
+
+		inv[7] = m[0] * m[6] * m[11] - 
+			m[0] * m[7] * m[10] - 
+			m[4] * m[2] * m[11] + 
+			m[4] * m[3] * m[10] + 
+			m[8] * m[2] * m[7] - 
+			m[8] * m[3] * m[6];
+
+		inv[11] = -m[0] * m[5] * m[11] + 
+			m[0] * m[7] * m[9] + 
+			m[4] * m[1] * m[11] - 
+			m[4] * m[3] * m[9] - 
+			m[8] * m[1] * m[7] + 
+			m[8] * m[3] * m[5];
+
+		inv[15] = m[0] * m[5] * m[10] - 
+			m[0] * m[6] * m[9] - 
+			m[4] * m[1] * m[10] + 
+			m[4] * m[2] * m[9] + 
+			m[8] * m[1] * m[6] - 
+			m[8] * m[2] * m[5];
+
+		det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
+
+		mat4 inv_out;
+		if (det != 0) {
+			det = 1.0 / det;
+
+			for (i = 0; i < 16; i++)
+				inv_out[i] = inv[i] * det;
+		}
+		return inv_out;
 	}
 }

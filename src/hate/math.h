@@ -124,9 +124,17 @@ namespace hate {
 			
 			// Inintalizes a new matrix.
 			mat4 (float d = 0);
+
+			float& operator[] (int i);
+			const float& operator[] (int i) const;
 			
 			// Multiplies the two matricies.
-			mat4 operator* (mat4 o); 
+			mat4 operator* (mat4 o) const; 
+
+			// Transforms a vector.
+			vec4 operator* (vec4 a) const;
+
+			vec2 operator* (vec2 a) const;
 	};
 
 	// A transform, because it's usefull.
@@ -168,4 +176,7 @@ namespace hate {
 
 	// Generaties an orthographic projection matrix.
 	extern mat4 ortho_project(float angle, float aspect_ratio, float zoom = 1.0f);
+
+	// Inverts the matrix (AKA generates a matrix which reverses the effects of the old one)
+	extern mat4 invert(mat4 const& m);
 }
