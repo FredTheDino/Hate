@@ -6,6 +6,8 @@ using namespace hate;
 int main(int c, char** v) {
 	hate::init_hate();
 
+	cam.zoom = 5.0f;
+
 	register_player_type();
 
 	entity p = deserialize_entity("player player 0 0 1 1 0 0");

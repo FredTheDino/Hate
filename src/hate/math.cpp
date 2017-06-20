@@ -158,7 +158,6 @@ namespace hate {
 		}
 	}
 
-	
 		
 	// Adds translation to the matrix, or generates a new one.
 	mat4 translation(float x, float y, float z) {
@@ -170,6 +169,14 @@ namespace hate {
 		m._13 += y;
 		m._23 += z;
 		return m;
+	}
+
+	mat4 translation(vec2 delta_pos) {
+		return translation(delta_pos.x, delta_pos.y);
+	}
+
+	mat4 translation(mat4 m, vec2 delta_pos) {
+		return translation(m, delta_pos.x, delta_pos.y);
 	}
 
 	// Adds in rotation in the matrix, around the z-axis 
@@ -236,7 +243,6 @@ namespace hate {
 		p._33 = zoom;
 
 		return p;
-
 	}
 	
 	mat4 invert(mat4 const& m) {

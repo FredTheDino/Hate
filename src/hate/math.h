@@ -160,6 +160,8 @@ namespace hate {
 	// Adds translation to the matrix, or generates a new one.
 	extern mat4 translation(float x, float y = 0, float z = 0);
 	extern mat4 translation(mat4 m, float x, float y = 0, float z = 0);
+	extern mat4 translation(vec2 delta_pos);
+	extern mat4 translation(mat4 m, vec2 delta_pos);
 
 	// Adds in rotation in the matrix, around the z-axis 
 	//
