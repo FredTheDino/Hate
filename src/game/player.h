@@ -4,6 +4,7 @@
 #include <graphics.h>
 #include <level.h>
 #include <math.h>
+#include <clock.h>
 
 using namespace hate;
 
@@ -41,6 +42,22 @@ void update_player(entity* e, float delta) {
 	t += delta;
 	player_data* p = ((player_data*) e->data);
 
+	if (is_down("cam_up")) {
+		cam.position.y += delta;
+	}
+
+	if (is_down("cam_down")) {
+		cam.position.y -= delta;
+	}
+	
+	if (is_down("cam_left")) {
+		cam.position.x -= delta;
+	}
+
+	if (is_down("cam_right")) {
+		cam.position.x += delta;
+	}
+	
 	if (is_down("left")) {
 		e->t.rotation -= M_PI / 5 * delta;
 	}
@@ -69,19 +86,25 @@ void draw_player(entity* e) {
 
 	mat4 main_transform = gen_transform(e->t);
 
-	vec4 turret_position = main_transform * vec4(0, -0.01f, 0, 1);
+	vec2 turret_position(0, -0.01f);
+	turret_position = main_transform * 
+		turret_position;
 
-	auto p = ortho_project(0, window_aspect_ratio, cam.zoom);
-	p = translation(p, -cam.position.x, -cam.position.y);
-	print_mat("p:", p);
+	vec2 mouse_pos = mouse_to_world();
 
-	vec2 mouse_pos = p * mouse_to_gl();
+	draw_color(vec4(1, 0, 0, 1));
 
-	printf("X: %f\tY: %f\n", mouse_pos.x, mouse_pos.y);
+	draw_quad(mouse_pos.x, mouse_pos.y, 1, 1);
 
-	float angle = atan2(turret_position.x - mouse_pos.x, turret_position.y - mouse_pos.y);
+	//printf("Mouse pos : %f, %f\n", mouse_pos.x, mouse_pos.y);
+	//printf("Turret pos: %f, %f\n", turret_position.x, turret_position.y);
 
-	mat4 turret_tansform = rotation(angle);
+	float angle = atan2(turret_position.x - mouse_pos.x, 
+			turret_position.y + mouse_pos.y);
+	angle = angle - e->t.rotation;
+
+	mat4 turret_tansform = translation(0 , -0.01f);
+	turret_tansform = rotation(angle);
 
 	draw_color(vec4(1, 0, 1, 1));
 

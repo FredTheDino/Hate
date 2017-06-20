@@ -61,7 +61,7 @@ namespace hate {
 		// @FIXME, we currently set Vsync to true, allways... 
 		// Maybe not do that? And the clear color... We need 
 		// some sort of initalizer object.
-		glfwSwapInterval(0);
+		glfwSwapInterval(1);
 	}
 
 	void init_hate() {
@@ -158,6 +158,7 @@ namespace hate {
 			
 			use_projection(cam);
 
+			/*
 			draw_sprite(0.1, 0.5, 1, 1, &t2, &t2);
 
 			std::string text = "fps ";
@@ -169,7 +170,7 @@ namespace hate {
 			}
 			draw_text_mesh(t_m, f, vec4(1.0, 1.0, 1.0, 1.0));
 			//draw_text(text, 10, f, 0, 2, vec4(0.75f, 0.2f, 0.75f, 1.0f));
-
+*/
 			draw(em);
 
 			// Updates the graphics

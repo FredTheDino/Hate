@@ -203,4 +203,11 @@ namespace hate {
 
 		return gl_pos;
 	}
+
+	vec2 mouse_to_world() {
+		return (
+				vec2(-cam.position.x, cam.position.y / window_aspect_ratio) - 
+				mouse_to_gl()) 
+			/ cam.zoom;
+	}
 }

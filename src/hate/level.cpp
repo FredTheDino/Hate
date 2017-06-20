@@ -101,9 +101,7 @@ namespace hate {
 
 	void update_base(entity* e, float delta) {}
 
-	void draw_base(entity* e) {
-		draw_quad(e->t.position.x, e->t.position.y, 1.0f, 1.0f);
-	}
+	void draw_base(entity* e) {}
 
 	// Initalizes the system.
 

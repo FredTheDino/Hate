@@ -9,3 +9,8 @@ up K UP
 down K DOWN
 left K LEFT
 right K RIGHT
+
+cam_up K I
+cam_down K K
+cam_left K J
+cam_right K L

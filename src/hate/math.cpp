@@ -36,6 +36,14 @@ namespace hate {
 		return result;
 	}
 
+	vec2 vec2::operator/ (float scale) const {
+		vec2 result;
+		for (int i = 0; i < 2; i++) {
+			result._[i] = _[i] / scale;
+		}
+		return result;
+	}
+
 	// The dot product, if you don't know this, look it up.
 	float dot(vec2 const& a, vec2 const& b) {
 		float result;
@@ -127,7 +135,7 @@ namespace hate {
 		vec4 out;
 		
 		for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) {
-			out._[j] += _[i * 4 + j];
+			out._[i] += a._[j] * _[i * 4 + j];
 		}
 
 		return out;
@@ -144,7 +152,7 @@ namespace hate {
 
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				printf("%f, ", m._[4 * i + j]);
+				printf("% 04.2f, ", m._[4 * i + j]);
 			}
 			printf("\b\b \n");
 		}

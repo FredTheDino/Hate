@@ -64,6 +64,9 @@ namespace hate {
 
 		// Scales the vector by a scaler.
 		vec2 operator* (float scale) const; 
+		
+		// Scales the vector by the inverse of a scaler.
+		vec2 operator/ (float scale) const; 
 	};
 
 	// The dot product, if you don't know this, look it up.
