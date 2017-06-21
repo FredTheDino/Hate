@@ -2,54 +2,11 @@
 #include <assert.h>
 
 namespace hate {
-	entity::~entity() {
-		if (trash && data) {
-			delete data;
-			data = nullptr;
-		}
-	}
-
-	// Some dummy functions for the entity.
-	//
-	// Something to default the update function to.
-	extern void dummy_update(entity* e, float delta) {}
-	
-	// Something to default the draw function to.
-	extern void dummy_draw(entity* e) {}
 
 	unsigned int add_entity(entity_system& em, entity const& e) {
-		// @Robuestness: We're currently adding stuff to
-		// the end, this is probably a bad idea...
-		//
-		// See notes in header file.
-
 		unsigned int id = 0;
 
-		// Gets the ID of the last index.
-		auto it = em.by_id.rbegin();
-		if (it != em.by_id.rend()) {
-			it++;
-			id = it->first;
-			// This ID should be unused.
-			id++;
-
-			// If we have reached the boundry, something has
-			// gone wrong, probably...
-			assert (id < - 2);
-		}
-
-
-		// Copies it.
-		em.by_id[id] = e;
-		em.by_id[id].id = id;
-		// The pointer.
-		entity* e_ptr = &em.by_id[id];
-
-		// It has been inserted.
-		em.by_layer.insert(std::make_pair(e.layer, e_ptr));
-
-		// And by name.
-		em.by_name[e.name] = e_ptr;
+		
 
 		return id;
 	}
