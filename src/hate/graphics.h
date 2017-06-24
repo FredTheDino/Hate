@@ -5,7 +5,7 @@
 //
 #pragma once
 #include "math.h"
-#include <map>
+#include <unordered_map>
 
 namespace hate {
 	// STRUCTS
@@ -22,18 +22,18 @@ namespace hate {
 	// A texture class that holds a texture.
 	struct texture {
 		int w, h;
-		unsigned int tex_id;
-		int sprites_x = 1;
-		int sprites_y = 1;
+		unsigned short tex_id;
+		unsigned char sprites_x = 1;
+		unsigned char sprites_y = 1;
 	};
 	
 	// A nice bundle of data related to 
 	// meshes. 
 	struct mesh {
-		unsigned	vbo;
-		unsigned	vao;
-		unsigned	ebo = 0;
-		unsigned 	draw_count;
+		unsigned vbo;
+		unsigned vao;
+		unsigned ebo = 0;
+		unsigned draw_count;
 	};
 
 	// This data type corresponds to a single face, that
@@ -55,7 +55,9 @@ namespace hate {
 	struct font {
 		// Storing them sorted since it isn't
 		// losely populated.
-		std::map<char, face> faces;
+		std::unordered_map<char, face> faces;
+		float highest;
+		float lowest;
 		// The texture holding all the baked fonts.
 		texture tex;
 	};
@@ -74,30 +76,36 @@ namespace hate {
 #define MIN_EDGE 0.48f
 #define MAX_EDGE 0.5f
 	// Renders a pice of text with the specified font to the screen.
-	extern void draw_text(std::string text, float size, font& f, 
+	extern void draw_text(std::string text, float size, font const& f, 
 			float x, float y, vec4 color = vec4(0, 0, 0, 1.0), 
 			float spacing = 1.0f, 
-			float min_edge = MIN_EDGE, float max_edge = MAX_EDGE);
+			bool use_transform = true, float min_edge = MIN_EDGE, float max_edge = MAX_EDGE);
 
 	// Generates a mesh with the specified text in the font.
 	//
 	// This procedure is also called by "draw_text", but
 	// this allows you to make optemizations, like not 
 	// re generating the text if it is the same as last frame.
-	mesh generate_text_mesh(std::string text, float size, font& f, 
+	mesh generate_text_mesh(std::string text, float size, font const& f, 
 			float x, float y, float spacing = 1.0f);
 
 	// Draws the generated text_mesh.
-	void draw_text_mesh(mesh m, font& f, 
+	void draw_text_mesh(mesh m, font const& f, 
 			vec4 color = vec4(0, 0, 0, 1.0), 
-			float min_edge = MIN_EDGE, float max_edge = MAX_EDGE);
+			bool use_transform = true, float min_edge = MIN_EDGE, float max_edge = MAX_EDGE);
 
 	// Deletes a mesh, suprise...
 	void delete_mesh(mesh m);
 
 	// Gets the length of the text in the coordinate space with the specified
 	// size.
-	extern float get_length_of_text(std::string text, float size, font& f, float spacing = 1.0f);
+	extern float get_length_of_text(std::string text, float size, font const& f, float spacing = 1.0f);
+
+	// Returns the height of the font, which is the distance from the base line to the highest.
+	extern float get_highest_of_font(float size, font const& f);
+
+	// Returns the lowest point on the font.
+	extern float get_lowest_of_font(float size, font const& f);
 
 	// GENERAL RENDERING
 

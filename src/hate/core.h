@@ -14,9 +14,7 @@
 
 #pragma once
 #include "basic.h"
-#include "entity.h"
 #include <AL/al.h>
-
 
 namespace hate {
 	// Initalizes the engine,
@@ -38,9 +36,6 @@ namespace hate {
 	// might be set allready, and as such
 	// should preferably not be tampered with.
 	extern GLFWwindow* window;
-
-	// The entity system, it's perty neat.
-	extern entity_system em;
 
 	extern int window_width;
 	extern int window_height;

@@ -4,7 +4,6 @@
 #include "shader.h"
 #include "input.h"
 #include "clock.h"
-#include "level.cpp"
 #include <stdio.h>
 #include <cmath>
 #include <string>
@@ -20,7 +19,6 @@ namespace hate {
 	int window_width;
 	int window_height;
 	float window_aspect_ratio;
-	entity_system em;
 
 	// Callbacks
 	void close_callback(GLFWwindow* window) {
@@ -68,8 +66,6 @@ namespace hate {
 		// Those don't really have dependancies.
 		find_resource_location();
 		load_input_map("input.map"); // Load that map!
-		initalize_entity_types();
-
 		// GLFW stuff.
 		make_window();
 
@@ -85,16 +81,11 @@ namespace hate {
 		glfwTerminate();
 	}
 
-	void another_update(entity* e, float delta) {
-	}
-
 	void run_hate() {
-
 
 		texture te = load_texture("monkey_norm.png", false);
 		texture t2 = load_texture("torus_norm.png", false);
 		shader s = load_shader("master.glsl");
-
 /*
 		entity e;
 		add_entity(em, e);
@@ -105,7 +96,6 @@ namespace hate {
 		e = deserialize_entity("base hello_world 1 1 1 1 0 0");
 		add_entity(em, e);
 */
-		load_level("level.level", &em);
 		auto sound_file = load_wav("a.wav");
 
 		use_shader(s);
@@ -154,15 +144,13 @@ namespace hate {
 			}
 			*/
 
-			update(em, get_clock_delta());
+			//update(em, get_clock_delta());
 			
 			use_projection(cam);
 
 			/*
 			draw_sprite(0.1, 0.5, 1, 1, &t2, &t2);
 
-			std::string text = "fps ";
-			text += std::to_string(get_clock_fps());
 			if (old_text != text) {
 				delete_mesh(t_m);
 				t_m = generate_text_mesh(text, 10.0, f, 0, 0);
@@ -170,9 +158,22 @@ namespace hate {
 			}
 			draw_text_mesh(t_m, f, vec4(1.0, 1.0, 1.0, 1.0));
 			//draw_text(text, 10, f, 0, 2, vec4(0.75f, 0.2f, 0.75f, 1.0f));
-*/
-			draw(em);
+			// draw(em);
 
+			*/
+
+			char t[12];
+			sprintf(t, "fps: %0.2f", get_clock_fps());
+			std::string text(t);
+
+			float size = 10 + 2 * sin(get_clock_time());
+			float y = get_highest_of_font(size, f);
+			printf("y: %0.4f\n", y);
+			draw_text(text, size, f, 
+					-get_length_of_text(text, size, f) * 0.5f, 
+					y,
+					vec4(sin(get_clock_time()) * 0.5f + 0.5f, 0.2f, 0.75f, 1.0f));
+			
 			// Updates the graphics
 			glfwSwapBuffers(window);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -185,7 +186,5 @@ namespace hate {
 		delete_shader(s);
 
 		destroy_audio();
-
-		save_level("level.level", &em);
 	}
 }

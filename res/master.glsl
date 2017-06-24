@@ -73,9 +73,9 @@ void default_render() {
 void text_render() {
 	vec4 pos;
 	if (translate_projection) {
-		pos = vec4(in_pos, 0.0, 1.0) * (projection + world);
+		pos = vec4(in_pos, 0.0, projection[3][3]) * (projection + world);
 	} else {
-		pos = vec4(in_pos * mat2(projection), 0.0, 1.0);
+		pos = vec4(in_pos * mat2(projection), 0.0, projection[3][3]);
 	}
 
 	gl_Position = pos;

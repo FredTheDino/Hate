@@ -247,6 +247,13 @@ namespace hate {
 			// Errors?
 		}
 
+		float w, h;
+		w = 1 / (float) f.tex.w;
+		h = 1 / (float) f.tex.h;
+
+		f.lowest = 100;
+		f.highest = 0;
+
 		std::string line;
 		while (std::getline(file, line)) {
 			auto parse = split(line);
@@ -254,19 +261,16 @@ namespace hate {
 			// We only care about the "char", the rest is allready known.
 			if (parse[0] != "char") continue;
 
-			float w, h;
-			w = 1 / (float) f.tex.w;
-			h = 1 / (float) f.tex.h;
 
 			face font_face;
 			// @Performance: When the character isn't needed to be drawn, 
 			// it's set to 0 in everything but adavnce and id. We could
 			// skipp parseing the rest of the line.
 			font_face.id = stoi(split(parse[1], '=')[1]);
-			font_face.u =  stoi(split(parse[2], '=')[1]) * w;
-			font_face.v =  stoi(split(parse[3], '=')[1]) * h;
-			font_face.w =  stoi(split(parse[4], '=')[1]) * w;
-			font_face.h =  stoi(split(parse[5], '=')[1]) * h;
+			font_face.u  = stoi(split(parse[2], '=')[1]) * w;
+			font_face.v  = stoi(split(parse[3], '=')[1]) * h;
+			font_face.w  = stoi(split(parse[4], '=')[1]) * w;
+			font_face.h  = stoi(split(parse[5], '=')[1]) * h;
 			font_face.offset_x = 
 			      stoi(split(parse[6], '=')[1]) * w;
 			font_face.offset_y = 
@@ -274,9 +278,16 @@ namespace hate {
 			font_face.advance = 
 			      stoi(split(parse[8], '=')[1]) * w;
 
-			// There, wasn't that hard was it?
+			if (font_face.u != 0 && font_face.v != 0) {
+				f.highest = fmax(f.highest, font_face.v + font_face.h);
+				printf("h: %0.2f\n", f.highest);
+				f.lowest = fmin(f.lowest, font_face.v);
+			}
 			f.faces[font_face.id] = font_face;
 		}
+
+		f.lowest  *= 0.01f;
+		f.highest *= 0.01f;
 		
 		return f;
 	}
@@ -286,7 +297,7 @@ namespace hate {
 		f.faces.clear();
 	}
 
-	mesh generate_text_mesh(std::string text, float size, font& f, float x, float y, float spacing) {
+	mesh generate_text_mesh(std::string text, float size, font const& f, float x, float y, float spacing) {
 		std::vector<vertex> verticies;
 		verticies.reserve(text.size() * 6);
 
@@ -294,13 +305,13 @@ namespace hate {
 		float cur = x;
 		for (char c : text) {
 			// ff stands for font face
-			face ff = f.faces[c];
+			face ff = f.faces.at(c);
 
 			if (ff.h != 0) {
 				float bx   = cur + ff.offset_x * size;
 				float bx_n = bx + ff.w * size;
 
-				float by   = ff.offset_y * size;
+				float by   = y + ff.offset_y * size;
 				float by_n = by + ff.h * size;
 
 				float u    = ff.u;
@@ -326,12 +337,13 @@ namespace hate {
 		//glDrawArrays(GL_TRIANGLES, 0, verticies.size());
 	}
 
-	void draw_text_mesh(mesh m, font& f, vec4 color, float min_edge, float max_edge) {
+	void draw_text_mesh(mesh m, font const& f, vec4 color, bool use_transform, float min_edge, float max_edge) {
 		// Assumes the master shader is used,
 		// might be dumb...
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, f.tex.tex_id);
 		glUniform1i(10, 1);
+		glUniform1i(16, use_transform);
 
 		glUniform1i(12, 1);
 		glUniform1f(13, min_edge);
@@ -342,18 +354,20 @@ namespace hate {
 
 		// Reset the state.
 		glUniform1i(12, 0);
+		glUniform1i(16, 0);
 	}
 
 	// Renders a pice of text with the specified font to the screen.
-	void draw_text(std::string text, float size, font& f, 
+	void draw_text(std::string text, float size, font const& f, 
 			float x, float y, vec4 color, float spacing, 
-			float min_edge, float max_edge) {
+			bool use_transform, float min_edge, float max_edge) {
 
 		// Assumes the master shader is used,
 		// might be dumb...
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, f.tex.tex_id);
 		glUniform1i(10, 1);
+		glUniform1i(16, use_transform);
 
 		glUniform1i(12, 1);
 		glUniform1f(13, min_edge);
@@ -366,19 +380,29 @@ namespace hate {
 		glUniform1i(12, 0);
 
 		delete_mesh(m);
-
+		glUniform1i(16, 0);
 	}
 
 	// Gets the length of the text in the coordinate space with the specified
 	// size.
-	float get_length_of_text(std::string text, float size, font& f, float spacing) {
+	float get_length_of_text(std::string text, float size, font const& f, float spacing) {
 		float total_length = 0;
 
 		for (char c : text) {
-			auto ff = f.faces[c];
-			total_length += (ff.advance + ff.offset_x) * size * spacing;
+			auto const& ff = f.faces.at(c);
+			total_length += (ff.advance + ff.offset_x) * spacing;
 		}
 
-		return total_length;
+		return total_length * size;
+	}
+
+	// Returns the height of the font, which is the distance from the base line to the highest.
+	extern float get_highest_of_font(float size, font const& f) {
+		return size * f.highest;
+	}
+
+	// Returns the lowest point on the font.
+	extern float get_lowest_of_font(float size, font const& f) {
+		return size * f.lowest;
 	}
 }

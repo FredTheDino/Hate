@@ -76,7 +76,8 @@ namespace hate {
 	}
 
 	void delete_texture(texture t) {
-		glDeleteTextures(1, &t.tex_id);
+		unsigned int i = t.tex_id;
+		glDeleteTextures(1, &i);
 	}
 
 	struct wav_chunk {
