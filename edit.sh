@@ -1,3 +1,3 @@
 #!/usr/bin/bash
-nvim README.md src/**/*.h src/**/*.cpp res/master.glsl
+vim README.md src/**/*.h src/**/*.cpp res/master.glsl
 

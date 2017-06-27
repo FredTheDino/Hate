@@ -1,6 +1,6 @@
 #pragma once
 #include "basic.h"
-#include "math.h"
+#include "matrix.h"
 #include <string>
 
 namespace hate {

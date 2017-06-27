@@ -7,7 +7,7 @@
 // nice things will go south, fast.
 #pragma once
 #include "basic.h"
-#include "math.h"
+#include "matrix.h"
 #include <AL/al.h>
 
 namespace hate {

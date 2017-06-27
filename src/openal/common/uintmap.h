@@ -19,7 +19,7 @@ typedef struct UIntMap {
     RWLock lock;
 } UIntMap;
 #define UINTMAP_STATIC_INITIALIZE_N(_n) { NULL, NULL, 0, 0, (_n), RWLOCK_STATIC_INITIALIZE }
-#define UINTMAP_STATIC_INITIALIZE UINTMAP_STATIC_INITIALIZE_N(INT_MAX)
+#define UINTMAP_STATIC_INITIALIZE UINTMAP_STATIC_INITIALIZE_N(-1)
 
 void InitUIntMap(UIntMap *map, ALsizei limit);
 void ResetUIntMap(UIntMap *map);

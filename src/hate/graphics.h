@@ -4,7 +4,7 @@
 // by default.
 //
 #pragma once
-#include "math.h"
+#include "matrix.h"
 #include <unordered_map>
 
 namespace hate {
