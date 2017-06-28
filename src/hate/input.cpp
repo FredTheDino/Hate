@@ -192,10 +192,10 @@ namespace hate {
 
 	// MOUSE
 
-	vec2 mouse_position = vec2(0, 0);
+	Vec2 mouse_position = Vec2(0, 0);
 
-	vec2 mouse_to_gl() {
-		vec2 gl_pos;
+	Vec2 mouse_to_gl() {
+		Vec2 gl_pos;
 
 		gl_pos.x =  2 * mouse_position.x / window_width - 1;
 		// @Performance: Maybe multiply x and scale y by something instead? No...
@@ -204,9 +204,9 @@ namespace hate {
 		return gl_pos;
 	}
 
-	vec2 mouse_to_world() {
+	Vec2 mouse_to_world() {
 		return (
-				vec2(-cam.position.x, cam.position.y / window_aspect_ratio) - 
+				Vec2(-cam.position.x, cam.position.y / window_aspect_ratio) - 
 				mouse_to_gl()) 
 			/ cam.zoom;
 	}

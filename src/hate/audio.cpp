@@ -16,7 +16,7 @@ namespace hate {
 		// The current buffer.
 		ALuint buffer;
 		// The type of the sound
-		sound_type type;
+		SoundType type;
 		// What the gain is at.
 		float target_gain = 1;
 		// What the pitch is at.
@@ -28,7 +28,7 @@ namespace hate {
 		// If position should be used.
 		bool positional = false;
 		// The position.
-		vec2 position = vec2();
+		Vec2 position = Vec2();
 		// If the source should loop.
 		bool loop = false;
 	};
@@ -109,7 +109,7 @@ namespace hate {
 	}
 	
 	// Sets the global gain for that kind of sound.
-	void set_global_gain(sound_type type, float gain) {
+	void set_global_gain(SoundType type, float gain) {
 		assert(type < 0);
 		assert(type > SOUND_TYPE_LENGTH);
 
@@ -144,7 +144,7 @@ namespace hate {
 	}
 
 	// Plays a sound but ignores the position.
-	ALuint play_sound(sound s, sound_type type, bool perturb, float gain, 
+	ALuint play_sound(Sound s, SoundType type, bool perturb, float gain, 
 			float pitch, bool loop) {
 		sound_info info = find_free_source();
 
@@ -170,8 +170,8 @@ namespace hate {
 	}
 
 	// Plays a sound at the specified position. 
-	ALuint play_sound_at(sound s, sound_type type, bool perturb, float gain, 
-			float pitch, bool loop, vec2 pos) {
+	ALuint play_sound_at(Sound s, SoundType type, bool perturb, float gain, 
+			float pitch, bool loop, Vec2 pos) {
 		sound_info info = find_free_source();
 
 		if (perturb) {
@@ -232,7 +232,7 @@ namespace hate {
 	}
 
 	// Sets the buffer.
-	void set_sound_buffer(ALuint source, sound s) {
+	void set_sound_buffer(ALuint source, Sound s) {
 		sources[source].buffer = s.buffer;
 	}
 
@@ -252,7 +252,7 @@ namespace hate {
 	}
 
 	// Spoiler! This sets the position of the sound.
-	void set_sound_position(ALuint source, vec2 pos) {
+	void set_sound_position(ALuint source, Vec2 pos) {
 		sources[source].position = pos;
 	}
 	

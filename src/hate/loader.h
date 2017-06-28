@@ -24,13 +24,13 @@ namespace hate {
 	// Loads a texture from a file and 
 	// sets up a GLTexture with the 
 	// desired specifications.
-	texture load_texture(std::string path, bool linear_filtering = false, GLenum wrap_style = GL_REPEAT, bool use_mipmaps = true); 
+	Texture load_texture(std::string path, bool linear_filtering = false, GLenum wrap_style = GL_REPEAT, bool use_mipmaps = true); 
 
 	// Deletes a texutre... I mean, comeon,
 	// it's perty obiouse...
-	extern void delete_texture(texture t);
+	extern void delete_texture(Texture t);
 
-	struct wav_header {
+	struct Wav_Header {
 		uint8_t		riff[4];        // RIFF Header Magic header
 		uint32_t	chunk_size;      // RIFF Chunk Size
 		uint8_t		wave[4];        // WAVE Header
@@ -46,10 +46,10 @@ namespace hate {
 	};
 
 	// Opens a wav file and reads in the data.
-	extern sound load_wav(std::string path);
+	extern Sound load_wav(std::string path);
 
 	// Deletes a sound.
-	extern void delete_sound(sound s);
+	extern void delete_sound(Sound s);
 
 	extern long get_edit_time(std::string path);
 

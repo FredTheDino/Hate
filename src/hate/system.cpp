@@ -3,10 +3,10 @@
 
 namespace hate {
 
-    template <typename object>
-    unsigned int add(system<object>& s, object const& o) {
+    template <typename Object>
+    unsigned int add(System<Object>& s, Object const& o) {
         // Take a free index, and move the next_add_id pointer to a new one.
-        index& i = s.indicies[s.next_add_id];
+        Index& i = s.indicies[s.next_add_id];
         s.next_add_id = i.next_free_id;
 
         // We can later pack this array
@@ -17,7 +17,7 @@ namespace hate {
 
         // We might make this into another
         // branch which packs the array.
-        assert(i.index < objects.size());
+        assert(i.Index < objects.size());
 
         // Copy over the id.
         s.objects[i.index] = o;
@@ -26,22 +26,22 @@ namespace hate {
         return i.id;
     }
     
-    template <typename object>
-    inline bool has(system<object>& s, unsigned int id) {
-        index& i = s.indicies[id & INDEX_MASK];
+    template <typename Object>
+    inline bool has(System<Object>& s, unsigned int id) {
+        Index& i = s.indicies[id & INDEX_MASK];
         return i.id == id && i.index != -1;
     }
 
-    template <typename object>
-    object* lookup(system<object>& s, unsigned int id) {
+    template <typename Object>
+    Object* lookup(System<Object>& s, unsigned int id) {
         return &s.objects[s.indicies[id & INDEX_MASK].index];
     }
 
-    template <typename object>
-    void remove(system<object>& s, unsigned int id) {
+    template <typename Object>
+    void remove(System<Object>& s, unsigned int id) {
         // Make some refferences.
-        index& i = s.indicies[id & INDEX_MASK];
-        object& o = s.object[i.index];
+        Index& i = s.indicies[id & INDEX_MASK];
+        Object& o = s.object[i.index];
         
         // Replace the object by moving it in
         // the array to a better position.
@@ -55,8 +55,8 @@ namespace hate {
         s.next_removed_id = id & INDEX_MASK;
     }
 
-    template <typename object>
-    void clear_system(system<object>& s) {
+    template <typename Object>
+    void clear_system(System<Object>& s) {
         for (int i = 0; i < s.indicies.size(); i++) {
             s.indicies[i].index = -1;
         }

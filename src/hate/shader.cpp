@@ -120,10 +120,10 @@ namespace hate {
 		return true;
 	}
 
-	shader load_shader(std::string path) {
+	Shader load_shader(std::string path) {
 		std::vector<GLchar> source;
 		read_file_to_buffer(path, &source);
-		shader s;
+		Shader s;
 		s.path = path;
 		s.program = -1;
 	
@@ -159,17 +159,17 @@ namespace hate {
 		return s;
 	}
 
-	void delete_shader(shader s) {
+	void delete_shader(Shader s) {
 		glDeleteProgram(s.program);
 	}
 
-	void use_shader(shader& s) {
+	void use_shader(Shader& s) {
 		glUseProgram(s.program);
 		float t = glfwGetTime();
 		glUniform1f(0, t);
 	}
 
-	void recompile_shader(shader* s, bool use_timer) {
+	void recompile_shader(Shader* s, bool use_timer) {
 		const float time_to_compile = 0.2f;
 
 		long edit_time = get_edit_time(s->path);
@@ -178,7 +178,7 @@ namespace hate {
 			if (use_timer) {
 				s->timer = 0;
 			} else {
-				shader _s = load_shader(s->path);
+				Shader _s = load_shader(s->path);
 				if (_s.program != -1) {
 					delete_shader(*s);
 					*s = _s;
@@ -192,7 +192,7 @@ namespace hate {
 		s->timer += get_clock_delta();
 		if (s->timer > time_to_compile) {
 			s->timer++;
-			shader _s = load_shader(s->path);
+			Shader _s = load_shader(s->path);
 			if (_s.program != -1) {
 				delete_shader(*s);
 				*s = _s;

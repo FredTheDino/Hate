@@ -9,6 +9,11 @@
 
 #ifdef _WIN32 // We're on windows
 
+#pragma warning( disable : 4996) // fopen
+#pragma warning( disable : 4267) // Casting
+#pragma warning( disable : 4244) // Casting
+#pragma warning( disable : 4267) // Casting
+
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>

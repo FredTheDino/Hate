@@ -34,12 +34,12 @@ namespace hate {
 
 	// MOUSE
 	// A nice little reffernce for the mouse position.
-	extern vec2 mouse_position;
+	extern Vec2 mouse_position;
 
 	// Returns the mouse position in OpenGL coords.
-	extern vec2 mouse_to_gl();
+	extern Vec2 mouse_to_gl();
 
 	// Returns the current coordinate in world space
 	// pointed to by the mouse.
-	extern vec2 mouse_to_world();
+	extern Vec2 mouse_to_world();
 }

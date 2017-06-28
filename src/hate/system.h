@@ -26,7 +26,7 @@
 namespace hate {
     // An entity is more of a lose
     // connection between components.
-    struct index {
+    struct Index {
         // The id of the entity, almost garanteed unique, unless
         // you plan on adding more than 4294967296 entities,
         // then it will slow down a bit.
@@ -37,10 +37,10 @@ namespace hate {
     };
 
     // A way to keep track of entities and updates them in bulk.
-    template <typename object>
-    struct system {
+    template <typename Object>
+    struct System {
         // Sets the default size of relevent objects.
-        entity_system(int min_size = MIN_SYSTSEM_SIZE) {
+		System(int min_size = MIN_SYSTSEM_SIZE) {
             // This is a nice size that should fit
             // into the cache of any modern computer.
             indicies.resize(min_size);
@@ -58,9 +58,9 @@ namespace hate {
         }
     
         // An ID to an object.
-        std::vector<index> indicies;
+        std::vector<Index> indicies;
         // A list of objects.
-        std::vector<object> objects; // This is where they actually live.
+        std::vector<Object> objects; // This is where they actually live.
         // These ones are free to be changed, 2
         unsigned short next_remove_id;
         unsigned short next_add_id;
@@ -68,24 +68,24 @@ namespace hate {
     };
 
     // Checks if the object is registered.
-    template <typename object>
-    extern bool has(system<object>& s, unsigned int id);
+    template <typename Object>
+    extern bool has(System<Object>& s, unsigned int id);
 
     // Adds an object to the world and returns an ID to it that can be used to reffer to it.
     //
     // The name is implicit.
-    template <typename object>
-    extern unsigned int add(system<object>& s, object const& o);
+    template <typename Object>
+    extern unsigned int add(System<Object>& s, Object const& o);
 
     // Gets the object that is associated with the ID.
-    template <typename object>
-    extern object* lookup(system<object>& s, unsigned int id);
+    template <typename Object>
+    extern Object* lookup(System<Object>& s, unsigned int id);
     
     // Removes the object.
-    template <typename object>
-    extern void remove(system<object>& s, unsigned int id);
+    template <typename Object>
+    extern void remove(System<Object>& s, unsigned int id);
 
     // Clears out the system.
-    template <typename object>
-    extern void clear_system(system<object>& s);
+    template <typename Object>
+    extern void clear_system(System<Object>& s);
 }

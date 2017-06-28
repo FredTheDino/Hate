@@ -9,11 +9,11 @@
 
 namespace hate {
 
-	camera cam;
+	Camera cam;
 
 	struct vertex {
-		vec2 position;
-		vec2 uv;
+		Vec2 position;
+		Vec2 uv;
 
 		vertex(float x, float y, float u, float v) {
 			position.x = x;
@@ -23,7 +23,7 @@ namespace hate {
 		}
 	};
 
-	void draw_mesh(mesh m) {
+	void draw_mesh(Mesh m) {
 		glBindVertexArray(m.vao);
 		if (m.ebo != 0) {
 			glDrawElements(GL_TRIANGLES, m.draw_count, GL_UNSIGNED_INT, 0);
@@ -33,8 +33,8 @@ namespace hate {
 		glBindVertexArray(0);
 	}
 
-	mesh new_mesh(std::vector<vertex> const& verticies) {
-		mesh m;
+	Mesh new_mesh(std::vector<vertex> const& verticies) {
+		Mesh m;
 		glGenVertexArrays(1, &m.vao);
 
 		glGenBuffers(1, &m.vbo);
@@ -62,8 +62,8 @@ namespace hate {
 		return m;
 	}
 
-	mesh new_mesh(std::vector<int> const& indicies, std::vector<vertex> const& verticies) {
-		mesh m;
+	Mesh new_mesh(std::vector<int> const& indicies, std::vector<vertex> const& verticies) {
+		Mesh m;
 		glGenVertexArrays(1, &m.vao);
 
 		glGenBuffers(1, &m.vbo);
@@ -95,7 +95,7 @@ namespace hate {
 		return m;
 	}
 
-	void delete_mesh(mesh m) {
+	void delete_mesh(Mesh m) {
 		glDeleteVertexArrays(1, &m.vao);
 		glDeleteBuffers(1, &m.vbo);
 
@@ -105,7 +105,7 @@ namespace hate {
 	}
 
 	// Create this on init
-	mesh quad;
+	Mesh quad;
 		
 	void init_graphics() {
 		// But first we need glew
@@ -145,7 +145,7 @@ namespace hate {
 		quad = new_mesh(indicies, verticies);
 	}
 
-	void draw_sprite(texture* color, texture* normal, int sub_sprite) {
+	void draw_sprite(Texture* color, Texture* normal, int sub_sprite) {
 		int draw_mode = 0;
 		if (color) 
 			draw_mode |= 0b01;
@@ -174,7 +174,7 @@ namespace hate {
 		draw_mesh(quad);
 	}
 
-	void draw_sprite(float x, float y, float w, float h, texture* color, texture* normal, int sub_sprite, bool translate) {
+	void draw_sprite(float x, float y, float w, float h, Texture* color, Texture* normal, int sub_sprite, bool translate) {
 		// Don't use a transform
 		glUniform1i(1, 0);
 		glUniform1i(16, translate);
@@ -187,7 +187,7 @@ namespace hate {
 		draw_sprite(color, normal, sub_sprite);
 	}
 
-	void draw_sprite(mat4 m, texture* color, texture* normal, int sub_sprite, bool translate) {
+	void draw_sprite(Mat4 m, Texture* color, Texture* normal, int sub_sprite, bool translate) {
 		glUniform1i(1, 1);
 		glUniform1i(16, translate);
 
@@ -195,7 +195,7 @@ namespace hate {
 	}
 
 
-	void draw_color(vec4 color) {
+	void draw_color(Vec4 color) {
 		glUniform4f(18, color.r, color.g, color.b, color.a);
 	}
 
@@ -213,30 +213,30 @@ namespace hate {
 		draw_mesh(quad);
 	}
 
-	void draw_quad(mat4 m, bool translate) {
+	void draw_quad(Mat4 m, bool translate) {
 		glUniform1i(1, 1);
 		glUniform1i(16, translate);
 		glUniform1i(17, 0);
 
-		glUniformMatrix4fv(6, &m._01 - &m._00, GL_FALSE, &m._[0]);
+		glUniformMatrix4fv(6, (GLsizei) (&m._01 - &m._00), GL_FALSE,  &m._[0]);
 		draw_mesh(quad);
 	}
 
 	// Who doesn't want to use a camera
-	void use_projection(camera c) {
-		mat4 p = ortho_project(0, window_aspect_ratio, c.zoom);
-		mat4 t = translation(-c.position.x, -c.position.y);
+	void use_projection(Camera c) {
+		Mat4 p = ortho_project(0, window_aspect_ratio, c.zoom);
+		Mat4 t = translation(-c.position.x, -c.position.y);
 		// Don't know if this works!
-		glUniformMatrix4fv(8, &p._01 - &p._00, GL_FALSE, &p._[0]);
-		glUniformMatrix4fv(7, &t._01 - &t._00, GL_FALSE, &t._[0]);
+		glUniformMatrix4fv(8, (GLsizei) (&p._01 - &p._00), GL_FALSE, &p._[0]);
+		glUniformMatrix4fv(7, (GLsizei) (&t._01 - &t._00), GL_FALSE, &t._[0]);
 	}
 
 	// FONTS
 	
 	// Loads a font.
-	font load_font(std::string path) {
+	Font load_font(std::string path) {
 		// Load in the texture.
-		font f;
+		Font f;
 		f.tex = load_texture(path + ".png", true, GL_REPEAT, false);
 
 		// Parse the .fnt file
@@ -262,7 +262,7 @@ namespace hate {
 			if (parse[0] != "char") continue;
 
 
-			face font_face;
+			Font_Face font_face;
 			// @Performance: When the character isn't needed to be drawn, 
 			// it's set to 0 in everything but adavnce and id. We could
 			// skipp parseing the rest of the line.
@@ -292,12 +292,12 @@ namespace hate {
 		return f;
 	}
 
-	void delete_font(font& f) {
+	void delete_font(Font& f) {
 		delete_texture(f.tex);
 		f.faces.clear();
 	}
 
-	mesh generate_text_mesh(std::string text, float size, font const& f, float x, float y, float spacing) {
+	Mesh generate_text_mesh(std::string text, float size, Font const& f, float x, float y, float spacing) {
 		std::vector<vertex> verticies;
 		verticies.reserve(text.size() * 6);
 
@@ -305,7 +305,7 @@ namespace hate {
 		float cur = x;
 		for (char c : text) {
 			// ff stands for font face
-			face ff = f.faces.at(c);
+			Font_Face ff = f.faces.at(c);
 
 			if (ff.h != 0) {
 				float bx   = cur + ff.offset_x * size;
@@ -331,13 +331,13 @@ namespace hate {
 			cur += (ff.advance + ff.offset_x) * size * spacing;
 		}
 
-		mesh m = new_mesh(verticies);
+		Mesh m = new_mesh(verticies);
 		return m;
 		// Draw
 		//glDrawArrays(GL_TRIANGLES, 0, verticies.size());
 	}
 
-	void draw_text_mesh(mesh m, font const& f, vec4 color, bool use_transform, float min_edge, float max_edge) {
+	void draw_text_mesh(Mesh m, Font const& f, Vec4 color, bool use_transform, float min_edge, float max_edge) {
 		// Assumes the master shader is used,
 		// might be dumb...
 		glActiveTexture(GL_TEXTURE1);
@@ -358,8 +358,8 @@ namespace hate {
 	}
 
 	// Renders a pice of text with the specified font to the screen.
-	void draw_text(std::string text, float size, font const& f, 
-			float x, float y, vec4 color, float spacing, 
+	void draw_text(std::string text, float size, Font const& f, 
+			float x, float y, Vec4 color, float spacing, 
 			bool use_transform, float min_edge, float max_edge) {
 
 		// Assumes the master shader is used,
@@ -373,7 +373,7 @@ namespace hate {
 		glUniform1f(13, min_edge);
 		glUniform1f(14, max_edge);
 		glUniform4f(15, color.x, color.y, color.z, color.w);
-		mesh m = generate_text_mesh(text, size, f, x, y, spacing);
+		Mesh m = generate_text_mesh(text, size, f, x, y, spacing);
 		draw_mesh(m);
 		
 		// Reset the state.
@@ -385,7 +385,7 @@ namespace hate {
 
 	// Gets the length of the text in the coordinate space with the specified
 	// size.
-	float get_length_of_text(std::string text, float size, font const& f, float spacing) {
+	float get_length_of_text(std::string text, float size, Font const& f, float spacing) {
 		float total_length = 0;
 
 		for (char c : text) {
@@ -397,12 +397,12 @@ namespace hate {
 	}
 
 	// Returns the height of the font, which is the distance from the base line to the highest.
-	extern float get_highest_of_font(float size, font const& f) {
+	extern float get_highest_of_font(float size, Font const& f) {
 		return size * f.highest;
 	}
 
 	// Returns the lowest point on the font.
-	extern float get_lowest_of_font(float size, font const& f) {
+	extern float get_lowest_of_font(float size, Font const& f) {
 		return size * f.lowest;
 	}
 }

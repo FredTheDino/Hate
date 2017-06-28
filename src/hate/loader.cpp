@@ -37,7 +37,7 @@ namespace hate {
 		}
 	}
 
-	texture load_texture(std::string path, bool linear_filtering, GLenum wrap_style, bool use_mipmaps) {	
+	Texture load_texture(std::string path, bool linear_filtering, GLenum wrap_style, bool use_mipmaps) {	
 		int w, h, comp;
 		unsigned char* pixels = stbi_load(get_real_path(path).c_str(), &w, &h, &comp, 0);
 
@@ -67,7 +67,7 @@ namespace hate {
 		}
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, format, GL_UNSIGNED_BYTE, pixels);
 
-		texture t;
+		Texture t;
 		t.tex_id = tex;
 		t.w = w;
 		t.h = h;
@@ -75,28 +75,28 @@ namespace hate {
 		return t;
 	}
 
-	void delete_texture(texture t) {
+	void delete_texture(Texture t) {
 		unsigned int i = t.tex_id;
 		glDeleteTextures(1, &i);
 	}
 
-	struct wav_chunk {
+	struct Wav_Chunk {
 		uint8_t         id[4];
 		uint32_t        size;
 	};
 
-	sound load_sound(std::vector<char>& data, int format, int samples_per_sec) {
-		sound s;
+	Sound load_sound(std::vector<char>& data, int format, int samples_per_sec) {
+		Sound s;
 		s.format = format;
 		alGenBuffers(1, &s.buffer);
-		alBufferData(s.buffer, format, &data[0], data.size(), samples_per_sec);
+		alBufferData(s.buffer, format, &data[0], (ALsizei) data.size(), samples_per_sec);
 
 		return s;
 	}
 
-	sound load_wav(std::string path) {
+	Sound load_wav(std::string path) {
 		ALenum format;
-		wav_header header;
+		Wav_Header header;
 		std::vector<char> data;	
 		
 		// C-style!
@@ -107,7 +107,7 @@ namespace hate {
 			assert(0);
 		}
 
-		if (!fread(&header, sizeof(wav_header), 1, file)) {
+		if (!fread(&header, sizeof(Wav_Header), 1, file)) {
 			printf("Error loading file: \"%s\"\n", path.c_str());
 			assert(0);
 		}
@@ -117,9 +117,9 @@ namespace hate {
 		format |= (2 == header.num_of_chan)      * 0b0010;
 
 		char chunk_name[] = "data";
-		wav_chunk chunk;
+		Wav_Chunk chunk;
 		while (1) {
-			fread(&chunk, sizeof(wav_chunk), 1, file);
+			fread(&chunk, sizeof(Wav_Chunk), 1, file);
 			for (int i = 0; i < 5; i++) {
 				if (i == 4) goto escape_while;
 				if (chunk_name[i] != chunk.id[i]) break;
@@ -145,7 +145,7 @@ escape_while:
 	}
 
 
-	void delete_sound(sound s) {
+	void delete_sound(Sound s) {
 		alDeleteBuffers(1, &s.buffer);
 	}
 

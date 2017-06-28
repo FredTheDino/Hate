@@ -11,7 +11,7 @@
 
 namespace hate {
 	// The shader struct 
-	struct shader {
+	struct Shader {
 		// These are used for recompilation.
 		long edit_time = 0;
 		float timer = 10;
@@ -24,11 +24,11 @@ namespace hate {
 	// two text files.
 	// 		/path/to/file.vert
 	// 		/path/to/file.frag
-	extern shader load_shader(std::string path);
+	extern Shader load_shader(std::string path);
 
 	// Clears a shader from memory by letting
 	// OpenGL dealocate it.
-	extern void delete_shader(shader s);
+	extern void delete_shader(Shader s);
 
 	// Uses the program
 	//
@@ -36,9 +36,9 @@ namespace hate {
 	// by refference, it isn't uniform with
 	// the rest of the program... But it is
 	// needed for the hot-swapable shader.)
-	extern void use_shader(shader& s);
+	extern void use_shader(Shader& s);
 
 	// Recompiles the shader if it is needed,
 	// has to be called every frame.
-	extern void recompile_shader(shader* s, bool use_timer = false);
+	extern void recompile_shader(Shader* s, bool use_timer = false);
 }

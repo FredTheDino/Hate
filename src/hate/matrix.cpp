@@ -4,14 +4,14 @@
 
 namespace hate {
 	
-	vec2::vec2(float x, float y) {
+	Vec2::Vec2(float x, float y) {
 		_[0] = x;	
 		_[1] = y;	
 	}
 
 	// Adds the other vector to this vector.
-	vec2 vec2::operator+ (vec2 other) const {
-		vec2 result;
+	Vec2 Vec2::operator+ (Vec2 other) const {
+		Vec2 result;
 		for (int i = 0; i < 2; i++) {
 			result._[i] = other._[i] + _[i];
 		}
@@ -19,8 +19,8 @@ namespace hate {
 	}
 
 	// Subtracts the other vector to this vector.
-	vec2 vec2::operator- (vec2 other) const {
-		vec2 result;
+	Vec2 Vec2::operator- (Vec2 other) const {
+		Vec2 result;
 		for (int i = 0; i < 2; i++) {
 			result._[i] = other._[i] - _[i];
 		}
@@ -28,16 +28,16 @@ namespace hate {
 	}
 
 	// Scales the vector by a scaler.
-	vec2 vec2::operator* (float scale) const {
-		vec2 result;
+	Vec2 Vec2::operator* (float scale) const {
+		Vec2 result;
 		for (int i = 0; i < 2; i++) {
 			result._[i] = _[i] * scale;
 		}
 		return result;
 	}
 
-	vec2 vec2::operator/ (float scale) const {
-		vec2 result;
+	Vec2 Vec2::operator/ (float scale) const {
+		Vec2 result;
 		for (int i = 0; i < 2; i++) {
 			result._[i] = _[i] / scale;
 		}
@@ -45,7 +45,7 @@ namespace hate {
 	}
 
 	// The dot product, if you don't know this, look it up.
-	float dot(vec2 const& a, vec2 const& b) {
+	float dot(Vec2 const& a, Vec2 const& b) {
 		float result;
 		for (int i = 0; i < 2; i++) {
 			result = a._[i] * b._[i];
@@ -63,24 +63,24 @@ namespace hate {
 	// clockwise or clockwise order.
 	//
 	// But yeah, it's wierd.
-	float coss(vec2 const& a, vec2 const& b) {
+	float coss(Vec2 const& a, Vec2 const& b) {
 		return a.x * b.y - a.y * b.x;
 	}
 
 	// The langth, squared...
-	float length_squared(vec2 const& a) {
+	float length_squared(Vec2 const& a) {
 		return a.x * a.x + a.y * a.y;
 	}
 
 	// The length of the vector.
-	float length(vec2 const& a) {
+	float length(Vec2 const& a) {
 		return sqrt(length_squared(a));
 	}
 
 	// Creates a normalized copy.
-	vec2 normalize(vec2 const& a) {
+	Vec2 normalize(Vec2 const& a) {
 		float l = length(a);
-		vec2 result;
+		Vec2 result;
 
 		if (l == 0) return result;
 
@@ -90,8 +90,8 @@ namespace hate {
 	}
 
 	// It, spoilers, rotates a vector.
-	vec2 rotate(vec2 const& a, float angle) {
-		vec2 result;
+	Vec2 rotate(Vec2 const& a, float angle) {
+		Vec2 result;
 
 		float c = cos(angle);
 		float s = sin(angle);
@@ -102,7 +102,7 @@ namespace hate {
 	}
 
 	// Creates a new matrix.
-	mat4::mat4 (float d) {
+	Mat4::Mat4 (float d) {
 		for (int i = 0; i < 16; i++) {
 			if (i % 5 == 0) {
 				_[i] = d;
@@ -112,17 +112,17 @@ namespace hate {
 		}
 	}
 
-	float& mat4::operator[] (int i) {
+	float& Mat4::operator[] (int i) {
 		return this->_[i];
 	}
 
-	const float& mat4::operator[] (int i) const{
+	const float& Mat4::operator[] (int i) const{
 		return this->_[i];
 	}
 	
 	// Multiplying with another matrix
-	mat4 mat4::operator* (mat4 o) const {
-		mat4 a;
+	Mat4 Mat4::operator* (Mat4 o) const {
+		Mat4 a;
 		for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) {
 			for (int k = 0; k < 4; k++) {
 				a._[i * 4 + j] += _[i * 4 + k] * o._[k * 4 + j];
@@ -131,8 +131,8 @@ namespace hate {
 		return a;
 	}
 
-	vec4 mat4::operator* (vec4 a) const {
-		vec4 out;
+	Vec4 Mat4::operator* (Vec4 a) const {
+		Vec4 out;
 		
 		for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) {
 			out._[i] += a._[j] * _[i * 4 + j];
@@ -141,13 +141,13 @@ namespace hate {
 		return out;
 	}
 
-	vec2 mat4::operator* (vec2 a) const {
-		vec4 out = (*this) * vec4(a.x, a.y, 0, 1);
-		return vec2(out.x, out.y);
+	Vec2 Mat4::operator* (Vec2 a) const {
+		Vec4 out = (*this) * Vec4(a.x, a.y, 0, 1);
+		return Vec2(out.x, out.y);
 	}
 
 	// Prints the matrix.
-	void print_mat(char const* prefix, mat4 const& m) {
+	void print_mat(char const* prefix, Mat4 const& m) {
 		printf("%s:\n", prefix);
 
 		for (int i = 0; i < 4; i++) {
@@ -160,22 +160,22 @@ namespace hate {
 
 		
 	// Adds translation to the matrix, or generates a new one.
-	mat4 translation(float x, float y, float z) {
-		return translation(mat4(0), x, y, z);
+	Mat4 translation(float x, float y, float z) {
+		return translation(Mat4(0), x, y, z);
 	}
 
-	mat4 translation(mat4 m, float x, float y, float z) {
+	Mat4 translation(Mat4 m, float x, float y, float z) {
 		m._03 += x;
 		m._13 += y;
 		m._23 += z;
 		return m;
 	}
 
-	mat4 translation(vec2 delta_pos) {
+	Mat4 translation(Vec2 delta_pos) {
 		return translation(delta_pos.x, delta_pos.y);
 	}
 
-	mat4 translation(mat4 m, vec2 delta_pos) {
+	Mat4 translation(Mat4 m, Vec2 delta_pos) {
 		return translation(m, delta_pos.x, delta_pos.y);
 	}
 
@@ -184,8 +184,8 @@ namespace hate {
 	// The angle is in radians.
 	//
 	// (This is made for 2D stuff after all)
-	mat4 rotation(float angle) {
-		mat4 r(1.0);
+	Mat4 rotation(float angle) {
+		Mat4 r(1.0);
 		float s = sin(angle);
 		float c = cos(angle);
 		r._00 =  c;
@@ -195,39 +195,39 @@ namespace hate {
 		return r;
 	}
 
-	mat4 rotation(mat4 m, float angle) {
-		mat4 r = rotation(angle);
+	Mat4 rotation(Mat4 m, float angle) {
+		Mat4 r = rotation(angle);
 		return r * m;
 	}
 
 	// Multiples the scale applied by the matrix.
-	mat4 scaling(float scale_x, float scale_y, float scale_z) {
-		mat4 s(1);
+	Mat4 scaling(float scale_x, float scale_y, float scale_z) {
+		Mat4 s(1);
 		s._00 = scale_x;
 		s._11 = scale_y;
 		s._22 = scale_z;
 		return s;
 	}
 
-	mat4 scaling(mat4 m, float scale_x, float scale_y, float scale_z) {
-		mat4 s = scaling(scale_x, scale_y, scale_z);
+	Mat4 scaling(Mat4 m, float scale_x, float scale_y, float scale_z) {
+		Mat4 s = scaling(scale_x, scale_y, scale_z);
 		return s * m;
 	}
 
-	mat4 gen_transform(transform const& t) {
+	Mat4 gen_transform(Transform const& t) {
 		return gen_transform(t.position, t.scale, t.rotation);
 	}
 
 	// Generates a brand spanking new transform that can be sent into OpenGL.
-	mat4 gen_transform(vec2 position, vec2 scale, float angle) {
-		mat4 result = scaling(scale.x, scale.y);
+	Mat4 gen_transform(Vec2 position, Vec2 scale, float angle) {
+		Mat4 result = scaling(scale.x, scale.y);
 		result = rotation(result, angle);
 		result = translation(result, position.x, position.y);
 		return result;
 	}
 
-	mat4 ortho_project(float angle, float aspect_ratio, float zoom) {
-		mat4 p(1);
+	Mat4 ortho_project(float angle, float aspect_ratio, float zoom) {
+		Mat4 p(1);
 		float a = 1.0f; //zoom.x;
 		// OpenGL is upside down.
 		float b = -aspect_ratio; //* zoom.y;
@@ -245,8 +245,8 @@ namespace hate {
 		return p;
 	}
 	
-	mat4 invert(mat4 const& m) {
-		mat4 inv;
+	Mat4 invert(Mat4 const& m) {
+		Mat4 inv;
 		float det;
 		int i;
 
@@ -364,7 +364,7 @@ namespace hate {
 
 		det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
 
-		mat4 inv_out;
+		Mat4 inv_out;
 		if (det != 0) {
 			det = 1.0 / det;
 

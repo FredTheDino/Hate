@@ -36,8 +36,8 @@ namespace hate {
 
 	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 	{
-		mouse_position.x = xpos;
-		mouse_position.y = ypos;
+		mouse_position.x = (float) xpos;
+		mouse_position.y = (float) ypos;
 	}
 
 	void make_window() {
@@ -83,9 +83,9 @@ namespace hate {
 
 	void run_hate() {
 
-		texture te = load_texture("monkey_norm.png", false);
-		texture t2 = load_texture("torus_norm.png", false);
-		shader s = load_shader("master.glsl");
+		Texture te = load_texture("monkey_norm.png", false);
+		Texture t2 = load_texture("torus_norm.png", false);
+		Shader s = load_shader("master.glsl");
 /*
 		entity e;
 		add_entity(em, e);
@@ -99,18 +99,18 @@ namespace hate {
 		auto sound_file = load_wav("a.wav");
 
 		use_shader(s);
-		draw_color(vec4(0.74f, 0.2f, 0.2f, 1.0f));
+		draw_color(Vec4(0.74f, 0.2f, 0.2f, 1.0f));
 
 		float y = 0;
 
-		font f = load_font("fonts/droid_sans");
+		Font f = load_font("fonts/droid_sans");
 		
 		reset_clock();
 		float delta;
 		float min_e = 0.5f;
 
 		std::string old_text = "NaN";
-		mesh t_m = generate_text_mesh(old_text, 10.0, f, 0, 0);
+		Mesh t_m = generate_text_mesh(old_text, 10.0, f, 0, 0);
 		while (running) {
 			update_clock();
 			delta = get_clock_delta();
@@ -172,7 +172,7 @@ namespace hate {
 			draw_text(text, size, f, 
 					-get_length_of_text(text, size, f) * 0.5f, 
 					y,
-					vec4(sin(get_clock_time()) * 0.5f + 0.5f, 0.2f, 0.75f, 1.0f));
+					Vec4(sin(get_clock_time()) * 0.5f + 0.5f, 0.2f, 0.75f, 1.0f));
 			
 			// Updates the graphics
 			glfwSwapBuffers(window);

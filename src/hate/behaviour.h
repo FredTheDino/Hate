@@ -13,7 +13,7 @@
 #pragma once
 
 namespace hate {
-	struct behaviour {
+	struct Behaviour {
 		int i = 0;
 	};
 }

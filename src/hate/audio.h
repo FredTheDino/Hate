@@ -17,7 +17,7 @@ namespace hate {
 	// This enables things like
 	// just changeing the volume 
 	// of music.
-	enum sound_type {
+	enum SoundType {
 		MUSIC,
 		SFX,
 		SOUND_TYPE_LENGTH
@@ -26,7 +26,7 @@ namespace hate {
 	// A sound is a efference to
 	// audio data that is allready
 	// loaded to the sound card.
-	struct sound {
+	struct Sound {
 		// A buffer id.
 		ALuint buffer;
 		// The format of the sound.
@@ -43,19 +43,19 @@ namespace hate {
 	extern void update_audio();
 
 	// Sets the global gain for that kind of sound.
-	extern void set_global_gain(sound_type type, float gain);
+	extern void set_global_gain(SoundType type, float gain);
 
 	// Plays a sound but ignores the position, it will return
 	// a refference. This is a "set and foreget" play procedure,
 	// which doesn't require anything more than this.
-	extern ALuint play_sound(sound s, sound_type type, bool perturb = true, 
+	extern ALuint play_sound(Sound s, SoundType type, bool perturb = true, 
 			float gain = 1, float pitch = 1, bool loop = false);
 
 	// Plays a sound at the specified position. 
 	// It returns a source id which can be used
 	// to change the sound when it is being played.
-	extern ALuint play_sound_at(sound s, sound_type type, bool perturb = true, 
-			float gain = 1, float pitch = 1, bool loop = false, vec2 pos = vec2(0, 0));
+	extern ALuint play_sound_at(Sound s, SoundType type, bool perturb = true, 
+			float gain = 1, float pitch = 1, bool loop = false, Vec2 pos = Vec2(0, 0));
 
 	// This makes it so the source doesn't get marked as unused.
 	extern void persistant_sound(ALuint source);
@@ -77,7 +77,7 @@ namespace hate {
 	extern bool is_paused(ALuint source);
 
 	// Sets the sound buffer.
-	extern void set_sound_buffer(ALuint source, sound s);
+	extern void set_sound_buffer(ALuint source, Sound s);
 
 	// Sets if the source should loop.
 	extern void set_sound_loop(ALuint source, bool loop);
@@ -89,7 +89,7 @@ namespace hate {
 	extern void set_sound_pitch(ALuint source, float new_pitch);
 
 	// Spoiler! This sets the position of the sound.
-	extern void set_sound_position(ALuint source, vec2 pos);
+	extern void set_sound_position(ALuint source, Vec2 pos);
 	
 	// Does what it says on the tin.
 	extern float get_gain(ALuint source);
