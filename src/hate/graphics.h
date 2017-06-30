@@ -22,7 +22,7 @@ namespace hate {
 	// A texture class that holds a texture.
 	struct Texture {
 		int w, h;
-		unsigned short tex_id;
+		unsigned short tex_id = -1; // Assuming we never get here.
 		unsigned char sprites_x = 1;
 		unsigned char sprites_y = 1;
 	};

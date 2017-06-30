@@ -1,4 +1,4 @@
 clear
-cd bin
+cd bin-make
 cmake -G"MinGW Makefiles" ..
 cd ..

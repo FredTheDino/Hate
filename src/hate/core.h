@@ -14,6 +14,7 @@
 
 #pragma once
 #include "basic.h"
+#include "system.h"
 #include <AL/al.h>
 
 namespace hate {

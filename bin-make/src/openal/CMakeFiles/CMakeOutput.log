@@ -1,0 +1,27 @@
+Determining if the waveOutOpen exist in winmm passed with the following output:
+Change Dir: E:/Dev/C++/Hate/bin-make/src/openal/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTC_7346c/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTC_7346c.dir\build.make CMakeFiles/cmTC_7346c.dir/build
+mingw32-make.exe[1]: Entering directory 'E:/Dev/C++/Hate/bin-make/src/openal/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7346c.dir/CheckSymbolExists.c.obj
+C:\MinGW\bin\gcc.exe    -fno-gnu89-inline -std=c11   -D_LARGEFILE_SOURCE -D_LARGE_FILES   -o CMakeFiles\cmTC_7346c.dir\CheckSymbolExists.c.obj   -c E:\Dev\C++\Hate\bin-make\src\openal\CMakeFiles\CMakeTmp\CheckSymbolExists.c
+Linking C executable cmTC_7346c.exe
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_7346c.dir\link.txt --verbose=1
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E remove -f CMakeFiles\cmTC_7346c.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\cmTC_7346c.dir/objects.a @CMakeFiles\cmTC_7346c.dir\objects1.rsp
+C:\MinGW\bin\gcc.exe  -fno-gnu89-inline -std=c11   -D_LARGEFILE_SOURCE -D_LARGE_FILES    -Wl,--whole-archive CMakeFiles\cmTC_7346c.dir/objects.a -Wl,--no-whole-archive  -o cmTC_7346c.exe -Wl,--out-implib,libcmTC_7346c.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_7346c.dir\linklibs.rsp
+mingw32-make.exe[1]: Leaving directory 'E:/Dev/C++/Hate/bin-make/src/openal/CMakeFiles/CMakeTmp'
+
+File E:/Dev/C++/Hate/bin-make/src/openal/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <windows.h>
+#include <mmsystem.h>
+
+void cmakeRequireSymbol(int dummy,...){(void)dummy;}
+int main()
+{
+  cmakeRequireSymbol(0,&waveOutOpen);
+  return 0;
+}
+

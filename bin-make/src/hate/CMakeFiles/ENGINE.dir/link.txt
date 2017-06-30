@@ -1,0 +1,2 @@
+C:\MinGW\bin\ar.exe qc libENGINE.a  CMakeFiles/ENGINE.dir/audio.cpp.obj CMakeFiles/ENGINE.dir/clock.cpp.obj CMakeFiles/ENGINE.dir/core.cpp.obj CMakeFiles/ENGINE.dir/graphics.cpp.obj CMakeFiles/ENGINE.dir/input.cpp.obj CMakeFiles/ENGINE.dir/loader.cpp.obj CMakeFiles/ENGINE.dir/matrix.cpp.obj CMakeFiles/ENGINE.dir/misc.cpp.obj CMakeFiles/ENGINE.dir/renderer.cpp.obj CMakeFiles/ENGINE.dir/shader.cpp.obj CMakeFiles/ENGINE.dir/system.cpp.obj
+C:\MinGW\bin\ranlib.exe libENGINE.a
