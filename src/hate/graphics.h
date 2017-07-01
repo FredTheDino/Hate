@@ -86,11 +86,14 @@ namespace hate {
 	// This procedure is also called by "draw_text", but
 	// this allows you to make optemizations, like not 
 	// re generating the text if it is the same as last frame.
-	Mesh generate_text_mesh(std::string text, float size, Font const& f, 
-			float x, float y, float spacing = 1.0f);
+	Mesh generate_text_mesh(std::string text, float size, Font const& f, float spacing = 1.0f);
 
 	// Draws the generated text_mesh.
-	void draw_text_mesh(Mesh m, Font const& f, 
+	void draw_text_mesh(Mesh m, float x, float y, Font const& f, 
+			Vec4 color = Vec4(0, 0, 0, 1.0), 
+			bool use_transform = true, float min_edge = MIN_EDGE, float max_edge = MAX_EDGE);
+
+	void draw_text_mesh(Mesh m, Mat4 transform, Font const& f, 
 			Vec4 color = Vec4(0, 0, 0, 1.0), 
 			bool use_transform = true, float min_edge = MIN_EDGE, float max_edge = MAX_EDGE);
 

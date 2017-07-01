@@ -1,6 +1,7 @@
 #include "core.h"
 #include "graphics.h"
 #include "loader.h"
+#include "system.h"
 #include "shader.h"
 #include "input.h"
 #include "clock.h"
@@ -13,12 +14,35 @@
 #define WINDOW_TITLE  "Hello World"
 
 namespace hate {
+
+    struct Monkey : public Entity {
+        Texture texture;
+
+        float timer = 0;
+        Transform t;
+
+        void init() {
+            texture = load_texture("monkey_norm.png", false);
+        }
+
+        void update(float delta) {
+            timer += delta;
+            t.position.y = sin(timer);
+        }
+
+        void draw() {
+            draw_sprite(gen_transform(t), &texture, &texture);
+        }
+    };
+    
     // Declaration
     bool running = true;
     GLFWwindow* window = nullptr;
     int window_width;
     int window_height;
     float window_aspect_ratio;
+
+    System system;
 
     // Callbacks
     void close_callback(GLFWwindow* window) {
@@ -58,7 +82,7 @@ namespace hate {
         // @FIXME, we currently set Vsync to true, allways... 
         // Maybe not do that? And the clear color... We need 
         // some sort of initalizer object.
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
     }
 
     void init_hate() {
@@ -108,8 +132,12 @@ namespace hate {
         float delta;
         float min_e = 0.5f;
 
+        Monkey* m = new Monkey();
+        m->init();
+        auto id = add(system, m);
+
         std::string old_text = "NaN";
-        Mesh t_m = generate_text_mesh(old_text, 10.0, f, 0, 0);
+        Mesh t_m = generate_text_mesh(old_text, 10.0, f);
         while (running) {
             update_clock();
             delta = get_clock_delta();
@@ -119,8 +147,7 @@ namespace hate {
             update_audio();
 
 
-            #undef DEBUG
-#ifdef DEBUG
+#ifdef DEBUG 
             reload_input_map("input.map", true);
             recompile_shader(&s, true);
             use_shader(s);
@@ -161,22 +188,30 @@ namespace hate {
 
             */
 
-            char t[12];
-            sprintf(t, "fps: %0.2f", get_clock_fps());
-            std::string text(t);
+            update(system, get_clock_delta());
+
+            remove(system, id);
+            id = add(system, m);
+
+            char temp_text[20];
+            sprintf(temp_text, "fps: %0.2f", get_clock_fps());
+            std::string text(temp_text);
 
             float size = 10 + 2 * sin(get_clock_time());
             float y = get_highest_of_font(size, f);
-            printf("y: %0.4f\n", y);
             draw_text(text, size, f, 
-                    -get_length_of_text(text, size, f) * 0.5f, 
-                    y,
+                    0, 
+                    0,
                     Vec4(sin(get_clock_time()) * 0.5f + 0.5f, 0.2f, 0.75f, 1.0f));
             
+            draw(system);
+
             // Updates the graphics
             glfwSwapBuffers(window);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
+
+        delete m;
 
         delete_sound(sound_file);
         delete_font(f);

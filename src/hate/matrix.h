@@ -143,7 +143,7 @@ namespace hate {
 	// A transform, because it's usefull.
 	struct Transform {
 		Vec2 position;
-		Vec2 scale;
+		Vec2 scale = Vec2(1, 1);
 		float rotation;
 	};
 

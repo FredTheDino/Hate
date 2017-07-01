@@ -51,9 +51,6 @@ void default_render() {
 
 	if (use_transform) {
 		m = transform * m;
-	}
-
-	if (use_transform) {
 		gl_Position = vec4(in_pos, 0.0, 1.0) * m;
 	} else {
 		gl_Position = vec4(x + w * in_pos.x, y + h * in_pos.y, 0.0, 1.0) * m;
@@ -71,6 +68,23 @@ void default_render() {
 }
 
 void text_render() {
+	mat4 m = projection;
+
+	if (translate_projection) {
+		m = m + world;
+	} else {
+		//m[3][3] = 1.0f;
+	}
+
+
+	if (use_transform) {
+		m = transform * m;
+		gl_Position = vec4(in_pos.x, in_pos.y, 0.0, projection[3][3]) * m;
+	} else {
+		gl_Position = vec4(x + w * in_pos.x + 0.0, y + h * in_pos.y, 0.0, projection[3][3]) * m;
+	}
+
+/*
 	vec4 pos;
 	if (translate_projection) {
 		pos = vec4(in_pos, 0.0, projection[3][3]) * (projection + world);
@@ -79,7 +93,7 @@ void text_render() {
 	}
 
 	gl_Position = pos;
-
+*/
 	pass_texCoord = in_texCoord;
 }
 

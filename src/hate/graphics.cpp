@@ -191,6 +191,8 @@ namespace hate {
 		glUniform1i(1, 1);
 		glUniform1i(16, translate);
 
+		glUniformMatrix4fv(6, (GLsizei) (&m._01 - &m._00), GL_FALSE, &m._[0]);
+
 		draw_sprite(color, normal, sub_sprite);
 	}
 
@@ -218,7 +220,8 @@ namespace hate {
 		glUniform1i(16, translate);
 		glUniform1i(17, 0);
 
-		glUniformMatrix4fv(6, (GLsizei) (&m._01 - &m._00), GL_FALSE,  &m._[0]);
+		glUniformMatrix4fv(6, (GLsizei) (&m._01 - &m._00), GL_FALSE, &m._[0]);
+
 		draw_mesh(quad);
 	}
 
@@ -280,7 +283,6 @@ namespace hate {
 
 			if (font_face.u != 0 && font_face.v != 0) {
 				f.highest = fmax(f.highest, font_face.v + font_face.h);
-				printf("h: %0.2f\n", f.highest);
 				f.lowest = fmin(f.lowest, font_face.v);
 			}
 			f.faces[font_face.id] = font_face;
@@ -292,20 +294,21 @@ namespace hate {
 		return f;
 	}
 
-	void delete_font(Font& f) {
-		delete_texture(f.tex);
-		f.faces.clear();
+	void delete_font(Font& font) {
+		delete_texture(font.tex);
+		font.faces.clear();
 	}
 
-	Mesh generate_text_mesh(std::string text, float size, Font const& f, float x, float y, float spacing) {
+	Mesh generate_text_mesh(std::string text, float size, Font const& font, float spacing) {
 		std::vector<vertex> verticies;
 		verticies.reserve(text.size() * 6);
 
 		// Generate the mesh with coordinates.
-		float cur = x;
+		float cur = get_length_of_text(text, size, font, spacing) / -2;
+		float y = get_highest_of_font(size, font) / 2;
 		for (char c : text) {
 			// ff stands for font face
-			Font_Face ff = f.faces.at(c);
+			Font_Face ff = font.faces.at(c);
 
 			if (ff.h != 0) {
 				float bx   = cur + ff.offset_x * size;
@@ -333,24 +336,52 @@ namespace hate {
 
 		Mesh m = new_mesh(verticies);
 		return m;
-		// Draw
-		//glDrawArrays(GL_TRIANGLES, 0, verticies.size());
 	}
 
-	void draw_text_mesh(Mesh m, Font const& f, Vec4 color, bool use_transform, float min_edge, float max_edge) {
+	void draw_text_mesh(Mesh mesh, float x, float y, Font const& font, Vec4 color, bool use_projection, float min_edge, float max_edge) {
 		// Assumes the master shader is used,
 		// might be dumb...
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, f.tex.tex_id);
+		glBindTexture(GL_TEXTURE_2D, font.tex.tex_id);
 		glUniform1i(10, 1);
-		glUniform1i(16, use_transform);
+		glUniform1i(16, use_projection);
+		glUniform1i(1, 0); // Don't use a transform matrix
 
 		glUniform1i(12, 1);
 		glUniform1f(13, min_edge);
 		glUniform1f(14, max_edge);
 		glUniform4f(15, color.x, color.y, color.z, color.w);
 
-		draw_mesh(m);
+		glUniform1f(2, x);
+		glUniform1f(3, y);
+
+		glUniform1f(4, 1);
+		glUniform1f(5, 1);
+
+		draw_mesh(mesh);
+
+		// Reset the state.
+		glUniform1i(12, 0);
+		glUniform1i(16, 0);
+	}
+
+	void draw_text_mesh(Mesh mesh, Mat4 transform, Font const& font, Vec4 color, bool use_transform, float min_edge, float max_edge) {
+		// Assumes the master shader is used,
+		// might be dumb...
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, font.tex.tex_id);
+		glUniform1i(10, 1);
+		glUniform1i(16, use_transform);
+		glUniform1i(1, 1); // Use a transform matrix
+
+		glUniform1i(12, 1);
+		glUniform1f(13, min_edge);
+		glUniform1f(14, max_edge);
+		glUniform4f(15, color.x, color.y, color.z, color.w);
+
+		glUniformMatrix4fv(6, (GLsizei) (&transform._01 - &transform._00), GL_FALSE, &transform._[0]);
+
+		draw_mesh(mesh);
 
 		// Reset the state.
 		glUniform1i(12, 0);
@@ -358,38 +389,24 @@ namespace hate {
 	}
 
 	// Renders a pice of text with the specified font to the screen.
-	void draw_text(std::string text, float size, Font const& f, 
+	void draw_text(std::string text, float size, Font const& font, 
 			float x, float y, Vec4 color, float spacing, 
-			bool use_transform, float min_edge, float max_edge) {
+			bool use_projection, float min_edge, float max_edge) {
 
-		// Assumes the master shader is used,
-		// might be dumb...
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, f.tex.tex_id);
-		glUniform1i(10, 1);
-		glUniform1i(16, use_transform);
 
-		glUniform1i(12, 1);
-		glUniform1f(13, min_edge);
-		glUniform1f(14, max_edge);
-		glUniform4f(15, color.x, color.y, color.z, color.w);
-		Mesh m = generate_text_mesh(text, size, f, x, y, spacing);
-		draw_mesh(m);
-		
-		// Reset the state.
-		glUniform1i(12, 0);
+		Mesh m = generate_text_mesh(text, size, font, spacing);
+		draw_text_mesh(m, x, y, font, color, use_projection, min_edge, max_edge);
 
 		delete_mesh(m);
-		glUniform1i(16, 0);
 	}
 
 	// Gets the length of the text in the coordinate space with the specified
 	// size.
-	float get_length_of_text(std::string text, float size, Font const& f, float spacing) {
+	float get_length_of_text(std::string text, float size, Font const& font, float spacing) {
 		float total_length = 0;
 
 		for (char c : text) {
-			auto const& ff = f.faces.at(c);
+			auto const& ff = font.faces.at(c);
 			total_length += (ff.advance + ff.offset_x) * spacing;
 		}
 
@@ -397,12 +414,12 @@ namespace hate {
 	}
 
 	// Returns the height of the font, which is the distance from the base line to the highest.
-	extern float get_highest_of_font(float size, Font const& f) {
-		return size * f.highest;
+	extern float get_highest_of_font(float size, Font const& font) {
+		return size * font.highest;
 	}
 
 	// Returns the lowest point on the font.
-	extern float get_lowest_of_font(float size, Font const& f) {
-		return size * f.lowest;
+	extern float get_lowest_of_font(float size, Font const& font) {
+		return size * font.lowest;
 	}
 }

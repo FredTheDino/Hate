@@ -12,22 +12,24 @@
 
 #include <vector>
 
-#define ID_INCREMENT 0x10000
-#define ID_MASK 0xFFFF
+#define ID_INCREMENT 0x00010000
+#define ID_MASK      0x0000FFFF
+#define ID_UNIQUE    0xEFFF0000
+#define INVALID_ID   0xFFFFFFFF
 
 namespace hate {
     // This is the base entity, everything else
     // has to implement a draw and an update.
     struct Entity {
-        unsigned int id = -1; // -1 is an invalid id.
+        unsigned int id = INVALID_ID; 
 
-        virtual void update(float delta) = 0;
-        virtual void draw() = 0;
+        virtual void update(float delta) {};
+        virtual void draw() {};
     };
 
     struct EntityIndex {
-        unsigned int id = -1; // -1 is an invalid id.
-        unsigned int next_free = -1; // Points to the next free spot.
+        unsigned int id = INVALID_ID; // -1 is an invalid id.
+        unsigned int next_free = INVALID_ID; // Points to the next free spot.
     };
 
     struct System {
@@ -35,8 +37,12 @@ namespace hate {
         std::vector<EntityIndex> indicies;
         std::vector<Entity*> entities;
 
-        unsigned int next_free = -1;
+        unsigned int next_free = INVALID_ID;
     };
+
+    // Reserves this many entityes space for the system.
+    extern void reserve(System& system, unsigned int min_size);
+
     // Updates all entities in the system.
     extern void update(System& system, float delta);
 

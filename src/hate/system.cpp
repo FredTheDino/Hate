@@ -4,21 +4,26 @@
 namespace hate {
     void update(System& system, float delta) {
         for (auto e : system.entities) {
-            if (e->id == -1) continue;
+            if (e->id == INVALID_ID) continue;
             e->update(delta);
         }
     }
 
     void draw(System& system) {
         for (auto e : system.entities) {
-            if (e->id == -1) continue;
+            if (e->id == INVALID_ID) continue;
             e->draw();
         }
     }
 
+    void reserve(System& system, unsigned int min_size) {
+        system.indicies.reserve(min_size);
+        system.entities.reserve(min_size);
+    }
+
     unsigned int add(System& system, Entity* entity) {
         EntityIndex index;
-        if (system.next_free == -1) {
+        if (system.next_free == INVALID_ID) {
             // There isn't a free spot.
             index.id = system.entities.size();
             entity->id = index.id;
@@ -29,10 +34,15 @@ namespace hate {
             // There is a free spot!
             // Get a new free spot if there is one.
             index = system.indicies[system.next_free];
-            system.next_free = index.next_free;
+            system.next_free = index.next_free & ID_MASK;
 
             // Increment the index to prevent collisions.
-            index.id += ID_INCREMENT;
+            // And stack overflows
+			if ((index.id & ID_UNIQUE) == ID_UNIQUE) {
+				index.id = index.id & ID_MASK;
+            } else {
+                index.id += ID_INCREMENT;
+            }
             entity->id = index.id;            
             
             system.indicies[index.id & ID_MASK] = index;
@@ -49,9 +59,9 @@ namespace hate {
            
         EntityIndex& index = system.indicies[id & ID_MASK];
         index.next_free = system.next_free;
-        system.next_free = index.id;
+        system.next_free = index.id & ID_MASK;
         // Clear the entity id.
-        system.entities[index.id & ID_MASK]->id = -1;
+        system.entities[index.id & ID_MASK]->id = INVALID_ID;
             
         return true;
     }
@@ -61,7 +71,7 @@ namespace hate {
 
         return 
             system.indicies[id & ID_MASK].id == id && 
-            system.entities[id & ID_MASK]->id != -1;
+            system.entities[id & ID_MASK]->id != INVALID_ID;
     }
 
     Entity* get(System& system, unsigned int id) {
