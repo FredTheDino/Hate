@@ -2,63 +2,72 @@
 #include <assert.h>
 
 namespace hate {
-
-    template <typename Object>
-    unsigned int add(System<Object>& s, Object const& o) {
-        // Take a free index, and move the next_add_id pointer to a new one.
-        Index& i = s.indicies[s.next_add_id];
-        s.next_add_id = i.next_free_id;
-
-        // We can later pack this array
-        // when it gets fragmented.
-        i.id += NEW_OBJECT_ADD;
-        i.index = s.num_entries;
-        s.num_objects++;
-
-        // We might make this into another
-        // branch which packs the array.
-        assert(i.Index < objects.size());
-
-        // Copy over the id.
-        s.objects[i.index] = o;
-        s.objects[i.index].id = i.id;
-
-        return i.id;
-    }
-    
-    template <typename Object>
-    inline bool has(System<Object>& s, unsigned int id) {
-        Index& i = s.indicies[id & INDEX_MASK];
-        return i.id == id && i.index != -1;
-    }
-
-    template <typename Object>
-    Object* lookup(System<Object>& s, unsigned int id) {
-        return &s.objects[s.indicies[id & INDEX_MASK].index];
-    }
-
-    template <typename Object>
-    void remove(System<Object>& s, unsigned int id) {
-        // Make some refferences.
-        Index& i = s.indicies[id & INDEX_MASK];
-        Object& o = s.object[i.index];
-        
-        // Replace the object by moving it in
-        // the array to a better position.
-        s.num_entries--;
-        o = s.objects[s.num_entries];
-        s.indices[o.id & INDEX_MASK].index = i.index;
-
-        // Delete the old index.
-        i.index = -1; // Max it out.
-        s.indices[s.next_removed_id].next_free_id = id & INDEX_MASK;
-        s.next_removed_id = id & INDEX_MASK;
-    }
-
-    template <typename Object>
-    void clear_system(System<Object>& s) {
-        for (int i = 0; i < s.indicies.size(); i++) {
-            s.indicies[i].index = -1;
+    void update(System& system, float delta) {
+        for (auto e : system.entities) {
+            if (e->id == -1) continue;
+            e->update(delta);
         }
+    }
+
+    void draw(System& system) {
+        for (auto e : system.entities) {
+            if (e->id == -1) continue;
+            e->draw();
+        }
+    }
+
+    unsigned int add(System& system, Entity* entity) {
+        EntityIndex index;
+        if (system.next_free == -1) {
+            // There isn't a free spot.
+            index.id = system.entities.size();
+            entity->id = index.id;
+
+            system.entities.push_back(entity);
+            system.indicies.push_back(index);
+        } else {
+            // There is a free spot!
+            // Get a new free spot if there is one.
+            index = system.indicies[system.next_free];
+            system.next_free = index.next_free;
+
+            // Increment the index to prevent collisions.
+            index.id += ID_INCREMENT;
+            entity->id = index.id;            
+            
+            system.indicies[index.id & ID_MASK] = index;
+            system.entities[index.id & ID_MASK] = entity;
+        }
+
+        return index.id;
+    }
+
+    bool remove(System& system, unsigned int id) {
+        if (!has(system, id)) {
+            return false;
+        }
+           
+        EntityIndex& index = system.indicies[id & ID_MASK];
+        index.next_free = system.next_free;
+        system.next_free = index.id;
+        // Clear the entity id.
+        system.entities[index.id & ID_MASK]->id = -1;
+            
+        return true;
+    }
+
+    bool has(System& system, unsigned int id) {
+        if (id & ID_MASK > system.indicies.size()) return false;
+
+        return 
+            system.indicies[id & ID_MASK].id == id && 
+            system.entities[id & ID_MASK]->id != -1;
+    }
+
+    Entity* get(System& system, unsigned int id) {
+        if (has(system, id)) {
+            return system.entities[id & ID_MASK];
+        }
+        return nullptr;
     }
 }
