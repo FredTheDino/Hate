@@ -9,6 +9,7 @@
 
 namespace hate {
 
+	// The camera that is normally used.
 	Camera cam;
 
 	struct vertex {

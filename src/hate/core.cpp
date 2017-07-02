@@ -6,7 +6,7 @@
 #include "input.h"
 #include "clock.h"
 #include <stdio.h>
-#include <cmath>
+#include <math.h>
 #include <string>
 
 #define WINDOW_WIDTH  600
@@ -15,6 +15,7 @@
 
 namespace hate {
 
+	// @Temporaray
     struct Monkey : public Entity {
         Texture texture;
 

@@ -9,6 +9,7 @@
 
 #ifdef _WIN32 // We're on windows
 
+// Thanks Visual Studio! You're allways so helpfull!
 #pragma warning( disable : 4996) // fopen
 #pragma warning( disable : 4267) // Casting
 #pragma warning( disable : 4244) // Casting

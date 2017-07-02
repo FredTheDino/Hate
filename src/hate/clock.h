@@ -12,7 +12,8 @@ namespace hate {
 	extern void reset_clock();
 
 	// Updates the clock by making it 
-	// take 1 step.
+	// take 1 step. Called by the main
+	// game loop, so no worries.
 	extern void update_clock();
 
 	// Returns the current delta of the frame.

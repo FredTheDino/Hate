@@ -5,9 +5,14 @@
 // track of the entities, making sure the
 // IDs are valid.
 //
-// Entities can be added and flagged for
-// removal.
+// Entities can be added and removed.
 //
+// A word of warning, don't store entity pointers
+// ever! They can be moved around in memory, so 
+// hold onto the ID since that is garanteeded to stay
+// valid during the life time of the object.
+//
+
 #pragma once
 
 #include <vector>

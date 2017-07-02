@@ -1,3 +1,0 @@
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E remove -f CMakeFiles\GAME.dir/objects.a
-C:\MinGW\bin\ar.exe cr CMakeFiles\GAME.dir/objects.a @CMakeFiles\GAME.dir\objects1.rsp
-C:\MinGW\bin\g++.exe  -g -O2 -g -DNDEBUG   -Wl,--whole-archive CMakeFiles\GAME.dir/objects.a -Wl,--no-whole-archive  -o GAME.exe -Wl,--out-implib,libGAME.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\GAME.dir\linklibs.rsp

@@ -3,7 +3,7 @@
 // This is ment to be held simple, hence there is
 // a limited set of functions.
 #pragma once
-#include <cmath>
+#include <math.h>
 
 namespace hate {
 	// I almost only need this for color...
