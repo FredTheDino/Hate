@@ -14,8 +14,8 @@
 
 #define ID_INCREMENT 0x00010000
 #define ID_MASK      0x0000FFFF
-#define ID_UNIQUE    0xFFFF0000 // This is needed since it might otherwise be an invalid ID.
-#define INVALID_ID   0x0000FFFF
+#define ID_UNIQUE    0xEFFF0000 // This is needed since it might otherwise be an invalid ID.
+#define INVALID_ID   0xFFFFFFFF
 
 namespace hate {
     // This is the base entity, everything else

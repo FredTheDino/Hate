@@ -15,14 +15,14 @@
 
 namespace hate {
 
-	Texture texture;
     struct Monkey : public Entity {
+        Texture texture;
 
         float timer = 0;
         Transform t;
 
-        static void init() {
-            texture = load_texture("torus_norm.png", false);
+        void init() {
+            texture = load_texture("monkey_norm.png", false);
         }
 
         void update(float delta) {
@@ -31,7 +31,7 @@ namespace hate {
         }
 
         void draw() {
-            draw_sprite(gen_transform(t), &texture);
+            draw_sprite(gen_transform(t), &texture, &texture);
         }
     };
     
@@ -132,11 +132,9 @@ namespace hate {
         float delta;
         float min_e = 0.5f;
 
-        std::list<Monkey> ms;
-
-        Monkey m = Monkey();
-        Monkey::init();
-        auto id = add(system, &m);
+        Monkey* m = new Monkey();
+        m->init();
+        auto id = add(system, m);
 
         std::string old_text = "NaN";
         Mesh t_m = generate_text_mesh(old_text, 10.0, f);
@@ -154,12 +152,11 @@ namespace hate {
             recompile_shader(&s, true);
             use_shader(s);
 #endif
+            /*
             if (is_down("up")) {
-				ms.push_back(Monkey());
-                add(system, &ms.back());
+                cam.zoom /= 1.0f + delta;
             }
 
-            /*
             if (is_down("down")) {
                 cam.zoom *= 1.0f + delta;
             }
@@ -194,9 +191,7 @@ namespace hate {
             update(system, get_clock_delta());
 
             remove(system, id);
-            id = add(system, &m);
-            
-			draw(system);
+            id = add(system, m);
 
             char temp_text[20];
             sprintf(temp_text, "fps: %0.2f", get_clock_fps());
@@ -209,11 +204,14 @@ namespace hate {
                     0,
                     Vec4(sin(get_clock_time()) * 0.5f + 0.5f, 0.2f, 0.75f, 1.0f));
             
+            draw(system);
 
             // Updates the graphics
             glfwSwapBuffers(window);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
+
+        delete m;
 
         delete_sound(sound_file);
         delete_font(f);
