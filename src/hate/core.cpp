@@ -16,14 +16,16 @@
 namespace hate {
 
 	// @Temporaray
+    Texture color_texture;
+    Texture normal_texture;
     struct Monkey : public Entity {
-        Texture texture;
 
         float timer = 0;
         Transform t;
 
         void init() {
-            texture = load_texture("monkey_norm.png", false);
+            normal_texture = load_texture("monkey_norm.png", false);
+            color_texture = load_texture("monkey_color.png", false);
         }
 
         void update(float delta) {
@@ -32,7 +34,7 @@ namespace hate {
         }
 
         void draw() {
-            draw_sprite(gen_transform(t), &texture, &texture);
+            draw_sprite(gen_transform(t), &color_texture, &normal_texture);
         }
     };
     

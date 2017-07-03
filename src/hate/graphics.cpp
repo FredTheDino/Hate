@@ -161,7 +161,7 @@ namespace hate {
 		}
 		if (normal) {
 			glActiveTexture(GL_TEXTURE0 + 1);
-			glBindTexture(GL_TEXTURE_2D, color->tex_id);
+			glBindTexture(GL_TEXTURE_2D, normal->tex_id);
 			glUniform1i(11, 1);
 		}
 
