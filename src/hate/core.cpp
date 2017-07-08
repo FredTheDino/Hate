@@ -109,104 +109,38 @@ namespace hate {
 
     void run_hate() {
 
-        Texture te = load_texture("monkey_norm.png", false);
-        Texture t2 = load_texture("torus_norm.png", false);
+        Font f = load_font("fonts/droid_sans");
         Shader s = load_shader("master.glsl");
-/*
-        entity e;
-        add_entity(em, e);
-        e.t.position.x = -0.5;
-        e.t.scale.y = 0.2f;
-        e.update = &another_update;
-        add_entity(em, e);
-        e = deserialize_entity("base hello_world 1 1 1 1 0 0");
-        add_entity(em, e);
-*/
-        auto sound_file = load_wav("a.wav");
 
         use_shader(s);
-        draw_color(Vec4(0.74f, 0.2f, 0.2f, 1.0f));
-
-        float y = 0;
-
-        Font f = load_font("fonts/droid_sans");
+        
+        auto sound_file = load_wav("a.wav");
         
         reset_clock();
         float delta;
-        float min_e = 0.5f;
 
         Monkey* m = new Monkey();
         m->init();
         auto id = add(system, m);
 
-        std::string old_text = "NaN";
-        Mesh t_m = generate_text_mesh(old_text, 10.0, f);
         while (running) {
             update_clock();
             delta = get_clock_delta();
+
             // @Tought: glfwPollEvents is in "update_input_map", not sure if it's a good idea.
             update_input_map();
 
             update_audio();
-
 
 #ifdef DEBUG 
             reload_input_map("input.map", true);
             recompile_shader(&s, true);
             use_shader(s);
 #endif
-            /*
-            if (is_down("up")) {
-                cam.zoom /= 1.0f + delta;
-            }
-
-            if (is_down("down")) {
-                cam.zoom *= 1.0f + delta;
-            }
-
-            if (is_down("left")) {
-                cam.position.x -= delta * 2;
-            }
-
-            if (is_down("right")) {
-                cam.position.x += delta * 2;
-            }
-            */
-
-            //update(em, get_clock_delta());
-            
             use_projection(cam);
-
-            /*
-            draw_sprite(0.1, 0.5, 1, 1, &t2, &t2);
-
-            if (old_text != text) {
-                delete_mesh(t_m);
-                t_m = generate_text_mesh(text, 10.0, f, 0, 0);
-                old_text = text;
-            }
-            draw_text_mesh(t_m, f, vec4(1.0, 1.0, 1.0, 1.0));
-            //draw_text(text, 10, f, 0, 2, vec4(0.75f, 0.2f, 0.75f, 1.0f));
-            // draw(em);
-
-            */
 
             update(system, get_clock_delta());
 
-            remove(system, id);
-            id = add(system, m);
-
-            char temp_text[20];
-            sprintf(temp_text, "fps: %0.2f", get_clock_fps());
-            std::string text(temp_text);
-
-            float size = 10 + 2 * sin(get_clock_time());
-            float y = get_highest_of_font(size, f);
-            draw_text(text, size, f, 
-                    0, 
-                    0,
-                    Vec4(sin(get_clock_time()) * 0.5f + 0.5f, 0.2f, 0.75f, 1.0f));
-            
             draw(system);
 
             // Updates the graphics
@@ -225,3 +159,50 @@ namespace hate {
         destroy_audio();
     }
 }
+
+            /*
+            // Used to be located in the main update loop, but I got sick of having it there.
+
+            remove(system, id);
+            id = add(system, m);
+
+            char temp_text[20];
+            sprintf(temp_text, "fps: %0.2f", get_clock_fps());
+            std::string text(temp_text);
+
+            float size = 10 + 2 * sin(get_clock_time());
+            float y = get_highest_of_font(size, f);
+            draw_text(text, size, f, 
+                    0, 
+                    0,
+                    Vec4(sin(get_clock_time()) * 0.5f + 0.5f, 0.2f, 0.75f, 1.0f));
+            
+            draw_sprite(0.1, 0.5, 1, 1, &t2, &t2);
+
+            if (old_text != text) {
+                delete_mesh(t_m);
+                t_m = generate_text_mesh(text, 10.0, f, 0, 0);
+                old_text = text;
+            }
+            draw_text_mesh(t_m, f, vec4(1.0, 1.0, 1.0, 1.0));
+            //draw_text(text, 10, f, 0, 2, vec4(0.75f, 0.2f, 0.75f, 1.0f));
+            // draw(em);
+
+            if (is_down("up")) {
+                cam.zoom /= 1.0f + delta;
+            }
+
+            if (is_down("down")) {
+                cam.zoom *= 1.0f + delta;
+            }
+
+            if (is_down("left")) {
+                cam.position.x -= delta * 2;
+            }
+
+            if (is_down("right")) {
+                cam.position.x += delta * 2;
+            }
+            */
+
+            //update(em, get_clock_delta());

@@ -144,6 +144,9 @@ namespace hate {
 		indicies.push_back(3);
 
 		quad = new_mesh(indicies, verticies);
+
+		// A nice default draw color.
+        draw_color(Vec4(0.74f, 0.2f, 0.2f, 1.0f));
 	}
 
 	void draw_sprite(Texture* color, Texture* normal, int sub_sprite) {
