@@ -152,8 +152,6 @@ namespace hate {
 
         delete_sound(sound_file);
         delete_font(f);
-        delete_texture(te);
-        delete_texture(t2);
         delete_shader(s);
 
         destroy_audio();
