@@ -3,7 +3,7 @@
 // This is ment to be held simple, hence there is
 // a limited set of functions.
 #pragma once
-#include <math.h>
+#include <cmath>
 
 namespace hate {
 	// I almost only need this for color...
@@ -140,26 +140,11 @@ namespace hate {
 			Vec2 operator* (Vec2 a) const;
 	};
 
-// A macro for a transform where you can reach
-// the properties without going through the 
-// transform.
-#define TRANSFORM union { \
-	Transform t; \
-	struct { \
-		Vec2 position; \
-		Vec2 scale; \
-		float rotation; \
-	}; \
-} \
-
 	// A transform, because it's usefull.
 	struct Transform {
-		Transform() {};
-		~Transform() {};
-
-		Vec2 position = Vec2(0, 0);
+		Vec2 position;
 		Vec2 scale = Vec2(1, 1);
-		float rotation = 0;
+		float rotation;
 	};
 
 	// #Functional #Precompiled #Rad
@@ -169,7 +154,7 @@ namespace hate {
 	// Some simple to use matrix manipulations functions.
 	//
 
-	// Prints the matrix.
+		// Prints the matrix.
 	extern void print_mat(char const* prefix, Mat4 const& m);
 
 	// Adds translation to the matrix, or generates a new one.

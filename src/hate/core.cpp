@@ -119,7 +119,7 @@ namespace hate {
         auto sound_file = load_wav("a.wav");
         
         reset_clock();
-        float delta;
+        float delta = 0.0f;
 
         Monkey* m = new Monkey();
         m->init();
