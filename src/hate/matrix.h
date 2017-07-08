@@ -140,11 +140,26 @@ namespace hate {
 			Vec2 operator* (Vec2 a) const;
 	};
 
+// A macro for a transform where you can reach
+// the properties without going through the 
+// transform.
+#define TRANSFORM union { \
+	Transform t; \
+	struct { \
+		Vec2 position; \
+		Vec2 scale; \
+		float rotation; \
+	}; \
+} \
+
 	// A transform, because it's usefull.
 	struct Transform {
-		Vec2 position;
+		Transform() {};
+		~Transform() {};
+
+		Vec2 position = Vec2(0, 0);
 		Vec2 scale = Vec2(1, 1);
-		float rotation;
+		float rotation = 0;
 	};
 
 	// #Functional #Precompiled #Rad

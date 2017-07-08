@@ -16,6 +16,7 @@
 namespace hate {
 
 	// @Temporaray
+
     Texture color_texture;
     Texture normal_texture;
     struct Monkey : public Entity {
@@ -39,6 +40,7 @@ namespace hate {
     };
     
     // Declaration
+	GameStateManager gsm = GameStateManager(); 
     bool running = true;
     GLFWwindow* window = nullptr;
     int window_width;
@@ -123,6 +125,9 @@ namespace hate {
         m->init();
         auto id = add(system, m);
 
+		// To switch to the new state before the main loop.
+		update_state(gsm, delta);
+
         while (running) {
             update_clock();
             delta = get_clock_delta();
@@ -139,9 +144,11 @@ namespace hate {
 #endif
             use_projection(cam);
 
-            update(system, get_clock_delta());
+            //update(system, get_clock_delta());
 
-            draw(system);
+            //draw(system);
+
+			update_state(gsm, delta);
 
             // Updates the graphics
             glfwSwapBuffers(window);

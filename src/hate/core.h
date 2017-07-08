@@ -15,6 +15,7 @@
 #pragma once
 #include "basic.h"
 #include "system.h"
+#include "gamestate.h"
 #include <AL/al.h>
 
 namespace hate {
@@ -37,6 +38,9 @@ namespace hate {
 	// might be set allready, and as such
 	// should preferably not be tampered with.
 	extern GLFWwindow* window;
+
+	// The, suprise, gamestate manager.
+	extern GameStateManager gsm; 
 
 	extern int window_width;
 	extern int window_height;
