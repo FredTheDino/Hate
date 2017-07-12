@@ -1,32 +1,34 @@
 #include "states.h"
 #include <stdio.h>
+#include <vector>
 
 #include <input.h>
+#include <clock.h>
 #include <graphics.h>
+#include <physics.h>
 
 namespace ps {
 	using namespace hate;
 
 	struct Player {
-		union {
-			Transform t;
-			struct {
-				Vec2 position;
-				Vec2 scale;
-				float rotation;
-			};
-		};
+		Body b = Body(1, 1);
 
-		Vec2 vel;
+		Transform t;
 
 		bool grounded = false;
 
 	} player;
 
-	float gravity = 6.0f;
+	Body b(1, 1);
+
+	World world;
 
 	void playing_load() {
-		draw_color(Vec4(0.75, 0.22, 0.80, 1.0));
+		b.position.y = 1.5;
+		player.b.is_static = false;
+
+		add(world, &b);
+		add(world, &player.b);
 	}
 
 	void playing_unload() {
@@ -34,24 +36,22 @@ namespace ps {
 	}
 
 	void playing_update(float delta) {
+		// Updates the "physics engine"
 
-		player.vel.y += gravity * delta;
+		update(world, delta);
+
 		player.grounded = false;
-		if (player.position.y >= 0.0f) {
-			player.position.y = 0.0f;
-			player.vel.y = 0.0f;
+		if (player.b.velocity.y == 0) {
 			player.grounded = true;
 		}
 
 		if (player.grounded && is_pressed("up")) {
-			player.vel.y = -3.0f;
+			player.b.velocity.y = -3.0f;
 		}
-
-		player.position.y += player.vel.y * delta;
 	}
 
 	void playing_draw() {
-		draw_quad(gen_transform(player));;
+		debug_draw(world);
 	}
 }
 
