@@ -87,7 +87,7 @@ namespace hate {
         // @FIXME, we currently set Vsync to true, allways... 
         // Maybe not do that? And the clear color... We need 
         // some sort of initalizer object.
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);
     }
 
     void init_hate() {

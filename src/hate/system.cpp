@@ -1,5 +1,6 @@
 #include "system.h"
 #include <assert.h>
+#include <stdio.h>
 
 namespace hate {
     void update(System& system, float delta) {
@@ -23,7 +24,9 @@ namespace hate {
 
     unsigned int add(System& system, Entity* entity) {
         EntityIndex index;
-        if (system.next_free == INVALID_ID) {
+		printf("Sys next: %u, Iv id: %u\n", system.next_free, INVALID_ID);
+		printf("Wooo!\n");
+        if (system.next_free = (INVALID_ID)) {
             // There isn't a free spot.
             index.id = system.entities.size();
             entity->id = index.id;

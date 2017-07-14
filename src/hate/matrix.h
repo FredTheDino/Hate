@@ -62,6 +62,9 @@ namespace hate {
 		// Subtracts the other vector to this vector.
 		Vec2 operator- (Vec2 other) const; 
 
+		// Negates the vector.
+		Vec2 operator- () const;
+
 		// Scales the vector by a scaler.
 		Vec2 operator* (float scale) const; 
 		

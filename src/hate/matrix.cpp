@@ -26,6 +26,11 @@ namespace hate {
 		}
 		return result;
 	}
+	
+	// Negates the vector.
+	Vec2 Vec2::operator- () const {
+		return Vec2(-x, -y);
+	}
 
 	// Scales the vector by a scaler.
 	Vec2 Vec2::operator* (float scale) const {

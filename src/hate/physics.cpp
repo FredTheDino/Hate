@@ -65,8 +65,8 @@ namespace hate {
 			
 			Vec2 d_pos = a.position - b.position;
 			Vec2 sat = Vec2(
-					abs(d_pos.x) - (a.dimension.x + a.dimension.x),
-					abs(d_pos.y) - (a.dimension.y + a.dimension.y));
+					abs(d_pos.x) - (a.dimension.x + b.dimension.x),
+					abs(d_pos.y) - (a.dimension.y + b.dimension.y));
 
 			if (sat.x > 0 || sat.y > 0) continue;
 			// Now we know we have a collision.
@@ -74,6 +74,7 @@ namespace hate {
 			// Collision Handleing //
 			// Find the axis with the smalest position difference.
 			Collision c;
+			printf("X: %f, Y: %f\n", sat.x, sat.y);
 			if (sat.x > sat.y) {
 				// X Axis
 				c.normal.x = sign(d_pos.x);
@@ -82,36 +83,42 @@ namespace hate {
 				c.normal.y = sign(d_pos.y);
 			}
 
+			// I don't know if this is faster, but it looks cool.
+			c.depth = c.normal.x * sat.x + c.normal.y * sat.y;
+
 			// The A-Body is allways the collision itself.
+			// and the normal points from A to B.
 			c.a = &a;
 			c.b = &b;
 			a.on_collision(&c);
 			// Why they're swaped here.
 			c.b = &a;
 			c.a = &b;
+			c.normal = -c.normal;
 			b.on_collision(&c);
+
+			// Flip it back.
+			c.normal = -c.normal;
 
 			// If either of the bodies are a trigger, there is no collision response.
 			if (a.is_trigger || b.is_trigger) continue;
 
-			// I don't know if this is faster, but it looks cool.
-			float depth = c.normal.x * sat.x + c.normal.y * sat.y;
 
 			// Note: The normal is pointing from B to A.
 			if (a.is_static) {
 				// A is static
-				b.position = b.position - c.normal * depth;
+				b.position = b.position - c.normal * c.depth;
 				b.velocity = b.velocity - c.normal * dot(c.normal, b.velocity);
 			} else if (b.is_static) {
 				// B is static
-				a.position = a.position + c.normal * depth;
+				a.position = a.position + c.normal * c.depth;
 				a.velocity = a.velocity - c.normal * dot(c.normal, a.velocity);
 			} else {
 				// None is static
-				depth *= 0.5f;
+				c.depth *= 0.5f;
 
-				b.position = b.position - c.normal * depth;
-				a.position = a.position + c.normal * depth;
+				b.position = b.position - c.normal * c.depth;
+				a.position = a.position + c.normal * c.depth;
 
 				float total_force = 
 					abs(dot(c.normal, a.velocity) * a.mass) + 

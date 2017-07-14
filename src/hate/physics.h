@@ -30,6 +30,8 @@ namespace hate {
 		Body* a;
 		Body* b;
 
+		float depth;
+
 		Vec2 normal;
 	};
 
