@@ -23,11 +23,14 @@ namespace ps {
 
 	void player_collision(Collision* c) {
 		Collision& col = *c;
+		/*
 		if (dot(col.normal, Vec2(0, 1)) > 0.75f) {
 			player.grounded = true;
 			col.a->velocity.y = 0;
 		}
-		col.a->position = col.b->position + col.normal * col.depth;
+		*/
+		printf("Normal: %f, %f\n", col.normal.x, col.normal.y);
+		//col.a->position = col.b->position + col.normal * col.depth;
 	}
 
 	// All the walkable platforms.
@@ -43,7 +46,7 @@ namespace ps {
 		path.resize(10);
 		for (float x = end; x < start; x += step) {
 			Body b;
-			b.is_trigger = true;
+			//b.is_trigger = true;
 			b.position.x = x;
 			b.position.y = ((float) rand()) / ((float) RAND_MAX);
 
@@ -52,7 +55,6 @@ namespace ps {
 			add(world, &path[path.size() - 1]);
 			break;
 		}
-		printf("Num bodies: %i\n", path.size());
 	}
 
 	void update(Path& path, float delta) {
@@ -72,6 +74,8 @@ namespace ps {
 		player.b.is_static = false;
 		player.b.is_trigger = false;
 		player.b.on_collision = player_collision;
+
+		cam.zoom = 5;
 
 		world.gravity.y = 10;
 		add(world, &player.b);
@@ -95,7 +99,7 @@ namespace ps {
 		}
 		
 		if (is_pressed("down")) {
-			player.b.position.y = -1;
+			player.b.position.y = -2;
 			player.b.velocity.y = 0;
 		}
 	}
